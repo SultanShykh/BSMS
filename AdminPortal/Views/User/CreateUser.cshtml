@@ -1,0 +1,213 @@
+﻿@model AdminPortal.Models.UserModel
+@{
+    ViewBag.Title = "CreateUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style
+{
+    @Styles.Render("~/Contents/stepform/style")
+}
+
+<div class="wizard-main">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 login-sec">
+                <div class="login-sec-bg">
+                    @*<h2 class="text-center">Campaign SMS</h2>*@
+                    <form id="form" action="">
+                        <h3>User Contact Detail</h3>
+                        <fieldset class="form-input">
+                            @Html.LabelFor(model => model.fullname):
+                            @Html.EditorFor(model => model.fullname, new { htmlAttributes = new { @class = "form-control", placeholder = "Full Name" } })
+                            @Html.ValidationMessageFor(model => model.fullname, "", new { @class = "text-danger" })
+
+                            @Html.LabelFor(model => model.email):
+                            @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Email" } })
+                            @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+
+                            @Html.LabelFor(model => model.username):
+                            @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control", placeholder = "", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+                            <span id="msg" style="display: none;color: red !important;font-size: 10px;">Username Already Exist Please Try Another</span>
+
+                            @Html.LabelFor(model => model.password):
+                            @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Password" } })
+                            @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+
+                            @Html.LabelFor(model => model.user_mobile):
+                            @Html.EditorFor(model => model.user_mobile, new { htmlAttributes = new { @class = "form-control", placeholder = "ex: 923113644859" } })
+                            @Html.ValidationMessageFor(model => model.user_mobile, "", new { @class = "text-danger" })
+
+                            @Html.LabelFor(model => model.status):
+                            <input class="form-check-input mt-1" type="checkbox" id="status" name="status">
+                            @*@Html.CheckBoxFor(model => model.status, new { @class = "form-check-input" })*@
+                            <br />
+                            @Html.LabelFor(model => model.user_expiry):
+                            @Html.EditorFor(model => model.user_expiry, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.user_expiry, "", new { @class = "text-danger" })
+
+                            @Html.LabelFor(model => model.masking):
+                            @Html.DropDownListFor(model => model.masking, (IEnumerable<SelectListItem>)ViewBag.maskings, new
+                            {
+                                required = "required",
+                                id = "masking",
+                                multiple = true
+                            })
+                        </fieldset>
+
+                        <h3>Account Information</h3>
+                        <fieldset class="form-input">
+                            <label>usertype</label>
+                            @Html.DropDownListFor(model => model.GroupId, (IEnumerable<SelectListItem>)ViewBag.userGroup, new
+                           {
+                               @class = "form-control",
+                               id = "GroupId"
+                           })
+
+                            @Html.LabelFor(model => model.acctype):
+                            <select class="form-control" id="acctype" name="acctype" required>
+                                <option value="prepaid">Prepaid</option>
+                                <option value="postpaid">Postpaid</option>
+                            </select>
+
+                            @Html.LabelFor(model => model.otpacctype):
+                            <select class="form-control" id="otpacctype" name="otpacctype" required>
+                                <option value="prepaid">Prepaid</option>
+                                <option value="postpaid">Postpaid</option>
+                            </select>
+
+                            @Html.LabelFor(model => model.otp_access):
+                            <input class="form-check-input mt-1" type="checkbox" id="otp_access" name="otp_access" checked="">
+                            @*@Html.CheckBoxFor(model => model.otp_access, new { @class = "form-check-input" })*@
+                            <br />
+
+                            <div class="form-row">
+                                <button type="submit" id="btnSubmit" class="btn bg-gradient-dark">Add</button>
+                                <a href="/User/Index" class="btn bg-gradient-dark">Close</a>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+    {
+    @Scripts.Render("~/bundles/stepform/js")
+    <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
+    <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#masking').selectpicker('refresh');
+        });
+        $(document).on("focusout", "#email", function () {
+            var re = /\S+@@\S+\.\S+/;
+            if (re.test($(this).val())) {
+                var username = $(this).val().substr(0, $(this).val().indexOf('@@'));
+                $('#username').val(username);
+                $("#username").trigger("focusout");
+
+            }
+        });
+        $(document).on("focusout", "#username", function () {
+            var username = $(this).val();
+            if (username != null && username != '') {
+                CrudScript.makeAjaxRequest('Post', '/User/CheckUsername', { username: username }).then(function (data) {
+                    if (data == false) {
+                        $('#msg').css('display', 'block');
+                        $('#username').attr('readonly', false);
+
+                    }
+                    else {
+                        $('#username').attr('readonly', true);
+                        $('#msg').css('display', 'none');
+                    }
+                })
+            }
+        });
+
+    </script>
+    <script>
+        var form = $('#form');
+
+        form.steps({
+            headerTag: "h3",
+            bodyTag: "fieldset",
+            transitionEffect: "slideLeft",
+            onStepChanging: function (event, currentIndex, newIndex) {
+                // Allways allow previous action even if the current form is not valid!
+                if (currentIndex > newIndex) {
+                    return true;
+                }
+                // Needed in some cases if the user went back (clean up)
+
+                return form.valid();
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) {
+
+            },
+            onFinishing: function (event, currentIndex) {
+                return form.valid();
+            },
+            onFinished: function (event, currentIndex) {
+
+            }
+        }).validate({
+            errorPlacement: function errorPlacement(error, element) { element.before(error); },
+            rules: {
+                fullname: {
+                    required: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                username: {
+                    required: true
+                },
+                password: {
+                    required: true
+                },
+                expireDate: {
+                    required: true
+                }
+            }
+        });
+
+        form.submit(function (e) {
+            if ($('#status').prop('checked')) {
+                $("#status").val(true);
+            }
+            else {
+                $("#status").val(false);
+            }
+
+            if ($('#otp_access').prop('checked')) {
+                $("#otp_access").val(true);
+            }
+            else {
+                $("#otp_access").val(false);
+            }
+
+            e.preventDefault();
+
+            if (form.valid()) {
+                CrudScript.makeAjaxRequest('Post', '/User/CreateUser', form.serialize()).then(function (data) {
+                    if (data.status == true)
+                    {
+                        ShowDivSuccess(data.message);
+                    }
+                    else {
+                        ShowDivSuccess(data.message);
+                    }
+                });
+
+            }
+            else {
+                ShowDivError("Input Data is not valid");
+            }
+        });
+    </script>
+}

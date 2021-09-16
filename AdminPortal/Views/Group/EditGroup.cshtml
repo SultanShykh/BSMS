@@ -1,0 +1,168 @@
+﻿@{
+    ViewBag.Title = "EditGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style {
+    <style>
+        ul.tree {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+            ul.tree li {
+                list-style: none;
+            }
+
+        input#name {
+            width: 236%;
+        }
+
+        div#users {
+            width: 35%;
+            /* margin-left: 0%; */
+            float: right;
+            /* margin-left: -21%; */
+            margin-top: -7%;
+        }
+
+        .card-action {
+            padding: 2%;
+        }
+    </style>
+}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title"></div>
+                        </div>
+                        <div class="card-body">
+                            <form id="form" method="post">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-12">
+                                            <div class=" row">
+                                                <div class="form-group col-md-4">
+                                                    @Html.Hidden("GroupId")
+                                                    <label>Group Name</label>
+                                                    <input type="text" class="form-control" id="GroupName" name="GroupName" placeholder="Group Name" required>
+                                                    <span id="message" style="display: none;color: red !important;font-size: 10px;">Please Enter Group Name</span>
+                                                    <br>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>Status</label>
+                                                    <select class="form-control" id="Status" name="Status">
+                                                        <option value="1">Active</option>
+                                                        <option value="0">Deactive</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                       
+                                    </div>
+                                </div>
+                                <div class="form-group form-show-validation row">
+                                    <label for="name" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-right">Permissions <span class="required-label">*</span></label>
+                                    <div class=" col-lg-4 col-md-9 col-sm-8" id="Permission">
+
+                                    </div>
+                                </div>
+                            </form>
+                            <button type="submit" class="btn bg-gradient-dark" id="btnSave">Save</button>
+                            <a href='@Url.Action("Index", "Group")'>
+                                <input type="button" class="btn bg-gradient-danger" id="cancel" value="Cancel" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+    <div id="myDiv" data-value="@Request.RequestContext.HttpContext.Session["SelectedUsers"]"></div>
+<script src="~/Scripts/ProjectScript/CrudScript.js"></script>
+<script src="~/Scripts/ProjectScript/GroupScript.js"></script>
+<script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
+<script>
+    
+    $('input[type=checkbox]').click(function () {
+        
+        // children checkboxes depend on current checkbox
+        $(this).next().find('input[type=checkbox]').prop('checked', this.checked);
+        // go up the hierarchy - and check/uncheck depending on number of children checked/unchecked
+        $(this).parents('ul').prev('input[type=checkbox]').prop('checked', function () {
+            return $(this).next().find(':checked').length;
+        });
+    });
+    $(document).on('click', '.tree label', function (e) {
+        $(this).next('ul').fadeToggle();
+        e.stopPropagation();
+    });
+
+    $(document).on('change', '.tree input[type=checkbox]', function (e) {
+        
+        $(this).next().find('input[type=checkbox]').prop('checked', this.checked);
+        $(this).next().find('input[type=checkbox]').prop('value', this.checked ? 1 : 0);
+        // go up the hierarchy - and check/uncheck depending on number of children checked/unchecked
+        $(this).parents('ul').prev('input[type=checkbox]').prop('checked', function () {
+            $(this).next().find(':checked').prop('value', this.checked ? 1 : 0);
+            return $(this).next().find(':checked').length;
+        });
+
+        $(this).siblings('ul').find("input[type='checkbox']").prop('value', this.checked ? 1 : 0);
+        this.value = this.checked ? 1 : 0;
+        e.stopPropagation();    
+    });
+    $(document).on("focusout", "#GroupName", function () {
+        var name = $(this).val();
+        if (name == null || name == '') {
+            $('#message').css('display', 'block');
+        }
+        else
+        {
+            $('#message').css('display', 'none');
+        }
+    });
+
+    $(document).ready(function () {
+        debugger
+        GroupScript.FillForm();
+        $('#Status').selectpicker('refresh');
+    });
+
+    $('#btnSave').click(function () {
+        if ($('#GroupName').val() == null || $('#GroupName').val() == "") {
+            $('#message').css('display', 'block');
+            e.stopPropagation();
+        }
+        else
+        {
+            GroupScript.UpdateGroup();
+        }
+    })
+
+    $('#cancel').click(function () {
+        debugger
+        window.location = "/Group/Index";
+    });
+
+
+    $(document).on('click', 'button', function (e) {
+        switch ($(this).text()) {
+            case 'Collepsed':
+                $('.tree ul').fadeOut();
+                break;
+            case 'Expanded':
+                $('.tree ul').fadeIn();
+                break;
+            case 'Checked All':
+                $(".tree input[type='checkbox']").prop('checked', true);
+                break;
+            case 'Unchek All':
+                $(".tree input[type='checkbox']").prop('checked', false);
+                break;
+            default:
+        }
+    });
+
+
+</script>

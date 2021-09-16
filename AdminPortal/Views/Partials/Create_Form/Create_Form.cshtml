@@ -1,0 +1,52 @@
+﻿@model AdminPortal.Models.Reseller
+
+@using (Html.BeginForm("CreateReseller", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-info" })
+    </div>
+    <div class="form-group mb-3">
+        @Html.LabelFor(modal => modal.email)
+        @Html.EditorFor(modal => modal.email, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(modal => modal.email, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group mb-3">
+        @Html.LabelFor(modal => modal.username)
+        @Html.EditorFor(modal => modal.username, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(modal => modal.username, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group mb-3">
+        @Html.LabelFor(modal => modal.pass)
+        @Html.EditorFor(modal => modal.pass, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(modal => modal.pass, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.userrole)
+        @Html.DropDownListFor(model => model.userrole, (IEnumerable<SelectListItem>)ViewBag.role,"select Item" ,new { @class="form-control"})
+
+        @*@Html.EditorFor(model => model.userrole, new { htmlAttributes = new { @class = "form-control" } })*@
+        @Html.ValidationMessageFor(model => model.userrole, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.ph_no)
+        @Html.EditorFor(model => model.ph_no, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.ph_no, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.image)
+        @Html.TextBox("file", "", new { type = "file"})
+        @Html.ValidationMessageFor(model => model.image, "", new { @class = "text-danger" })
+    </div>
+    @*<div class="form-group mb-3">
+            @Html.DisplayNameFor(model => model.domain)
+            @Html.EditorFor(model => model.domain, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+        <div class="form-group mb-3">
+            @Html.DisplayNameFor(model => model.maskingID)
+            @Html.EditorFor(model => model.maskingID, new { htmlAttributes = new { @class = "form-control" } })
+        </div>*@
+    <input type="submit" class="btn bg-gradient-primary shadow" value="Create" />
+    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+}

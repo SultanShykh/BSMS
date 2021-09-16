@@ -1,0 +1,10 @@
+.dropdown .form-control:disabled, 
+.form-control:read-only {
+    background-color: transparent;
+    opacity: 1;
+}
+
+.dropdown.dropdown-hover:hover > .dropdown-menu::before, 
+.dropdown #bs-select-1 .dropdown-menu.show::before {
+    content: none;
+}

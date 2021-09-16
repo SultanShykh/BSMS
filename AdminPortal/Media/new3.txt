@@ -1,0 +1,35 @@
+Flagyl Susp 200 MG 60 ml
+Rs.72.56
+Uses
+Metronidazole is used to treat bacterial infections of the vagina, stomach or intestines, liver, skin, joints, brain, heart, and respiratory tract. Metrogel (topical metronidazole) is also used to treat rosacea, a skin condition. Vaginal metronidazole gel is also used to treat bacterial infections of the vagina
+
+Side Effects
+It can cause agitation, back pain, blindness, dizziness, irritability, lack of co-ordination.
+
+Side Effects
+It can cause agitation, back pain, blindness, dizziness, irritability, lack of co-ordination.
+
+private bool ValidateRecipient(ref string Number)
+        {
+            try
+            {
+                Number = Number.Trim();
+
+                if (Number.Length > 14) return false;
+
+                if (Number.IndexOfAny(SpecialChars) > -1)
+                    Number = Number.Replace("-", "").Replace(" ", "").Replace("(", "").Replace(")", "");
+
+                string str = Number.Substring(Number.IndexOf('3'));
+
+                if (str.Length != 10 || !long.TryParse(str, out l)) return false;
+
+                Number = "923" + Number.Substring(Number.Length - 9);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }

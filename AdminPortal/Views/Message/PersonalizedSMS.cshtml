@@ -1,0 +1,214 @@
+﻿@model AdminPortal.Models.Campaign
+@{
+    ViewBag.Title = "PersonalizedSMS";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="font-weight-bolder mb-0">Compose Personalized Message</h6>
+                    @{
+                        if (ViewBag.result != null)
+                        {
+                            <div class="alert alert-dismissable alert-@ViewBag.status">
+                                <p class="text-white">@ViewBag.result</p>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="card-body">
+                    <form id="form" method="post" action="/Message/PersonalizedSMS" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Campaign</label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    @Html.EditorFor(model => model.camp_name, new { htmlAttributes = new { @class = "form-control", placeholder = "Campaign Name" } })
+                                    @Html.ValidationMessageFor(model => model.camp_name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Masking</label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    @Html.DropDownListFor(model => model.sender, (IEnumerable<SelectListItem>)ViewBag.maskings, new
+                               {
+                                   @class = "form-control mb-1",
+                                   required = "true",
+                                   id = "sender",
+                               })
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Schedule</label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <input type="datetime-local" class="form-control" name="camp_time" id="camp_time" />
+                                    @Html.ValidationMessageFor(model => model.camp_time, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Template</label>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <select class="form-control" id="template" name="template">
+                                        <option>None</option>
+                                        <option>None</option>
+                                        <option>None</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Message:</label>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <button type="button" class="btn bg-gradient-dark" id="btnSave">Urdu</button>
+                                    @Html.TextAreaFor(model => model.msgdata, new { @class = "form-control mb-2", placeholder = "Enter Message", rows = "5", cols = "68" })
+                                    @Html.ValidationMessageFor(model => model.msgdata, "", new { @class = "text-danger" })
+                                    <span id="message" style="display :none;color: red !important;font-size: 10px;">Enter Maximum 50 characters</span><br />
+                                    <button type="button" class="btn bg-gradient-dark" id="btnMessage">0 characters / 0 SMS Message</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Keyword</label>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="p-2 border-radius-md" style="border: 1px solid lightgrey">
+                                    <button type="button" class="btn bg-gradient-dark" value="B" onclick="putBtnVal(this.value)">column B</button>
+                                    <button type="button" class="btn bg-gradient-dark" value="C" onclick="putBtnVal(this.value)">column C</button>
+                                    <button type="button" class="btn bg-gradient-dark" value="D" onclick="putBtnVal(this.value)">column D</button><br />
+                                    <button type="button" class="btn bg-gradient-dark" value="E" onclick="putBtnVal(this.value)">column E</button>
+                                    <button type="button" class="btn bg-gradient-dark" value="F" onclick="putBtnVal(this.value)">column F</button>
+                                    <button type="button" class="btn bg-gradient-dark" value="G" onclick="putBtnVal(this.value)">column G</button><br />
+                                    <button type="button" class="btn bg-gradient-dark" value="H" onclick="putBtnVal(this.value)">column H</button>
+                                    <button type="button" class="btn bg-gradient-dark" value="I" onclick="putBtnVal(this.value)">column I</button>
+                                    <button type="button" class="btn bg-gradient-dark" value="J" onclick="putBtnVal(this.value)">column J</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Send To: </label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <input type="file" class="form-control mt-2" name="contactsFile" id="contactsFile" />
+                                    <span id="message" style="color: red !important;font-size: 10px;">*Attach .csv/.xlsx file. </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="offset-8 col-md-4 col-lg-4">
+                            <input type="reset" class="btn bg-gradient-dark" value="reset" />
+                            <input type="submit" class="btn bg-gradient-dark" value="send" />
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
+    <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#div3").fadeIn();
+            $('.alert').fadeOut(3000);
+        });
+
+        var form = $("#form");
+        $('#msgdata').keyup(function () {
+            var msgVal = $('#msgdata').val().length;
+            $('#btnMessage').text(msgVal + ' characters / ' + Math.ceil(msgVal / 160) + ' SMS');
+        });
+
+        form.submit(function (e) {
+            debugger
+            var filename = $('#contactsFile').val();
+            var subStr = filename.substr(filename.lastIndexOf('.') + 1);
+
+            if (subStr == "csv" || subStr == "xls" || subStr == "xlsx") { }
+            else {
+                ShowDivError("please upload correct file format");
+            }
+
+            if (!form.valid()) {
+                ShowDivError("please fill out the form");
+                e.preventDefault();
+            }
+            else
+            {
+                ShowDivSuccess1("Please wait...");
+            }
+        });
+
+        function putBtnVal(val) {
+            var msgdata = $("#msgdata").val();
+            $("#msgdata").val(msgdata + "$" + val + "$");
+        }
+
+        //e.preventDefault();
+        //var fileUpload = $("#contactsFile").get(0);
+        //var files = fileUpload.files;
+        //var formdata = new FormData(this);
+
+        //for (var i = 0; i < files.length; i++) {
+        //    formdata.append(files[i].name, files[i]);
+        //}
+
+        //if (form.valid()) {
+        //    CallAsyncService1('/Message/PersonalizedSMS', formdata, ShowDivSuccess, "POST", ShowDivError);
+        //}
+        //else {
+        //    ShowDivError("input data is not valid");
+        //}
+
+    </script>
+}

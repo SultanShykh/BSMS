@@ -1,0 +1,181 @@
+﻿@model AdminPortal.Models.UserModel
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href=".Media/apple-icon.png">
+    <link rel="icon" type="image/png" href="Media/favicon.png">
+    <title>
+        Intellexal Solution PVT LTD
+    </title>
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Nucleo Icons -->
+    <link href="~/Content/nucleo-icons.css" rel="stylesheet" />
+    <link href="~/Content/nucleo-svg.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- CSS Files -->
+    <link id="pagestyle" href="~/Content//soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
+
+    <style>
+        #body{
+           
+            height: 100%;
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body id="body" style="background-image: url('Media/its_whatsapp.jpg')">
+    <main class="main-content">
+        <section class=" mt-6">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-header pb-0 text-left bg-transparent">
+                                <h3 class="font-weight-bolder text-info text-gradientmx-auto d-block"><span><img src="Media/form-logo.png" /></span></h3>
+                                <hr />
+                            </div>
+                            <div class="card-body">
+
+                                @using (Html.BeginForm(null,null, FormMethod.Post, new { id = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="form-horizontal">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    @Html.LabelFor(model => model.username)
+                                    <div class="mb-3">
+                                        @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control", placeholder = "Username" } })
+                                        @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    @Html.LabelFor(model => model.password)
+                                    <div class="mb-3">
+                                        @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", placeholder = "Password" } })
+                                        @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="form-control btn btn-gradient-dark submit px-3">Sign In</button>
+                                    </div>
+                                }
+                                <p class="mb-0 mt-1 text-secondary text-center">
+                                    © Intellexal Solutions (PVT.) LTD
+                                    <script>document.write(new Date().getFullYear())</script>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <!-- -------- START FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
+        <footer class="footer py-6 mb-1">
+            <div class="container">
+                <div class="col-lg-8 mx-auto text-center ">
+                    <a href="https://api.whatsapp.com/send/?phone=923008997733&text&app_absent=0" target="_blank" class="text-white me-xl-4 me-4">
+                        <span class="text-lg fab fa-whatsapp"></span>
+                    </a>
+                    <a href="https://www.facebook.com/itssms?fref=ts" target="_blank" class="text-white me-xl-4 me-4">
+                        <span class="text-lg fab fa-facebook"></span>
+                    </a>
+                    <a href="https://twitter.com/IntellexalS" target="_blank" class="text-white me-xl-4 me-4">
+                        <span class="text-lg fab fa-twitter"></span>
+                    </a>
+                    <a href="https://www.instagram.com/intellexalsolutions9/" target="_blank" class="text-white me-xl-4 me-4">
+                        <span class="text-lg fab fa-instagram"></span>
+                    </a>
+                    <a href="https://www.linkedin.com/company/its-intellexal-solutions-pvt-ltd?trk=top_nav_home" target="_blank" class="text-white me-xl-4 me-4">
+                        <span class="text-lg fab fa-linkedin"></span>
+                    </a>
+                    <a href="https://www.youtube.com/channel/UC9fCXOa8nV0iqfYprZI4r8w/featured" target="_blank" class="text-white me-xl-4 me-4">
+                        <span class="text-lg fab fa-youtube"></span>
+                    </a>
+                </div>
+            </div>
+        </footer>
+        <!-- -------- END FOOTER 3 w/ COMPANY DESCRIPTION WITH LINKS & SOCIAL ICONS & COPYRIGHT ------- -->
+    </main>
+
+    <!--   Core JS Files   -->
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/plugins/perfect-scrollbar.min.js"></script>
+    <script src="~/Scripts/plugins/smooth-scrollbar.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
+    <script>
+        var form = $('#form');
+        form.submit(function (e) {
+            debugger
+            var formData = new FormData(this);
+            if (form.valid()) {
+                debugger
+                $.ajax({
+                    url: '/Account/Login',
+                    type: "POST",
+                    async: true,
+                    data: formData,
+                    success: function (data) {
+                        debugger
+                        if (data.response == true && data.message == "success") {
+                            
+                        }
+                        else {
+                            ShowDivError(data.message);
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                })
+            }
+            else {
+                e.preventDefault();
+            }
+        });
+        $(document).ready(function () {
+            var images = ["its_cva", "its_onlinebussiness-1366x768", "its_ecommerce", "its_whatsapp"];
+            var i = 0;
+            setInterval(function () {
+                $('#body').css("background-image", 'url("Media/' + images[i] + '.jpg")');
+                i++;
+                if (i == (images.length - 1)) {
+                    i = 0;
+                }
+            }, 5000);
+        })
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }</script>
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="~/Scripts/soft-ui-dashboard.min.js?v=1.0.3"></script>
+</body>
+
+</html>

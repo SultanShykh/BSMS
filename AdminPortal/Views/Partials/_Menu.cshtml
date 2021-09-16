@@ -1,0 +1,76 @@
+﻿@model AdminPortal.Models.MenuModel
+<div class="modal fadeIn" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <span class="fw-mediumbold">
+                        New
+                    </span>
+                    <span class="fw-light">
+                        Menu
+                    </span>
+                </h5>
+
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6 pr-0">
+                            <div class="form-group form-group-default">
+                                @Html.HiddenFor(model => model.Id)
+
+                                @Html.LabelFor(model => model.MenuName)
+                                @Html.EditorFor(model => model.MenuName, new { htmlAttributes = new { @class = "form-control", placeholder = "Menu Name" } })
+                                @Html.ValidationMessageFor(model => model.MenuName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.MenuUrl)
+                                @Html.EditorFor(model => model.MenuUrl, new { htmlAttributes = new { @class = "form-control", placeholder = "Menu Url" } })
+                                @Html.ValidationMessageFor(model => model.MenuUrl, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6 pr-0">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.Controller)
+                                @Html.EditorFor(model => model.Controller, new { htmlAttributes = new { @class = "form-control", placeholder = "Controller" } })
+                                @Html.ValidationMessageFor(model => model.Controller, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.Action)
+                                @Html.EditorFor(model => model.Action, new { htmlAttributes = new { @class = "form-control", placeholder = "Action" } })
+                                @Html.ValidationMessageFor(model => model.Action, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pr-0">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.IsActive)
+                                true
+                                @Html.RadioButtonFor(model => model.IsActive, "True")
+                                false
+                                @Html.RadioButtonFor(model => model.IsActive, "False")
+                                @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                }
+                </div>
+            <div class="modal-footer border-0">
+                <button type="submit" id="btnSubmit" class="btn bg-gradient-dark">Add</button>
+                <button type="submit" id="btnUpdate" class="btn bg-gradient-dark" style="display:none">Update</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

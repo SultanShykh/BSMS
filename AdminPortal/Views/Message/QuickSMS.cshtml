@@ -1,0 +1,146 @@
+﻿@model AdminPortal.Models.Campaign
+@{
+    ViewBag.Title = "QuickSMS";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="font-weight-bolder mb-0">Compose Message</h6>
+                </div>
+                <div class="card-body">
+                    <form id="form" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Sender ID: </label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    @Html.DropDownListFor(model => model.sender, (IEnumerable<SelectListItem>
+                                        )ViewBag.maskings, new
+                                        {
+                                        @class = "form-control",
+                                        required = "true",
+                                        id = "Masking"
+                                        })
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Contact No:</label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    @Html.TextAreaFor(model => model.receiver, new { @class = "form-control", placeholder = "Enter Contacts", rows = "5", cols = "68" })
+                                    @Html.ValidationMessageFor(model => model.receiver, "", new { @class = "text-danger" })
+                                    <span id="message" style="color: red !important;font-size: 10px;">Enter Maximum 50 contacts</span><br />
+                                    <button type="button" class="btn bg-gradient-dark" id="btnContacts">0 Contact / Group</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Message:</label>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <button type="button" class="btn bg-gradient-dark" id="btnSave">Urdu</button>
+                                    @Html.TextAreaFor(model => model.msgdata, new { @class = "form-control mb-2", placeholder = "Enter Contacts", rows = "5", cols = "68" })
+                                    @Html.ValidationMessageFor(model => model.msgdata, "", new { @class = "text-danger" })
+                                    <button type="button" class="btn bg-gradient-dark" id="btnMessage">0 characters / 0 SMS</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="offset-8 col-md-4 col-lg-4">
+                            <input type="reset" class="btn bg-gradient-dark" value="reset" />
+                            <input type="submit" class="btn bg-gradient-dark" value="send" id="send" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
+    <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
+
+    <script>
+        var contactsCount = 0;
+        $(document).ready(function () {
+            $("#Masking").selectpicker('refresh');
+
+            $('#receiver').keyup(function () {
+                var msgVal = $('#receiver').val();
+                var count = 0;
+                var stringArr = msgVal.split(",");
+                var arr = [];
+
+                for (var i = 0; i < stringArr.length; i++) {
+                    if ((stringArr[i].trim().substr(0, 2) == "92" && stringArr[i].trim().length == 12) || (stringArr[i].trim().substr(0, 2) == "03" && stringArr[i].trim().length == 11) || (stringArr[i].trim().substr(0, 1) == "3" && stringArr[i].trim().length == 10)) {
+                        count++;
+                    }
+                    else {
+                        arr.push(stringArr[i]);
+                    }
+                }
+                contactsCount = count;
+                $('#message').text('Invalid Numbers: ' + arr);
+                $('#btnContacts').text(count + ' Contact / Group');
+                if ((contactsCount) > 49) {
+                    $('#message').text('only 50 contacts are allowed');
+                }
+            });
+
+            $('#msgdata').keyup(function (e) {
+                var msgVal = $('#msgdata').val().length;
+                $('#btnMessage').text(msgVal + ' characters / ' + Math.floor(msgVal / 160) + ' SMS');
+            });
+        });
+
+
+        var form = $('#form');
+        form.submit(function (e) {
+            e.preventDefault();
+            $('#message').text('');
+
+            if ((contactsCount) > 50) {
+                $('#message').text('only 50 contacts are allowed');
+                e.preventDefault();
+            }
+
+            debugger
+            if (form.valid()) {
+                CrudScript.makeAjaxRequest('Post', '/Message/QuickSMS', form.serialize()).then(function (data) {
+                    if (data.status == true) {
+                        ShowDivSuccess(data.message);
+                    }
+                    else {
+                        ShowDivSuccess(data.message);
+                    }
+                });
+            }
+            else {
+                ShowDivError("Fields required");
+            }
+        });
+    </script>
+}

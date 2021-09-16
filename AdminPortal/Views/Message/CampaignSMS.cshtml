@@ -1,0 +1,308 @@
+﻿@model AdminPortal.Models.Campaign
+@{
+    ViewBag.Title = "CampaignSMS";
+}
+@section style
+{
+    @Styles.Render("~/Contents/stepform/style")
+
+}
+
+<div class="wizard-main">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 login-sec">
+                <div class="login-sec-bg">
+                    @*<h2 class="text-center">Campaign SMS</h2>*@
+                    <form id="form" action="#">
+                        <h3>Campaign Details</h3>
+                        <fieldset class="form-input">
+                            <h4>Add Campaign</h4>
+
+                            @Html.LabelFor(model => model.camp_name):
+                            @Html.EditorFor(model => model.camp_name, new { htmlAttributes = new { @class = "form-control", placeholder = "Campaign Name" } })
+                            @Html.ValidationMessageFor(model => model.camp_name, "", new { @class = "text-danger" })
+
+                            @Html.LabelFor(model => model.sender):
+                            @Html.DropDownListFor(model => model.sender, (IEnumerable<SelectListItem>)ViewBag.maskings, new
+                            {
+                                @class = "form-control mb-1",
+                                required = "true",
+                                id = "Masking"
+                            })
+
+                            @Html.LabelFor(model => model.receiver):
+                            @Html.TextAreaFor(model => model.receiver, new { @class = "form-control", placeholder = "Enter Contacts", rows = "5", cols = "68" })
+                            @Html.ValidationMessageFor(model => model.receiver, "", new { @class = "text-danger" })
+                            <div class="badge bg-gradient-dark pb-0 mt-2">
+                                <p class="badge bg-gradient-dark" id="btnContacts">0 Contact / Group</p>
+                            </div>
+
+                            <input type="file" class="form-control mt-2" name="contactsFile" id="contactsFile" />
+                            <span id="" style="color: red !important;font-size: 10px;">*Attach .csv/.xlsx file only</span><br />
+                            <button type="button" class="btn bg-gradient-dark" id="btnGroup">0 Contact / Group</button>
+
+                            <div class="row">
+                                <label>Upload Multiple Option:</label>
+                                <div class="col-md-2">
+                                    <input type="button" class="btn bg-gradient-dark" value="Add Contact" data-toggle="modal" data-target="#contactModal" />
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="button" class="btn bg-gradient-dark" value="Add Group" data-toggle="modal" data-target="#groupModal" />
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="reset" class="btn bg-gradient-dark" value="Reset" />
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <h3>Message Content</h3>
+                        <fieldset class="form-input">
+                            <h4>Add Message</h4>
+
+                            <button type="button" class="btn bg-gradient-dark" id="">Urdu</button>
+                            @Html.TextAreaFor(model => model.msgdata, new { @class = "form-control mb-2", placeholder = "Enter Message", rows = "5", cols = "68" })
+                            @Html.ValidationMessageFor(model => model.msgdata, "", new { @class = "text-danger" })
+                            <button type="button" class="btn bg-gradient-dark" id="btnMessage">0 characters 0 SMS Message</button>
+                        </fieldset>
+
+                        <h3>Schedule Time Period</h3>
+                        <fieldset class="form-input">
+                            <h4>When do you want to send your campaign</h4>
+                            <input class="form-check-input" type="radio" name="sendMessage" id="sendNow" required>
+                            <label class="custom-control-label" for="sendMessage">Send It Now</label>
+
+                            <input class="form-check-input" type="radio" name="sendMessage" id="scheduelCamp" required>
+                            <label class="custom-control-label" for="sendMessage">Schedule For Campaign</label>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div id="scheduleMyCamp" class="collapse">
+                                            <label class="custom-control-label" for="scheduleMessage">Schedule Delivery Datetime: </label>
+                                            <input type="datetime-local" class="form-control" name="camp_time" id="camp_time" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="submit" class="btn bg-gradient-dark" value="Send" id="btnSubmit" />
+                            <input type="button" class="btn bg-gradient-danger" value="Close" />
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Group Modal -->
+<div class="modal" id="groupModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add Group</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <h4>Select Multiple Group:</h4>
+                <select class="form-control" id="groupSelect" name="groupSelect">
+                    <option>Group 1</option>
+                    <option>Group 2</option>
+                    <option>Group 3</option>
+                </select>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal" id="contactModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Add Contact</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td>Fullname</td>
+                                <td>Mobile</td>
+                                <td>Email</td>
+                                <td>Option 1</td>
+                                <td>Option 2</td>
+                                <td>Option 3</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <textarea class="form-control" id="contactsData" name="contactsData" rows="5" cols="68"></textarea>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/stepform/js")
+    <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
+    <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
+    <script>
+        $(document).ready(function () {
+            var contactsCount = 0;
+            var contacts = $('#receiver').val("");
+            $('#sendNow').change(function () {
+                $('#scheduleMyCamp').hide();
+                $('#camp_time').val('');
+            });
+
+            $('#scheduelCamp').change(function () {
+                $('#scheduleMyCamp').show();
+            });
+
+            $('#contactsFile').change(function () {
+                debugger
+                var fileUpload = $("#contactsFile").get(0);
+                var files = fileUpload.files;
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                $.ajax({
+                    url: "/Message/FetchContacts",
+                    type: "POST",
+                    data: fileData,
+                    success: function (data) {
+                        contacts = "";
+                        if (data.status == true) {
+                            $(data.message).each(function (key, val) {
+                                contacts += val + ',\n';
+                            });
+                            $('#receiver').val(contacts);
+                        }
+                        else
+                        {
+                            ShowDivError(data.message);
+                        }
+                    },
+                    error: function () {
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            });
+
+            $('#receiver').keyup(function () {
+                debugger
+                var msgVal = $('#receiver').val();
+                var count = 0;
+                var stringArr = msgVal.split(",");
+                var arr = [];
+
+                for (var i = 0; i < stringArr.length; i++) {
+                    if ((stringArr[i].trim().substr(0, 2) == "92" && stringArr[i].trim().length == 12) || (stringArr[i].trim().substr(0, 2) == "03" && stringArr[i].trim().length == 11) || (stringArr[i].trim().substr(0, 1) == "3" && stringArr[i].trim().length == 10)) {
+                        count++;
+                    }
+                    else {
+                        arr.push(stringArr[i]);
+                    }
+                }
+                contactsCount = count;
+                $('#message').text('Invalid Numbers: ' + arr);
+                $('#btnContacts').text(count + ' Contact / Group');
+                if ((contactsCount) > 49) {
+                    $('#message').text('only 50 contacts are allowed');
+                }
+            });
+
+            $('#msgdata').keyup(function (e) {
+                debugger
+                var msgVal = $('#msgdata').val().length;
+                $('#btnMessage').text(msgVal + ' characters / ' + Math.ceil(msgVal / 160) + ' SMS');
+            });
+        });
+
+    </script>
+    <script>
+        var form = $('#form');
+        form.steps({
+            headerTag: "h3",
+            bodyTag: "fieldset",
+            transitionEffect: "slideLeft",
+            onStepChanging: function (event, currentIndex, newIndex) {
+                // Allways allow previous action even if the current form is not valid!
+                if (currentIndex > newIndex) {
+                    return true;
+                }
+                // Needed in some cases if the user went back (clean up)
+                if (currentIndex < newIndex) {
+                    // To remove error styles
+                    form.find(".body:eq(" + newIndex + ") label.error").remove();
+                    form.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+                }
+
+                return form.valid();
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) {
+
+            },
+            onFinishing: function (event, currentIndex) {
+                return form.valid();
+            },
+            onFinished: function (event, currentIndex) {
+
+            }
+        }).validate({
+            errorPlacement: function errorPlacement(error, element) { element.before(error); },
+            rules: {
+                camp_name: {
+                    required: true
+                },
+                receiver: {
+                    required: true
+                },
+                msgdata: {
+                    required: true
+                }
+            }
+        });
+
+        form.submit(function (e) {
+            e.preventDefault();
+
+            if (form.valid()) {
+                CallAsyncService('/Message/CampaignSMS', form.serialize(), ShowDivSuccess, "POST", ShowDivError);
+            }
+            else {
+                ShowDivError("Input data is not valid");
+            }
+        });
+
+    </script>
+
+}
