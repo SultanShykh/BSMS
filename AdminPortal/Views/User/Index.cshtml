@@ -22,13 +22,28 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="offset-8 col-md-4">
-                            <form method="get">
-                                <input placeholder="search" name="search" id="serach" class="form-control" value="@ViewBag.search" />
-                            </form>
+                    <form id="form" method="post" action="/User/Index/@ViewBag.pageNumber">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.Item1[0].username)
+                                <input type="text" name="username" class="form-control" placeholder="username" value="@ViewBag.username" />
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.Item1[0].email)
+                                <input type="email" name="email" class="form-control" placeholder="Email" value="@ViewBag.email" />
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.Item1[0].user_mobile)
+                                <input type="text" name="user_mobile" class="form-control" placeholder="Mobile Number" value="@ViewBag.user_mobile" />
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn bg-gradient-dark sender-button mt-4" id="fetch">Search</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
+
+                    <hr />
+
                     <!-- Modal -->
                     @{
                         Html.RenderAction("_updateUser", "User");

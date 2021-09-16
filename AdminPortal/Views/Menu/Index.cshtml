@@ -22,13 +22,21 @@
         <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="offset-8 col-md-4">
-                            <form method="get">
-                                <input placeholder="search" name="search" id="serach" class="form-control" value="@ViewBag.search" />
-                            </form>
+                    <form id="form" method="post" action="/Menu/Index/@ViewBag.pageNumber">
+                        <div class="row">
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.Item1[0].MenuName)
+                                <input type="text" name="menu_name" class = "form-control" placeholder = "Menu Name" value="@ViewBag.menu_name"/>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.LabelFor(model => model.Item1[0].MenuUrl)
+                                <input type="text" name="menu_url" class="form-control" placeholder="Menu URL" value="@ViewBag.menu_url"/>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn bg-gradient-dark sender-button mt-4" id="fetch">Search</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="table-responsive mb-2">
                         <table class="table align-items-center mb-0 tblmanage table-striped table-bordered mt-2">
                             <thead>

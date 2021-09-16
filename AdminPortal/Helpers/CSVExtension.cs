@@ -15,22 +15,42 @@ namespace AdminPortal.Helpers
         private static string mobNumber;
         private static IDictionary<string, int> cols = new Dictionary<string, int>();
         
-        public static List<string> getDataFromExcel(string path) 
+        public static void getDataFromExcel(string path, out List<string> list) 
         {
-            List<string> l = new List<string>();
+            list = new List<string>();
             using (XLWorkbook excel = new XLWorkbook(path)) 
             {
                 IXLWorksheet xLWorksheet = excel.Worksheet(1);
                 foreach (IXLRow row in xLWorksheet.RowsUsed()) 
                 {
-                    mobNumber = row.Cell(1).Value.ToString() != null ? row.Cell(1).Value.ToString() : "";
-                    if (!l.Contains(row.Cell(1).Value.ToString())) 
+                    if (Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string validRes))
                     {
-                        l.Add(mobNumber);
+                        if (!list.Contains(validRes))
+                        {
+                            list.Add(validRes);
+                        }
                     }
                 }
             }
-            return l;
+        }
+
+        public static void getContactsFromCSV(string path, out List<string> list)
+        {
+            list = new List<string>();
+            list.Clear();
+
+            DataTable datatable = CSVLibraryAK.CSVLibraryAK.Import(path, false);
+
+            foreach (DataRow data in datatable.Rows)
+            {
+                if (Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string validRes))
+                {
+                    if (!list.Contains(validRes))
+                    {
+                        list.Add(validRes);
+                    }
+                }
+            }
         }
 
         public static bool getDataFromExcel1(string path,string msgdata1,out IDictionary<string, string> list)
@@ -56,7 +76,7 @@ namespace AdminPortal.Helpers
                 foreach (IXLRow row in xLWorksheet.RowsUsed()) 
                 {
                     string msgdata = msgdata1;
-                    string mobNumber;
+                    string mobNumber = "";
                     string cellValue;
 
                     while (msgdata.IndexOf('$') > 0)
@@ -70,7 +90,10 @@ namespace AdminPortal.Helpers
                         if (cols.ContainsKey(column))
                         {
                             column = cols[column].ToString();
-                            mobNumber = row.Cell(1).Value.ToString() != null ? row.Cell(1).Value.ToString(): "";
+
+                            if (Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string validRes))
+                                mobNumber = validRes;
+
                             cellValue = row.Cell(column).Value.ToString() != null ? row.Cell(column).Value.ToString() : "";
                             nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
 
@@ -107,7 +130,7 @@ namespace AdminPortal.Helpers
             cols.Add("I", 8);
             cols.Add("J", 9);
 
-            string mobNumber;
+            
             string cellValue = "";
             int colNum;
 
@@ -129,7 +152,10 @@ namespace AdminPortal.Helpers
                         if (cols.ContainsKey(column))
                         {
                             colNum = cols[column];
-                            mobNumber = data.ItemArray[0].ToString() != null ? data.ItemArray[0].ToString() : "";
+
+                            if (Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string validRes))
+                                mobNumber = validRes;
+
                             cellValue = data.ItemArray[colNum].ToString() != null ? data.ItemArray[colNum].ToString() : "";
 
                             nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
@@ -155,5 +181,6 @@ namespace AdminPortal.Helpers
  
             return true;
         }
+
     }
 }

@@ -15,33 +15,24 @@ namespace AdminPortal.Controllers
         CommonProcessing c = new CommonProcessing();
         List<GroupMasterModel> groups;
         // GET: Users
-        public ActionResult Index()
+        public ActionResult Index(int Id = 1, FormCollection collection = null)
         {
             List<UserModel> userModel = new List<UserModel>();
             List<Pagination> pagination = new List<Pagination>();
-            var pageNum = 0;
-            var search = "";
-            int userId = Convert.ToInt32(Session["UserId"]);
+
+            ViewBag.pageNumber = Id;
+            ViewBag.username = collection["username"];
+            ViewBag.email = collection["email"];
+            ViewBag.user_mobile = collection["user_mobile"];
 
             try
             {
-                search = (Server.UrlEncode(HttpContext.Request.QueryString["search"]) != null) ? Server.UrlEncode(HttpContext.Request.QueryString["search"]) : "";
-                if (Server.UrlEncode(HttpContext.Request.QueryString["page"]) != null)
-                {
-                    pageNum = Convert.ToInt32(Server.UrlEncode(HttpContext.Request.QueryString["page"]));
-                }
-                else
-                {
-                    pageNum = 1;
-                }
-
-                UserProcessing.GetUsers(pageNum, search, out userModel, out pagination, userId);
-                ViewBag.search = search;
+                UserProcessing.GetUsers(Id, collection["username"], collection["email"], collection["user_mobile"], out userModel, out pagination, Convert.ToInt32(Session["UserId"]));
+                
                 return View(Tuple.Create(userModel, pagination));
             }
             catch (Exception ex)
             {
-                ViewBag.search = search;
                 return View(Tuple.Create(userModel, pagination));
             }
         }

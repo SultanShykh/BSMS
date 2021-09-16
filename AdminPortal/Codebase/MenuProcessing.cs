@@ -9,12 +9,12 @@ namespace AdminPortal.Models
     public class MenuProcessing
     {
         static dynamic AppDB = Database.OpenNamedConnection("MainDB");
-        public static void GetMenu(int pageNum, string search, out List<MenuModel> result, out List<Pagination> pagination)
+        public static void GetMenu(int pageNum, string menu_name, string menu_url, out List<MenuModel> result, out List<Pagination> pagination)
         {
             result = new List<MenuModel>();
             pagination = new List<Pagination>();
 
-            dynamic Records = AppDB.COR_USP_GetMenu(pageNum,search);
+            dynamic Records = AppDB.COR_USP_GetMenu(pageNum, menu_name, menu_url);
 
             if (Records.FirstOrDefault() != null)
             {

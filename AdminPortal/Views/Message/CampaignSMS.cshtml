@@ -196,20 +196,23 @@
                     url: "/Message/FetchContacts",
                     type: "POST",
                     data: fileData,
+                    beforeSend: function () {
+                        ShowDivSuccess1("Please Wait fetching contacts");
+                    },
                     success: function (data) {
                         contacts = "";
                         if (data.status == true) {
+                            ShowDivSuccess("Done");
                             $(data.message).each(function (key, val) {
                                 contacts += val + ',\n';
                             });
                             $('#receiver').val(contacts);
+
                         }
                         else
                         {
                             ShowDivError(data.message);
                         }
-                    },
-                    error: function () {
                     },
                     cache: false,
                     contentType: false,

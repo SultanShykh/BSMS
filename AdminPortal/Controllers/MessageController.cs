@@ -65,7 +65,6 @@ namespace AdminPortal.Controllers
             return Json(new { status = true, message = "sent successfully"});
         }
 
-        [HttpGet]
         public ActionResult CampaignSMS()
         {
             UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
@@ -87,20 +86,24 @@ namespace AdminPortal.Controllers
             campaign.user_id = Convert.ToInt32(Session["userid"]);
             var validRes = "";
 
-                foreach (var v in numbers)
-                {
-                    if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true)
-                        validRes += validNum + ',';
-                }
-                try
-                {
-                    campaign.receiver = validRes;
-                    m.createCampaign(campaign);
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { status = false, message = "server error" });
-                } 
+            foreach (var v in numbers)
+            {
+                if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true)
+                    validRes += validNum + ',';
+            }
+            try
+            {
+                campaign.receiver = validRes;
+                //for () 
+                //{
+
+                //}
+                m.createCampaign(campaign);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = "server error" });
+            } 
             
             return Json(new { status = true, message = "successfully sent" });
         }
@@ -108,7 +111,7 @@ namespace AdminPortal.Controllers
         [HttpPost]
         public ActionResult FetchContacts()
         {
-            var list = new List<string>();
+            List<string> list = new List<string>();
             if (Request.Files.Count > 0) 
             {
                 try
@@ -119,27 +122,17 @@ namespace AdminPortal.Controllers
                         HttpPostedFileBase file = files[i];
                         string fileName = Path.GetFileName(file.FileName);
                         string extension = Path.GetExtension(fileName);
+                        string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
 
-                        if (extension.Contains("csv") || extension.Contains("xls") || extension.Contains("xlsx"))
+                        if (extension == ".xls" || extension == ".xlsx")
                         {
-                            string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
-                            
-                            if (extension == ".xls" || extension == ".xlsx")
-                            {
-                                list = CSVExtension.getDataFromExcel(path);
-                            }
-                            else if (extension == ".csv")
-                            {
-                                DataTable datatable = CSVLibraryAK.CSVLibraryAK.Import(path, false);
-
-                                foreach (DataRow data in datatable.Rows)
-                                {
-                                    if (!list.Contains(data.ItemArray[0].ToString()))
-                                    {
-                                        list.Add(data.ItemArray[0].ToString());
-                                    }
-                                }
-                            }
+                            file.SaveAs(path);
+                            CSVExtension.getDataFromExcel(path, out list);
+                        }
+                        else if (extension == ".csv")
+                        {
+                            file.SaveAs(path);
+                            CSVExtension.getContactsFromCSV(path, out list);
                         }
                         else
                         {
@@ -189,7 +182,8 @@ namespace AdminPortal.Controllers
                         if (extension.Contains("csv") || extension.Contains("xls") || extension.Contains("xlsx"))
                         {
                             string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
-                            
+                            file.SaveAs(path);
+
                             if (extension == ".xls" || extension == ".xlsx")
                             {
                                 if (CSVExtension.getDataFromExcel1(path, campaign.msgdata, out IDictionary<string, string> list))

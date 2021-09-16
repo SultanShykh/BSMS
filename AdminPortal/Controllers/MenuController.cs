@@ -14,32 +14,23 @@ namespace AdminPortal.Controllers
     {
         public const string PARTIAL_VIEW_FOLDER = "~/Views/Partials/";
 
-        public ActionResult Index()
+        public ActionResult Index(int Id = 1, FormCollection collection = null)
         {
             List<MenuModel> result = new List<MenuModel>();
             List<Pagination> pagination = new List<Pagination>();
-            var pageNum = 0;
-            var search = "";
-           
+
+            ViewBag.pageNumber = Id;
+            ViewBag.menu_name = collection["menu_name"];
+            ViewBag.menu_url = collection["menu_url"];
+
             try
             {
-                search = (Server.UrlEncode(HttpContext.Request.QueryString["search"]) != null) ? Server.UrlEncode(HttpContext.Request.QueryString["search"]) : "";
-                if (Server.UrlEncode(HttpContext.Request.QueryString["page"]) != null)
-                {
-                    pageNum = Convert.ToInt32(Server.UrlEncode(HttpContext.Request.QueryString["page"]));
-                }
-                else
-                {
-                    pageNum = 1;
-                }
-
-                MenuProcessing.GetMenu(pageNum,search, out result, out pagination);
-                ViewBag.search = search;
+                MenuProcessing.GetMenu(Id, collection["menu_name"], collection["menu_url"], out result, out pagination);
+                
                 return View(Tuple.Create(result,pagination));
             }
             catch (Exception ex)
             {
-                ViewBag.search = search;
                 return View(Tuple.Create(result, pagination));
             }
         }

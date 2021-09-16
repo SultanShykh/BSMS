@@ -12,11 +12,11 @@ namespace AdminPortal.Codebase
     {
         static dynamic AppDB = Database.OpenNamedConnection("MainDB");
         
-        public static void GetUsers(int pageNum, string search, out List<UserModel> userModel, out List<Pagination> pagination, int userId) 
+        public static void GetUsers(int pageNum, string username, string email, string user_mobile, out List<UserModel> userModel, out List<Pagination> pagination, int userId) 
         {
             userModel = new List<UserModel>();
 
-            dynamic Records = AppDB.COR_getuserwithgroups2(currentPage: pageNum,search: search, userId: userId);
+            dynamic Records = AppDB.COR_getuserwithgroups2(currentPage: pageNum, username: username,email: email, mobile_number: user_mobile, userId: userId);
 
             if (Records.FirstOrDefault() != null)
             {
