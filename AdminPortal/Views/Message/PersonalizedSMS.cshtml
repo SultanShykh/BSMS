@@ -163,14 +163,13 @@
             $('.alert').fadeOut(3000);
         });
 
-        var form = $("#form");
         $('#msgdata').keyup(function () {
             var msgVal = $('#msgdata').val().length;
             $('#btnMessage').text(msgVal + ' characters / ' + Math.ceil(msgVal / 160) + ' SMS');
         });
 
+        var form = $("#form");
         form.submit(function (e) {
-            debugger
             var filename = $('#contactsFile').val();
             var subStr = filename.substr(filename.lastIndexOf('.') + 1);
 

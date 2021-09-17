@@ -179,7 +179,6 @@ namespace AdminPortal.Controllers
                 Session["GroupId"] = Id;
                 return Json("/Group/EditGroup", JsonRequestBehavior.AllowGet);
             }
-
         }
 
         [HttpGet]
@@ -197,7 +196,6 @@ namespace AdminPortal.Controllers
             try
             {
                 bool result = true;
-                bool flag = false;
                 GroupMasterModel Model = new GroupMasterModel();
                 GroupMenuModel groupMenu = new GroupMenuModel();
                 Model.id = Convert.ToInt32(model["GroupId"]);

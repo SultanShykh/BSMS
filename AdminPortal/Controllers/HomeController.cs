@@ -142,6 +142,5 @@ namespace AdminPortal.Controllers
             string path = Path.Combine(Server.MapPath("~/Media"), filename);
             return File(path, "image/jpg","bg.jpg");
         }
-
     } 
 }

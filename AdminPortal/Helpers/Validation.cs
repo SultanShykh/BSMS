@@ -9,9 +9,6 @@ namespace AdminPortal.Helpers
     {
         private static long l;
         private static char[] SpecialChars = new char[] { '-', ' ', '(', ')' };
-        private static string _prevStr;
-        private static string _str;
-        private static string _nextStr;
 
         public static bool ValidateRecipient(string Number, out string validNum)
         {
@@ -30,6 +27,7 @@ namespace AdminPortal.Helpers
 
                 Number = "923" + Number.Substring(Number.Length - 9);
                 validNum = Number;
+
                 return true;
             }
             catch (Exception)

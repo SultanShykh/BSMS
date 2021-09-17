@@ -85,9 +85,7 @@
                                     </div>
                                 </div>
                             </div>
-
                             <input type="submit" class="btn bg-gradient-dark" value="Send" id="btnSubmit" />
-                            <input type="button" class="btn bg-gradient-danger" value="Close" />
                         </fieldset>
                     </form>
                 </div>
@@ -211,6 +209,7 @@
                         }
                         else
                         {
+                            $('#receiver').val("");
                             ShowDivError(data.message);
                         }
                     },

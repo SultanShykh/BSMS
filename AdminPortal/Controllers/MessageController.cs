@@ -10,6 +10,7 @@ using AdminPortal.Models;
 using AdminPortal.Helpers;
 using System.Data;
 using CSVLibraryAK;
+using System.Diagnostics;
 
 namespace AdminPortal.Controllers
 {
@@ -18,6 +19,8 @@ namespace AdminPortal.Controllers
     {
         List<Masking> maskings;
         MessageProcessing m = new MessageProcessing();
+        List<string> list = new List<string>();
+
         public ActionResult QuickSMS()
         {
             UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
@@ -32,35 +35,32 @@ namespace AdminPortal.Controllers
             ViewBag.maskings = new SelectList(maskings, "id", "masking");
 
             ModelState.Remove("camp_name");
-
             if (!ModelState.IsValid)
                 return Json(new { status = false, message = "sending failed" });
 
-            var validRes = "";
-            var numbers = campaign.receiver.Split(',');
-            campaign.user_id = Convert.ToInt32(Session["userid"]);
-            
-                if (numbers.Count() > 0 && numbers.Count() <= 50)
-                {
-                    foreach (var v in numbers)
-                    {
-                        if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true) validRes += validNum + ',';
-                    }
-                    campaign.receiver = validRes;
+            if (campaign.receiver.Split(',').Count() < 0 || campaign.receiver.Split(',').Count() > 50) return Json(new { status = false, message = "please enter less than 50 or greater than 0 contacts" });
 
-                    try
-                    { 
-                        m.createMessage(campaign); 
-                    }
-                    catch (Exception ex) 
-                    {
-                        return Json(new { status = false, message = "sending failed server error" });
-                    }
-                }
-                else 
-                {
-                    return Json(new { status = false, message = "please enter less than 50 contacts" });
-                }
+            var validReceivers = "";
+
+            foreach (var v in campaign.receiver.Split(','))
+            {
+                if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true)
+                    validReceivers += validNum + ',';
+            }
+
+            if (validReceivers.Equals("")) return Json(new { status = false, message = "Please insert atleast 1 number" });
+
+            try
+            {
+                campaign.user_id = Convert.ToInt32(Session["userid"]);
+                campaign.receiver = validReceivers;
+
+                m.createMessage(campaign);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex });
+            }
 
             return Json(new { status = true, message = "sent successfully"});
         }
@@ -69,82 +69,85 @@ namespace AdminPortal.Controllers
         {
             UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
             ViewBag.maskings = new SelectList(maskings, "id", "masking");
+
             return View();
         }
 
         [HttpPost]
         public ActionResult CampaignSMS(Campaign campaign)
         {
-            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
-            ViewBag.maskings = new SelectList(maskings, "id", "masking");
+            list.Clear();
+            string validReceivers = "";
 
             ModelState.Remove("camp_time");
             if (!ModelState.IsValid)
                 return Json(new { status = false, message = "Fields are empty" }) ;
 
-            var numbers = campaign.receiver.Split(',');
-            campaign.user_id = Convert.ToInt32(Session["userid"]);
-            var validRes = "";
-
-            foreach (var v in numbers)
+            foreach (var v in campaign.receiver.Split(','))
             {
-                if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true)
-                    validRes += validNum + ',';
+                if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true) 
+                {
+                    if (!list.Contains(validNum)) 
+                    {
+                        list.Add(validNum);
+                        validReceivers += validNum + ',';
+                    }
+                }
             }
+
+            if (validReceivers.Equals("")) return Json(new { status = false, message = "Please insert atleast 1 number" });
+
+            campaign.user_id = Convert.ToInt32(Session["userid"]);
+
             try
             {
-                campaign.receiver = validRes;
-                //for () 
-                //{
-
-                //}
+                campaign.receiver = validReceivers;
                 m.createCampaign(campaign);
             }
             catch (Exception ex)
             {
-                return Json(new { status = false, message = "server error" });
-            } 
-            
+                return Json(new { status = false, message = ex });
+            }
+
             return Json(new { status = true, message = "successfully sent" });
         }
 
         [HttpPost]
         public ActionResult FetchContacts()
         {
-            List<string> list = new List<string>();
-            if (Request.Files.Count > 0) 
+            list.Clear();
+            if (Request.Files.Count == 1) 
             {
                 try
                 {
                     HttpFileCollectionBase files = Request.Files;
-                    for (int i = 0; i < files.Count; i++) 
-                    {
-                        HttpPostedFileBase file = files[i];
-                        string fileName = Path.GetFileName(file.FileName);
-                        string extension = Path.GetExtension(fileName);
-                        string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
+                    HttpPostedFileBase file = files[0];
 
-                        if (extension == ".xls" || extension == ".xlsx")
-                        {
-                            file.SaveAs(path);
-                            CSVExtension.getDataFromExcel(path, out list);
-                        }
-                        else if (extension == ".csv")
-                        {
-                            file.SaveAs(path);
-                            CSVExtension.getContactsFromCSV(path, out list);
-                        }
-                        else
-                        {
-                            return Json(new { status = false, message = "Please attach csv, xls or xlsx files" });
-                        }
+                    string fileName = Path.GetFileName(file.FileName);
+                    string extension = Path.GetExtension(fileName);
+                    string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
+
+                    if (extension == ".xls" || extension == ".xlsx")
+                    {
+                        file.SaveAs(path);
+                        if (!CSVExtension.geContactsFromExcel(path, out list)) return Json(new { status = false, message = "Empty / corrupt File" }); ;
+                    }
+                    else if (extension == ".csv")
+                    {
+                        file.SaveAs(path);
+                        if (!CSVExtension.getContactsFromCSV(path, out list)) return Json(new { status = false, message = "Empty / corrupt File" });
+                    }
+                    else
+                    {
+                        return Json(new { status = false, message = "Please attach csv, xls or xlsx files" });
                     }
                 }
                 catch (Exception ex) 
                 {
-                    return Json(new { status = false, message = "Corrupt File" });
+                    return Json(new { status = false, message = ex });
                 }
             }
+
             return Json(new { status = true, message = list });
         }
 
@@ -165,80 +168,82 @@ namespace AdminPortal.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            if (Request.Files.Count > 0)
+            if (Request.Files.Count == 1)
             {
                 try
                 {
                     string numbers = "";
                     string msg = "";
                     HttpFileCollectionBase files = Request.Files;
+                    HttpPostedFileBase file = files[0];
 
-                    for (int i = 0; i < files.Count; i++)
+                    string fileName = Path.GetFileName(file.FileName);
+                    string extension = Path.GetExtension(fileName);
+                    string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
+                        
+                    if (extension == ".xls" || extension == ".xlsx")
                     {
-                        HttpPostedFileBase file = files[i];
-                        string fileName = Path.GetFileName(file.FileName);
-                        string extension = Path.GetExtension(fileName);
-
-                        if (extension.Contains("csv") || extension.Contains("xls") || extension.Contains("xlsx"))
+                        file.SaveAs(path);
+                        if (CSVExtension.getDataFromExcel(path, campaign.msgdata, out IDictionary<string, string> list))
                         {
-                            string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
-                            file.SaveAs(path);
-
-                            if (extension == ".xls" || extension == ".xlsx")
+                            foreach (KeyValuePair<string, string> keyVal in list)
                             {
-                                if (CSVExtension.getDataFromExcel1(path, campaign.msgdata, out IDictionary<string, string> list))
-                                {
-                                    foreach (KeyValuePair<string, string> keyVal in list)
-                                    {
-                                        numbers += keyVal.Key;
-                                        msg += keyVal.Value;
-                                    }
-                                }
-                                else
-                                {
-                                    ViewBag.result = "Corrupt File";
-                                    ViewBag.status = "danger";
-                                    return View();
-                                }
-
-                                campaign.receiver = numbers;
-                                campaign.msgdata = msg;
-                            }
-                            else if (extension == ".csv")
-                            {
-                                if (CSVExtension.getDataFromCSV(path, campaign.msgdata, out IDictionary<string, string> list))
-                                {
-                                    foreach (KeyValuePair<string, string> keyVal in list)
-                                    {
-                                        numbers += keyVal.Key + ",";
-                                        msg += keyVal.Value + ",";
-                                    }
-                                }
-                                else
-                                {
-                                    ViewBag.result = "Corrupt File";
-                                    ViewBag.status = "danger";
-                                    return View();
-                                }
-
-                                campaign.receiver = numbers;
-                                campaign.msgdata = msg;
+                                numbers += keyVal.Key;
+                                msg += keyVal.Value;
                             }
                         }
-                        else 
+                        else
                         {
-                            ViewBag.result = "uploaded file must be in csv, xls or xlsx format";
+                            ViewBag.result = "Empty / Corrupt File";
                             ViewBag.status = "danger";
                             return View();
                         }
-                        
+
+                        campaign.receiver = numbers;
+                        campaign.msgdata = msg;
+                    }
+                    else if (extension == ".csv")
+                    {
+                        file.SaveAs(path);
+                        if (CSVExtension.getDataFromCSV(path, campaign.msgdata, out IDictionary<string, string> list))
+                        {
+                            foreach (KeyValuePair<string, string> keyVal in list)
+                            {
+                                numbers += keyVal.Key + ",";
+                                msg += keyVal.Value + ",";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.result = "Empty / Corrupt File";
+                            ViewBag.status = "danger";
+                            return View();
+                        }
+
+                        campaign.receiver = numbers;
+                        campaign.msgdata = msg;
+                    }
+                    else
+                    {
+                        ViewBag.result = "Please attach csv, xls or xlsx files";
+                        ViewBag.status = "danger";
+                        return View();
                     }
                 }
                 catch (Exception ex)
                 {
-
+                    ViewBag.result = ex;
+                    ViewBag.status = "danger";
+                    return View();
                 }
             }
+            else
+            {
+                ViewBag.result = "Please upload single file only";
+                ViewBag.status = "danger";
+                return View();
+            }
+
             ViewBag.result = "successfully sent";
             ViewBag.status = "success";
             return View();

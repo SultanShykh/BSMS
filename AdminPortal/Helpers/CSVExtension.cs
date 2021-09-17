@@ -15,50 +15,63 @@ namespace AdminPortal.Helpers
         private static string mobNumber;
         private static IDictionary<string, int> cols = new Dictionary<string, int>();
         
-        public static void getDataFromExcel(string path, out List<string> list) 
-        {
-            list = new List<string>();
-            using (XLWorkbook excel = new XLWorkbook(path)) 
-            {
-                IXLWorksheet xLWorksheet = excel.Worksheet(1);
-                foreach (IXLRow row in xLWorksheet.RowsUsed()) 
-                {
-                    if (Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string validRes))
-                    {
-                        if (!list.Contains(validRes))
-                        {
-                            list.Add(validRes);
-                        }
-                    }
-                }
-            }
-        }
-
-        public static void getContactsFromCSV(string path, out List<string> list)
+        public static bool geContactsFromExcel(string path, out List<string> list) 
         {
             list = new List<string>();
             list.Clear();
 
-            DataTable datatable = CSVLibraryAK.CSVLibraryAK.Import(path, false);
-
-            foreach (DataRow data in datatable.Rows)
+            try
             {
-                if (Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string validRes))
+                using (XLWorkbook excel = new XLWorkbook(path))
                 {
-                    if (!list.Contains(validRes))
+                    IXLWorksheet xLWorksheet = excel.Worksheet(1);
+                    foreach (IXLRow row in xLWorksheet.RowsUsed())
                     {
-                        list.Add(validRes);
+                        if (Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string validRes))
+                            if (!list.Contains(validRes)) list.Add(validRes);
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public static bool getDataFromExcel1(string path,string msgdata1,out IDictionary<string, string> list)
+        public static bool getContactsFromCSV(string path, out List<string> list)
         {
-            cols.Clear();
+            list = new List<string>();
+            list.Clear();
+
+            try
+            {
+                DataTable datatable = CSVLibraryAK.CSVLibraryAK.Import(path, false);
+
+                foreach (DataRow data in datatable.Rows)
+                {
+                    if (Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string validRes))
+                        if (!list.Contains(validRes)) list.Add(validRes);
+                }
+            }
+            catch (Exception ex) 
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool getDataFromExcel(string path,string msgdata1,out IDictionary<string, string> list)
+        {
             list = new Dictionary<string, string>();
+            int _endIndex;
+            string msgdata = msgdata1;
+            string mobNumber = "";
+            string cellValue;
+
             list.Clear();
-            
+            cols.Clear();
+
             cols.Add("B", 2);
             cols.Add("C", 3);
             cols.Add("D", 4);
@@ -69,47 +82,49 @@ namespace AdminPortal.Helpers
             cols.Add("I", 9);
             cols.Add("J", 10);
 
-            using (XLWorkbook excel = new XLWorkbook(path))
+            try
             {
-                IXLWorksheet xLWorksheet = excel.Worksheet(1);
-
-                foreach (IXLRow row in xLWorksheet.RowsUsed()) 
+                using (XLWorkbook excel = new XLWorkbook(path))
                 {
-                    string msgdata = msgdata1;
-                    string mobNumber = "";
-                    string cellValue;
+                    IXLWorksheet xLWorksheet = excel.Worksheet(1);
 
-                    while (msgdata.IndexOf('$') > 0)
+                    foreach (IXLRow row in xLWorksheet.RowsUsed())
                     {
-                        prevStr = msgdata.Substring(0, msgdata.IndexOf('$'));
-
-                        int _endIndex = msgdata.IndexOf('$', msgdata.IndexOf('$') + 1);
-
-                        column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim();
-
-                        if (cols.ContainsKey(column))
+                        while (msgdata.IndexOf('$') > 0)
                         {
-                            column = cols[column].ToString();
+                            prevStr = msgdata.Substring(0, msgdata.IndexOf('$'));
 
-                            if (Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string validRes))
-                                mobNumber = validRes;
+                            _endIndex = msgdata.IndexOf('$', msgdata.IndexOf('$') + 1);
 
-                            cellValue = row.Cell(column).Value.ToString() != null ? row.Cell(column).Value.ToString() : "";
-                            nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
+                            column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim();
 
-                            msgdata = prevStr + "" + cellValue + "" + nextStr;
-
-                            if (!list.ContainsKey(mobNumber))
+                            if (cols.ContainsKey(column))
                             {
-                                list.Add(mobNumber, msgdata);
-                            }
-                            else
-                            {
-                                list[mobNumber] = msgdata;
+                                column = cols[column].ToString();
+
+                                if (Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string validRes)) mobNumber = validRes;
+
+                                cellValue = row.Cell(column).Value.ToString() != null ? row.Cell(column).Value.ToString() : "";
+                                nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
+
+                                msgdata = prevStr + "" + cellValue + "" + nextStr;
+
+                                if (!list.ContainsKey(mobNumber))
+                                {
+                                    list.Add(mobNumber, msgdata);
+                                }
+                                else
+                                {
+                                    list[mobNumber] = msgdata;
+                                }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception ex) 
+            {
+                return false;
             }
             
             return true;
@@ -117,9 +132,15 @@ namespace AdminPortal.Helpers
 
         public static bool getDataFromCSV(string path, string msgdata1, out IDictionary<string, string> list)
         {
-            cols.Clear();
             list = new Dictionary<string, string>();
+            string cellValue = "";
+            int colNum;
+            int _endIndex;
+            string msgdata = msgdata1;
+
             list.Clear();
+            cols.Clear();
+            
             cols.Add("B", 1);
             cols.Add("C", 2);
             cols.Add("D", 3);
@@ -130,31 +151,25 @@ namespace AdminPortal.Helpers
             cols.Add("I", 8);
             cols.Add("J", 9);
 
-            
-            string cellValue = "";
-            int colNum;
-
             try
             {
                 DataTable datatable = CSVLibraryAK.CSVLibraryAK.Import(path, false);
 
                 foreach (DataRow data in datatable.Rows)
                 {
-                    string msgdata = msgdata1;
                     while (msgdata.IndexOf('$') > 0)
                     {
                         prevStr = msgdata.Substring(0, msgdata.IndexOf('$'));
 
-                        int _endIndex = msgdata.IndexOf('$', msgdata.IndexOf('$') + 1);
+                        _endIndex = msgdata.IndexOf('$', msgdata.IndexOf('$') + 1);
 
-                        column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim();
+                        column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim(' ');
 
                         if (cols.ContainsKey(column))
                         {
                             colNum = cols[column];
 
-                            if (Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string validRes))
-                                mobNumber = validRes;
+                            if (Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string validRes)) mobNumber = validRes;
 
                             cellValue = data.ItemArray[colNum].ToString() != null ? data.ItemArray[colNum].ToString() : "";
 
