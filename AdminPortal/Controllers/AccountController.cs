@@ -28,7 +28,7 @@ namespace AdminPortal.Controllers
             {
                 var user = ac.UserLogin(userModel.username, userModel.password).FirstOrDefault();
                 string message = string.Empty;
-                UserModel u = user; ;
+                UserModel u = user;
                 switch (user.Response)
                 {
                     case -1:

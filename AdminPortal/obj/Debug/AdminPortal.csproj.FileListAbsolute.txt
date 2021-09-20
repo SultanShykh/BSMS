@@ -181,4 +181,3 @@ D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CoreCompileInput
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CopyComplete
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.dll
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.pdb
-D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache

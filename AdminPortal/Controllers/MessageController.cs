@@ -11,6 +11,7 @@ using AdminPortal.Helpers;
 using System.Data;
 using CSVLibraryAK;
 using System.Diagnostics;
+using System.Data.SqlClient;
 
 namespace AdminPortal.Controllers
 {
@@ -20,6 +21,8 @@ namespace AdminPortal.Controllers
         List<Masking> maskings;
         MessageProcessing m = new MessageProcessing();
         List<string> list = new List<string>();
+        SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+        DataTable dt = new DataTable();
 
         public ActionResult QuickSMS()
         {
@@ -38,7 +41,8 @@ namespace AdminPortal.Controllers
             if (!ModelState.IsValid)
                 return Json(new { status = false, message = "sending failed" });
 
-            if (campaign.receiver.Split(',').Count() < 0 || campaign.receiver.Split(',').Count() > 50) return Json(new { status = false, message = "please enter less than 50 or greater than 0 contacts" });
+            if (campaign.receiver.Split(',').Count() < 0 || campaign.receiver.Split(',').Count() > 50) 
+                return Json(new { status = false, message = "please enter less than 50 or greater than 0 contacts" });
 
             var validReceivers = "";
 
@@ -55,7 +59,7 @@ namespace AdminPortal.Controllers
                 campaign.user_id = Convert.ToInt32(Session["userid"]);
                 campaign.receiver = validReceivers;
 
-                m.createMessage(campaign);
+                m.COR_WEB_createMessage(campaign);
             }
             catch (Exception ex)
             {
@@ -76,36 +80,86 @@ namespace AdminPortal.Controllers
         [HttpPost]
         public ActionResult CampaignSMS(Campaign campaign)
         {
-            list.Clear();
-            string validReceivers = "";
+            dt.Clear();
+            dt.Columns.Add(new DataColumn("camp_id", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("user_id", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("sender", typeof(string)));
+            dt.Columns.Add(new DataColumn("receiver", typeof(string)));
+            dt.Columns.Add(new DataColumn("status", typeof(bool)));
+            dt.Columns.Add(new DataColumn("route", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("cost", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("senttime", typeof(DateTime)));
+            dt.Columns.Add(new DataColumn("smstype", typeof(string)));
+            dt.Columns.Add(new DataColumn("operator", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("isswallow", typeof(bool)));
+            dt.Columns.Add(new DataColumn("isotpallow", typeof(bool)));
+            dt.Columns.Add(new DataColumn("RemoteIP", typeof(string)));
+            dt.Columns.Add(new DataColumn("CurrentDateTime", typeof(DateTime)));
 
             ModelState.Remove("camp_time");
             if (!ModelState.IsValid)
                 return Json(new { status = false, message = "Fields are empty" }) ;
 
+            int count = 0;
+            campaign.user_id = Convert.ToInt32(Session["UserId"]);
+
             foreach (var v in campaign.receiver.Split(','))
             {
-                if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true) 
+                if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true)
                 {
-                    if (!list.Contains(validNum)) 
+                    DataRow dr = dt.NewRow();
+                    
+                    if (dr["receiver"].ToString() != validNum)
                     {
-                        list.Add(validNum);
-                        validReceivers += validNum + ',';
+                        dr["camp_id"] = 1;
+                        dr["user_id"] = campaign.user_id;
+                        dr["sender"] = campaign.sender;
+                        dr["receiver"] = validNum;
+                        dr["status"] = 1;
+                        dr["route"] = 4;
+                        dr["cost"] = 0;
+                        dr["senttime"] = "2021-08-31";
+                        dr["smstype"] = campaign.camp_smstype;
+                        dr["operator"] = 4;
+                        dr["isswallow"] = 1;
+                        dr["isotpallow"] = 1;
+                        dr["RemoteIP"] = "";
+                        dr["CurrentDateTime"] = DateTime.Now;
+                        dt.Rows.Add(dr);
+                        ++count;
                     }
                 }
             }
-
-            if (validReceivers.Equals("")) return Json(new { status = false, message = "Please insert atleast 1 number" });
-
-            campaign.user_id = Convert.ToInt32(Session["userid"]);
-
             try
             {
-                campaign.receiver = validReceivers;
-                m.createCampaign(campaign);
+                var result = m.COR_WEB_createCampaign(campaign);
+                var camp_id = result.camp_id;
+
+                con.Open();
+                SqlBulkCopy sqlbulk = new SqlBulkCopy(con);
+                sqlbulk.DestinationTableName = "outbox_Camp";
+                sqlbulk.ColumnMappings.Add("camp_id", "camp_id");
+                sqlbulk.ColumnMappings.Add("user_id", "user_id");
+                sqlbulk.ColumnMappings.Add("sender", "sender");
+                sqlbulk.ColumnMappings.Add("receiver", "receiver");
+                sqlbulk.ColumnMappings.Add("status", "status");
+                sqlbulk.ColumnMappings.Add("route", "route");
+                sqlbulk.ColumnMappings.Add("cost", "cost");
+                sqlbulk.ColumnMappings.Add("senttime", "senttime");
+                sqlbulk.ColumnMappings.Add("smstype", "smstype");
+                sqlbulk.ColumnMappings.Add("operator", "operator");
+                sqlbulk.ColumnMappings.Add("isswallow", "isswallow");
+                sqlbulk.ColumnMappings.Add("isotpallow", "isotpallow");
+                sqlbulk.ColumnMappings.Add("RemoteIP", "RemoteIP");
+                sqlbulk.ColumnMappings.Add("CurrentDateTime", "CurrentDateTime");
+                sqlbulk.WriteToServer(dt);
+                sqlbulk.Close();
+                con.Close();
+                m.COR_WEB_updateCampaign(camp_id,count);
             }
             catch (Exception ex)
             {
+
                 return Json(new { status = false, message = ex });
             }
 
