@@ -21,7 +21,7 @@ namespace AdminPortal.Controllers
         List<Masking> maskings;
         MessageProcessing m = new MessageProcessing();
         List<string> list = new List<string>();
-        SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString);
+        
         DataTable dt = new DataTable();
 
         public ActionResult QuickSMS()
@@ -34,9 +34,6 @@ namespace AdminPortal.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult QuickSMS(Campaign campaign)
         {
-            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
-            ViewBag.maskings = new SelectList(maskings, "id", "masking");
-
             ModelState.Remove("camp_name");
             if (!ModelState.IsValid)
                 return Json(new { status = false, message = "sending failed" });
@@ -80,6 +77,10 @@ namespace AdminPortal.Controllers
         [HttpPost]
         public ActionResult CampaignSMS(Campaign campaign)
         {
+            ModelState.Remove("camp_time");
+            if (!ModelState.IsValid)
+                return Json(new { status = false, message = "Fields are empty" }) ;
+
             dt.Clear();
             dt.Columns.Add(new DataColumn("camp_id", typeof(Int32)));
             dt.Columns.Add(new DataColumn("user_id", typeof(Int32)));
@@ -96,70 +97,74 @@ namespace AdminPortal.Controllers
             dt.Columns.Add(new DataColumn("RemoteIP", typeof(string)));
             dt.Columns.Add(new DataColumn("CurrentDateTime", typeof(DateTime)));
 
-            ModelState.Remove("camp_time");
-            if (!ModelState.IsValid)
-                return Json(new { status = false, message = "Fields are empty" }) ;
-
-            int count = 0;
-            campaign.user_id = Convert.ToInt32(Session["UserId"]);
-
-            foreach (var v in campaign.receiver.Split(','))
+            try 
             {
-                if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true)
-                {
-                    DataRow dr = dt.NewRow();
-                    
-                    if (dr["receiver"].ToString() != validNum)
-                    {
-                        dr["camp_id"] = 1;
-                        dr["user_id"] = campaign.user_id;
-                        dr["sender"] = campaign.sender;
-                        dr["receiver"] = validNum;
-                        dr["status"] = 1;
-                        dr["route"] = 4;
-                        dr["cost"] = 0;
-                        dr["senttime"] = "2021-08-31";
-                        dr["smstype"] = campaign.camp_smstype;
-                        dr["operator"] = 4;
-                        dr["isswallow"] = 1;
-                        dr["isotpallow"] = 1;
-                        dr["RemoteIP"] = "";
-                        dr["CurrentDateTime"] = DateTime.Now;
-                        dt.Rows.Add(dr);
-                        ++count;
-                    }
-                }
-            }
-            try
-            {
+                int count = 0;
+                campaign.user_id = Convert.ToInt32(Session["UserId"]);
+
                 var result = m.COR_WEB_createCampaign(campaign);
                 var camp_id = result.camp_id;
 
-                con.Open();
-                SqlBulkCopy sqlbulk = new SqlBulkCopy(con);
-                sqlbulk.DestinationTableName = "outbox_Camp";
-                sqlbulk.ColumnMappings.Add("camp_id", "camp_id");
-                sqlbulk.ColumnMappings.Add("user_id", "user_id");
-                sqlbulk.ColumnMappings.Add("sender", "sender");
-                sqlbulk.ColumnMappings.Add("receiver", "receiver");
-                sqlbulk.ColumnMappings.Add("status", "status");
-                sqlbulk.ColumnMappings.Add("route", "route");
-                sqlbulk.ColumnMappings.Add("cost", "cost");
-                sqlbulk.ColumnMappings.Add("senttime", "senttime");
-                sqlbulk.ColumnMappings.Add("smstype", "smstype");
-                sqlbulk.ColumnMappings.Add("operator", "operator");
-                sqlbulk.ColumnMappings.Add("isswallow", "isswallow");
-                sqlbulk.ColumnMappings.Add("isotpallow", "isotpallow");
-                sqlbulk.ColumnMappings.Add("RemoteIP", "RemoteIP");
-                sqlbulk.ColumnMappings.Add("CurrentDateTime", "CurrentDateTime");
-                sqlbulk.WriteToServer(dt);
-                sqlbulk.Close();
-                con.Close();
-                m.COR_WEB_updateCampaign(camp_id,count);
+                foreach (var v in campaign.receiver.Split(','))
+                {
+                    if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true)
+                    {
+                        DataRow dr = dt.NewRow();
+                    
+                        if (dr["receiver"].ToString() != validNum)
+                        {
+                            dr["camp_id"] = camp_id;
+                            dr["user_id"] = campaign.user_id;
+                            dr["sender"] = campaign.sender;
+                            dr["receiver"] = validNum;
+                            dr["status"] = 1;
+                            dr["route"] = 4;
+                            dr["cost"] = 0;
+                            dr["senttime"] = "2021-08-31";
+                            dr["smstype"] = campaign.camp_smstype;
+                            dr["operator"] = 4;
+                            dr["isswallow"] = 1;
+                            dr["isotpallow"] = 1;
+                            dr["RemoteIP"] = "";
+                            dr["CurrentDateTime"] = DateTime.Now;
+                            dt.Rows.Add(dr);
+                            ++count;
+                        }
+                    }
+                }
+
+                using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString)) 
+                {
+                    using (SqlBulkCopy sqlbulk = new SqlBulkCopy(con)) 
+                    {
+                        sqlbulk.DestinationTableName = "outbox_Camp";
+                        sqlbulk.ColumnMappings.Add("camp_id", "camp_id");
+                        sqlbulk.ColumnMappings.Add("user_id", "user_id");
+                        sqlbulk.ColumnMappings.Add("sender", "sender");
+                        sqlbulk.ColumnMappings.Add("receiver", "receiver");
+                        sqlbulk.ColumnMappings.Add("status", "status");
+                        sqlbulk.ColumnMappings.Add("route", "route");
+                        sqlbulk.ColumnMappings.Add("cost", "cost");
+                        sqlbulk.ColumnMappings.Add("senttime", "senttime");
+                        sqlbulk.ColumnMappings.Add("smstype", "smstype");
+                        sqlbulk.ColumnMappings.Add("operator", "operator");
+                        sqlbulk.ColumnMappings.Add("isswallow", "isswallow");
+                        sqlbulk.ColumnMappings.Add("isotpallow", "isotpallow");
+                        sqlbulk.ColumnMappings.Add("RemoteIP", "RemoteIP");
+                        sqlbulk.ColumnMappings.Add("CurrentDateTime", "CurrentDateTime");
+
+                        con.Open();
+                        sqlbulk.WriteToServer(dt);
+                        sqlbulk.BatchSize = 5000;
+                        sqlbulk.Close();
+                        con.Close();
+                    }
+                }
+
+                m.COR_WEB_updateCampaign(camp_id, count);
             }
             catch (Exception ex)
             {
-
                 return Json(new { status = false, message = ex });
             }
 
@@ -184,7 +189,7 @@ namespace AdminPortal.Controllers
                     if (extension == ".xls" || extension == ".xlsx")
                     {
                         file.SaveAs(path);
-                        if (!CSVExtension.geContactsFromExcel(path, out list)) return Json(new { status = false, message = "Empty / corrupt File" }); ;
+                        if (!CSVExtension.geContactsFromExcel(path, out list)) return Json(new { status = false, message = "Empty / corrupt File" });
                     }
                     else if (extension == ".csv")
                     {
@@ -198,7 +203,7 @@ namespace AdminPortal.Controllers
                 }
                 catch (Exception ex) 
                 {
-                    return Json(new { status = false, message = ex });
+                    return Json(new { status = false, message = "Error while Fetching" });
                 }
             }
 
@@ -228,6 +233,7 @@ namespace AdminPortal.Controllers
                 {
                     string numbers = "";
                     string msg = "";
+                    string msgdata = campaign.msgdata;
                     HttpFileCollectionBase files = Request.Files;
                     HttpPostedFileBase file = files[0];
 
@@ -238,13 +244,44 @@ namespace AdminPortal.Controllers
                     if (extension == ".xls" || extension == ".xlsx")
                     {
                         file.SaveAs(path);
-                        if (CSVExtension.getDataFromExcel(path, campaign.msgdata, out IDictionary<string, string> list))
+                        
+                        campaign.msgdata = "";
+                        var result = m.COR_WEB_createCampaign(campaign);
+                        int camp_id = result.camp_id;
+                        campaign.msgdata = msgdata;
+
+                        if (CSVExtension.getDataFromExcel2(path, campaign.msgdata, out IDictionary<string, string> list,out DataTable dt, campaign, out int count, camp_id))
                         {
-                            foreach (KeyValuePair<string, string> keyVal in list)
+                            using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
-                                numbers += keyVal.Key;
-                                msg += keyVal.Value;
+                                using (SqlBulkCopy sqlbulk = new SqlBulkCopy(con))
+                                {
+                                    sqlbulk.DestinationTableName = "outbox";
+                                    sqlbulk.ColumnMappings.Add("camp_id", "camp_id");
+                                    sqlbulk.ColumnMappings.Add("user_id", "user_id");
+                                    sqlbulk.ColumnMappings.Add("sender", "sender");
+                                    sqlbulk.ColumnMappings.Add("receiver", "receiver");
+                                    sqlbulk.ColumnMappings.Add("msgdata", "msgdata");
+                                    sqlbulk.ColumnMappings.Add("status", "status");
+                                    sqlbulk.ColumnMappings.Add("route", "route");
+                                    sqlbulk.ColumnMappings.Add("cost", "cost");
+                                    sqlbulk.ColumnMappings.Add("senttime", "senttime");
+                                    sqlbulk.ColumnMappings.Add("smstype", "smstype");
+                                    sqlbulk.ColumnMappings.Add("operator", "operator");
+                                    sqlbulk.ColumnMappings.Add("isswallow", "isswallow");
+                                    sqlbulk.ColumnMappings.Add("isotpallow", "isotpallow");
+                                    sqlbulk.ColumnMappings.Add("RemoteIP", "RemoteIP");
+                                    sqlbulk.ColumnMappings.Add("CurrentDateTime", "CurrentDateTime");
+
+                                    con.Open();
+                                    sqlbulk.WriteToServer(dt);
+                                    sqlbulk.BatchSize = 5000;
+                                    sqlbulk.Close();
+                                    con.Close();
+                                }
                             }
+
+                            m.COR_WEB_updateCampaign(camp_id,count);
                         }
                         else
                         {
@@ -259,13 +296,44 @@ namespace AdminPortal.Controllers
                     else if (extension == ".csv")
                     {
                         file.SaveAs(path);
-                        if (CSVExtension.getDataFromCSV(path, campaign.msgdata, out IDictionary<string, string> list))
+
+                        campaign.msgdata = "";
+                        var result = m.COR_WEB_createCampaign(campaign);
+                        int camp_id = result.camp_id;
+                        campaign.msgdata = msgdata;
+                        
+                        if (CSVExtension.getDataFromCSV2(path, campaign.msgdata, out IDictionary<string,string> list, out DataTable dt,campaign ,out int count, camp_id))
                         {
-                            foreach (KeyValuePair<string, string> keyVal in list)
+                            using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
-                                numbers += keyVal.Key + ",";
-                                msg += keyVal.Value + ",";
+                                using (SqlBulkCopy sqlbulk = new SqlBulkCopy(con))
+                                {
+                                    sqlbulk.DestinationTableName = "outbox";
+                                    sqlbulk.ColumnMappings.Add("camp_id", "camp_id");
+                                    sqlbulk.ColumnMappings.Add("user_id", "user_id");
+                                    sqlbulk.ColumnMappings.Add("sender", "sender");
+                                    sqlbulk.ColumnMappings.Add("receiver", "receiver");
+                                    sqlbulk.ColumnMappings.Add("msgdata", "msgdata");
+                                    sqlbulk.ColumnMappings.Add("status", "status");
+                                    sqlbulk.ColumnMappings.Add("route", "route");
+                                    sqlbulk.ColumnMappings.Add("cost", "cost");
+                                    sqlbulk.ColumnMappings.Add("senttime", "senttime");
+                                    sqlbulk.ColumnMappings.Add("smstype", "smstype");
+                                    sqlbulk.ColumnMappings.Add("operator", "operator");
+                                    sqlbulk.ColumnMappings.Add("isswallow", "isswallow");
+                                    sqlbulk.ColumnMappings.Add("isotpallow", "isotpallow");
+                                    sqlbulk.ColumnMappings.Add("RemoteIP", "RemoteIP");
+                                    sqlbulk.ColumnMappings.Add("CurrentDateTime", "CurrentDateTime");
+
+                                    con.Open();
+                                    sqlbulk.WriteToServer(dt);
+                                    sqlbulk.BatchSize = 5000;
+                                    sqlbulk.Close();
+                                    con.Close();
+                                }
                             }
+
+                            m.COR_WEB_updateCampaign(camp_id, count);
                         }
                         else
                         {

@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using AdminPortal.Models;
+using ClosedXML.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,7 +13,6 @@ namespace AdminPortal.Helpers
         private static string prevStr;
         private static string column;
         private static string nextStr;
-        private static string mobNumber;
         private static IDictionary<string, int> cols = new Dictionary<string, int>();
         
         public static bool geContactsFromExcel(string path, out List<string> list) 
@@ -64,14 +64,10 @@ namespace AdminPortal.Helpers
         public static bool getDataFromExcel(string path,string msgdata1,out IDictionary<string, string> list)
         {
             list = new Dictionary<string, string>();
-            int _endIndex;
-            string msgdata = msgdata1;
-            string mobNumber = "";
             string cellValue;
 
             list.Clear();
             cols.Clear();
-
             cols.Add("B", 2);
             cols.Add("C", 3);
             cols.Add("D", 4);
@@ -90,32 +86,28 @@ namespace AdminPortal.Helpers
 
                     foreach (IXLRow row in xLWorksheet.RowsUsed())
                     {
+                        string msgdata = msgdata1;
                         while (msgdata.IndexOf('$') > 0)
                         {
-                            prevStr = msgdata.Substring(0, msgdata.IndexOf('$'));
-
-                            _endIndex = msgdata.IndexOf('$', msgdata.IndexOf('$') + 1);
-
-                            column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim();
+                            personalizedMessageString(msgdata);
 
                             if (cols.ContainsKey(column))
                             {
                                 column = cols[column].ToString();
-
-                                if (Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string validRes)) mobNumber = validRes;
+                                Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string mobile_number);
 
                                 cellValue = row.Cell(column).Value.ToString() != null ? row.Cell(column).Value.ToString() : "";
                                 nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
 
                                 msgdata = prevStr + "" + cellValue + "" + nextStr;
 
-                                if (!list.ContainsKey(mobNumber))
+                                if (!list.ContainsKey(mobile_number))
                                 {
-                                    list.Add(mobNumber, msgdata);
+                                    list.Add(mobile_number, msgdata);
                                 }
                                 else
                                 {
-                                    list[mobNumber] = msgdata;
+                                    list[mobile_number] = msgdata;
                                 }
                             }
                         }
@@ -135,8 +127,6 @@ namespace AdminPortal.Helpers
             list = new Dictionary<string, string>();
             string cellValue = "";
             int colNum;
-            int _endIndex;
-            string msgdata = msgdata1;
 
             list.Clear();
             cols.Clear();
@@ -157,33 +147,31 @@ namespace AdminPortal.Helpers
 
                 foreach (DataRow data in datatable.Rows)
                 {
+                    string msgdata = msgdata1;
+
                     while (msgdata.IndexOf('$') > 0)
                     {
-                        prevStr = msgdata.Substring(0, msgdata.IndexOf('$'));
-
-                        _endIndex = msgdata.IndexOf('$', msgdata.IndexOf('$') + 1);
-
-                        column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim(' ');
+                        personalizedMessageString(msgdata);
 
                         if (cols.ContainsKey(column))
                         {
                             colNum = cols[column];
 
-                            if (Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string validRes)) mobNumber = validRes;
+                            Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string mobile_number);
 
                             cellValue = data.ItemArray[colNum].ToString() != null ? data.ItemArray[colNum].ToString() : "";
 
                             nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
 
-                            if (!list.ContainsKey(mobNumber))
+                            msgdata = prevStr + "" + cellValue + "" + nextStr;
+
+                            if (!list.ContainsKey(mobile_number))
                             {
-                                msgdata = prevStr + "" + cellValue + "" + nextStr;
-                                list.Add(mobNumber, msgdata);
+                                list.Add(mobile_number, msgdata);
                             }
                             else
                             {
-                                msgdata = prevStr + "" + cellValue + "" + nextStr;
-                                list[mobNumber] = msgdata;
+                                list[mobile_number] = msgdata;
                             }
                         }
                     }
@@ -197,5 +185,220 @@ namespace AdminPortal.Helpers
             return true;
         }
 
+        public static void personalizedMessageString(string msgdata) 
+        {
+            prevStr = msgdata.Substring(0, msgdata.IndexOf('$'));
+
+            int _endIndex = msgdata.IndexOf('$', msgdata.IndexOf('$') + 1);
+
+            column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim(' ');
+        }
+
+
+        public static bool getDataFromExcel2(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt,Campaign campaign, out int count, int camp_id)
+        {
+            list = new Dictionary<string, string>();
+            dt = new DataTable();
+            string cellValue;
+            count = 0;
+
+            list.Clear();
+            cols.Clear();
+            cols.Add("B", 2);
+            cols.Add("C", 3);
+            cols.Add("D", 4);
+            cols.Add("E", 5);
+            cols.Add("F", 6);
+            cols.Add("G", 7);
+            cols.Add("H", 8);
+            cols.Add("I", 9);
+            cols.Add("J", 10);
+
+            makeColumns(dt);
+
+            try
+            {
+                using (XLWorkbook excel = new XLWorkbook(path))
+                {
+                    IXLWorksheet xLWorksheet = excel.Worksheet(1);
+
+                    foreach (IXLRow row in xLWorksheet.RowsUsed())
+                    {
+                        string msgdata = msgdata1;
+                        while (msgdata.IndexOf('$') > 0)
+                        {
+                            personalizedMessageString(msgdata);
+
+                            if (cols.ContainsKey(column))
+                            {
+                                column = cols[column].ToString();
+                                Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string mobile_number) ;
+                                    
+                                cellValue = row.Cell(column).Value.ToString() != null ? row.Cell(column).Value.ToString() : "";
+                                nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
+
+                                msgdata = prevStr + "" + cellValue + "" + nextStr;
+
+                                if (!list.ContainsKey(mobile_number))
+                                {
+                                    list.Add(mobile_number, msgdata);
+                                }
+                                else
+                                {
+                                    list[mobile_number] = msgdata;
+                                }
+                            }
+                        }
+                    }
+
+                    if (list.Count > 0)
+                    {
+                        foreach (KeyValuePair<string, string> keyVal in list) 
+                        {
+                            DataRow dr = dt.NewRow();
+
+                            dr["camp_id"] = camp_id;
+                            dr["user_id"] = campaign.user_id;
+                            dr["sender"] = campaign.sender;
+                            dr["receiver"] = keyVal.Key;
+                            dr["msgdata"] = keyVal.Value;
+                            dr["status"] = 1;
+                            dr["route"] = 4;
+                            dr["cost"] = 0;
+                            dr["senttime"] = "2021-08-31";
+                            dr["smstype"] = campaign.camp_smstype;
+                            dr["operator"] = 4;
+                            dr["isswallow"] = 1;
+                            dr["isotpallow"] = 1;
+                            dr["RemoteIP"] = "";
+                            dr["CurrentDateTime"] = DateTime.Now;
+                            dt.Rows.Add(dr);
+                            ++count;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool getDataFromCSV2(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt, Campaign campaign, out int count, int camp_id)
+        {
+            list = new Dictionary<string, string>();
+            string cellValue = "";
+            int colNum;
+            count = 0;
+
+            list.Clear();
+            cols.Clear();
+
+            cols.Add("B", 1);
+            cols.Add("C", 2);
+            cols.Add("D", 3);
+            cols.Add("E", 4);
+            cols.Add("F", 5);
+            cols.Add("G", 6);
+            cols.Add("H", 7);
+            cols.Add("I", 8);
+            cols.Add("J", 9);
+
+            dt = new DataTable(); 
+            makeColumns(dt);
+
+            try
+            {
+                DataTable datatable = CSVLibraryAK.CSVLibraryAK.Import(path, false);
+
+                foreach (DataRow data in datatable.Rows)
+                {
+                    string msgdata = msgdata1;
+
+                    while (msgdata.IndexOf('$') >= 0)
+                    {
+                        personalizedMessageString(msgdata);
+
+                        if (cols.ContainsKey(column))
+                        {
+                            colNum = cols[column];
+
+                            Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string mobile_number);
+
+                            cellValue = data.ItemArray[colNum].ToString() != null ? data.ItemArray[colNum].ToString() : "";
+
+                            nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
+
+                            msgdata = prevStr + "" + cellValue + "" + nextStr;
+
+                            if (!list.ContainsKey(mobile_number))
+                            {
+                                list.Add(mobile_number, msgdata);
+                            }
+                            else
+                            {
+                                list[mobile_number] = msgdata;
+                            }
+                        }
+                    }
+                }
+
+                if (list.Count > 0)
+                {
+                    foreach (KeyValuePair<string, string> keyVal in list)
+                    {
+                        DataRow dr = dt.NewRow();
+
+                        dr["camp_id"] = camp_id;
+                        dr["user_id"] = campaign.user_id;
+                        dr["sender"] = campaign.sender;
+                        dr["receiver"] = keyVal.Key;
+                        dr["msgdata"] = keyVal.Value;
+                        dr["status"] = 1;
+                        dr["route"] = 4;
+                        dr["cost"] = 0;
+                        dr["senttime"] = "2021-08-31";
+                        dr["smstype"] = campaign.camp_smstype;
+                        dr["operator"] = 4;
+                        dr["isswallow"] = 1;
+                        dr["isotpallow"] = 1;
+                        dr["RemoteIP"] = "";
+                        dr["CurrentDateTime"] = DateTime.Now;
+                        dt.Rows.Add(dr);
+                        ++count;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+
+        public static void makeColumns(DataTable dt) 
+        {
+            dt = new DataTable();
+            dt.Columns.Add(new DataColumn("camp_id", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("user_id", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("sender", typeof(string)));
+            dt.Columns.Add(new DataColumn("receiver", typeof(string)));
+            dt.Columns.Add(new DataColumn("msgdata", typeof(string)));
+            dt.Columns.Add(new DataColumn("status", typeof(bool)));
+            dt.Columns.Add(new DataColumn("route", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("cost", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("senttime", typeof(DateTime)));
+            dt.Columns.Add(new DataColumn("smstype", typeof(string)));
+            dt.Columns.Add(new DataColumn("operator", typeof(Int32)));
+            dt.Columns.Add(new DataColumn("isswallow", typeof(bool)));
+            dt.Columns.Add(new DataColumn("isotpallow", typeof(bool)));
+            dt.Columns.Add(new DataColumn("RemoteIP", typeof(string)));
+            dt.Columns.Add(new DataColumn("CurrentDateTime", typeof(DateTime)));
+        }
     }
 }

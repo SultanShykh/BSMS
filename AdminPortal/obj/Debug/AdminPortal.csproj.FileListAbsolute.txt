@@ -90,6 +90,8 @@ C:\Users\Sultan\source\repos\AdminPortal\AdminPortal\obj\Debug\AdminPortal.cspro
 C:\Users\Sultan\source\repos\AdminPortal\AdminPortal\obj\Debug\AdminPortal.dll
 C:\Users\Sultan\source\repos\AdminPortal\AdminPortal\obj\Debug\AdminPortal.pdb
 C:\Users\Sultan\source\repos\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache
+D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache
+D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CoreCompileInputs.cache
 D:\wwwroot\AdminPortal\AdminPortal\bin\AdminPortal.dll.config
 D:\wwwroot\AdminPortal\AdminPortal\bin\AdminPortal.dll
 D:\wwwroot\AdminPortal\AdminPortal\bin\AdminPortal.pdb
@@ -177,7 +179,6 @@ D:\wwwroot\AdminPortal\AdminPortal\bin\System.Web.WebPages.Razor.xml
 D:\wwwroot\AdminPortal\AdminPortal\bin\Newtonsoft.Json.xml
 D:\wwwroot\AdminPortal\AdminPortal\bin\Antlr3.Runtime.pdb
 D:\wwwroot\AdminPortal\AdminPortal\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CoreCompileInputs.cache
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CopyComplete
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.dll
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.pdb

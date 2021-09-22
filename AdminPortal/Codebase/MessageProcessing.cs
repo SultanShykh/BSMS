@@ -16,9 +16,9 @@ namespace AdminPortal.Codebase
             return result;
         }
 
-        public dynamic  COR_WEB_createCampaign(Campaign campaign)
+        public dynamic COR_WEB_createCampaign(Campaign campaign)
         {
-            var result = connection.COR_WEB_createCampaign(user_id: campaign.user_id, camp_name: campaign.camp_name, sender: campaign.sender, receiver: campaign.receiver, msgdata: campaign.msgdata, camp_time: campaign.camp_time).FirstOrDefault();
+            var result = connection.COR_WEB_createCampaign(user_id: campaign.user_id, camp_name: campaign.camp_name, sender: campaign.sender, msgdata: campaign.msgdata, camp_time: campaign.camp_time).FirstOrDefault();
             return result;
         }
 
