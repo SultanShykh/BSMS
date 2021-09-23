@@ -23,6 +23,7 @@ function CallAsyncService(url, Param, funSucc, Type, funError) {
                 if (data.status == true)
                 {
                     ShowDivSuccess(data.message);
+                    location.reload();
                 }
                 else
                 {
