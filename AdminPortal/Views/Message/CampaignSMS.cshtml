@@ -5,7 +5,6 @@
 @section style
 {
     @Styles.Render("~/Contents/stepform/style")
-
 }
 
 <div class="wizard-main">
@@ -18,7 +17,7 @@
                         if (ViewBag.result != null)
                         {
                             <div class="alert alert-dismissable alert-@ViewBag.status" style="background-color: @ViewBag.status">
-                                <p style="color: black">@ViewBag.result</p>
+                                <p style="color: white">@ViewBag.result</p>
                             </div>
                             <br />
                         }
@@ -177,10 +176,7 @@
     <script>
         $(document).ready(function () {
             $(".alert").fadeIn();
-            $('.alert').fadeOut(3000);
-
-            //var contactsCount = 0;
-            //var contacts = $('#receiver').val("");
+            $('.alert').fadeOut(5000);
 
             $('#sendNow').change(function () {
                 $('#scheduleMyCamp').hide();

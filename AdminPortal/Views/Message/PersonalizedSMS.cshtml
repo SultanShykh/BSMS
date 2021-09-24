@@ -100,7 +100,6 @@
                                     <button type="button" class="btn bg-gradient-dark" id="btnSave">Urdu</button>
                                     @Html.TextAreaFor(model => model.msgdata, new { @class = "form-control mb-2", placeholder = "Enter Message", rows = "5", cols = "68" })
                                     @Html.ValidationMessageFor(model => model.msgdata, "", new { @class = "text-danger" })
-                                    <span id="message" style="display :none;color: red !important;font-size: 10px;">Enter Maximum 50 characters</span><br />
                                     <button type="button" class="btn bg-gradient-dark" id="btnMessage">0 characters / 0 SMS Message</button>
                                 </div>
                             </div>
@@ -136,7 +135,7 @@
                             </div>
                             <div class="col-md-6 col-lg-6">
                                 <div class="form-group">
-                                    <input type="file" class="form-control mt-2" name="contactsFile" id="contactsFile" />
+                                    <input type="file" class="form-control mt-2" name="contactsFile" id="contactsFile" required/>
                                     <span id="message" style="color: red !important;font-size: 10px;">*Attach .csv/.xlsx file. </span>
                                 </div>
                             </div>
@@ -169,14 +168,28 @@
         });
 
         var form = $("#form");
+        
         form.submit(function (e) {
-            var filename = $('#contactsFile').val();
-            var subStr = filename.substr(filename.lastIndexOf('.') + 1);
+            
+            form.validate({
+                rules: {
+                    contactsFile: {
+                        required: true,
+                        extension: "csv|xls|xlsx",
+                    },
+                    msgdata: {
+                        required: true
+                    }
+                },
+                messages: {
+                    contactsFile: {
+                        required: "Message data field is required",
+                        extension: "Please attach csv, xls or xlsx files only"
+                    }
+                }
+            });
 
-            if (subStr == "csv" || subStr == "xls" || subStr == "xlsx") { }
-            else {
-                ShowDivError("please upload correct file format");
-            }
+            $("#msgdata").rules("add", { regex: "[^$]" }, "Please add column");
 
             if (!form.valid()) {
                 ShowDivError("please fill out the form");
@@ -192,22 +205,6 @@
             var msgdata = $("#msgdata").val();
             $("#msgdata").val(msgdata + "$" + val + "$");
         }
-
-        //e.preventDefault();
-        //var fileUpload = $("#contactsFile").get(0);
-        //var files = fileUpload.files;
-        //var formdata = new FormData(this);
-
-        //for (var i = 0; i < files.length; i++) {
-        //    formdata.append(files[i].name, files[i]);
-        //}
-
-        //if (form.valid()) {
-        //    CallAsyncService1('/Message/PersonalizedSMS', formdata, ShowDivSuccess, "POST", ShowDivError);
-        //}
-        //else {
-        //    ShowDivError("input data is not valid");
-        //}
 
     </script>
 }

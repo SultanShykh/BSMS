@@ -35,11 +35,11 @@ namespace AdminPortal.Helpers
                             list.Add(validRes);
                     }
 
-                    List<string> unique = list.Distinct().ToList();
+                    list = list.Distinct().ToList();
 
-                    if (list.Count < 0) return false;
+                    if (list.Count <= 0) return false;
 
-                    foreach (var v in unique)
+                    foreach (var v in list)
                     {
                         DataRow dr = dt.NewRow();
 
@@ -69,7 +69,7 @@ namespace AdminPortal.Helpers
             return true;
         }
 
-        public static bool getContactsFromCSV(string path, out List<string> list, out int count, out DataTable dt, Campaign campaign, int camp_id)
+        public static bool getContactsFromCSV(string path, out List<string> list, out int count, out DataTable dt, Campaign campaign)
         {
             count = 0;
             dt = new DataTable();
@@ -88,15 +88,15 @@ namespace AdminPortal.Helpers
                         list.Add(validRes);
                 }
 
-                List<string> unique = list.Distinct().ToList();
+                list = list.Distinct().ToList();
 
-                if (list.Count < 0) return false;
+                if (list.Count <= 0) return false;
 
-                foreach (var v in unique) 
+                foreach (var v in list) 
                 {
                     DataRow dr = dt.NewRow();
 
-                    dr["camp_id"] = camp_id;
+                    dr["camp_id"] = campaign.id;
                     dr["user_id"] = campaign.user_id;
                     dr["sender"] = campaign.sender;
                     dr["receiver"] = v;
@@ -121,7 +121,7 @@ namespace AdminPortal.Helpers
             return true;
         }
 
-        public static bool getDataFromExcel(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt,Campaign campaign, out int count, int camp_id)
+        public static bool getDataFromExcel(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt,Campaign campaign, out int count)
         {
             list = new Dictionary<string, string>();
             dt = new DataTable();
@@ -151,6 +151,7 @@ namespace AdminPortal.Helpers
                     foreach (IXLRow row in xLWorksheet.RowsUsed())
                     {
                         string msgdata = msgdata1;
+                        
                         while (msgdata.IndexOf('$') > 0)
                         {
                             personalizedMessageString(msgdata);
@@ -183,7 +184,7 @@ namespace AdminPortal.Helpers
                         {
                             DataRow dr = dt.NewRow();
 
-                            dr["camp_id"] = camp_id;
+                            dr["camp_id"] = campaign.id;
                             dr["user_id"] = campaign.user_id;
                             dr["sender"] = campaign.sender;
                             dr["receiver"] = keyVal.Key;
@@ -216,7 +217,7 @@ namespace AdminPortal.Helpers
             return true;
         }
 
-        public static bool getDataFromCSV(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt, Campaign campaign, out int count, int camp_id)
+        public static bool getDataFromCSV(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt, Campaign campaign, out int count)
         {
             list = new Dictionary<string, string>();
             string cellValue = "";
@@ -246,8 +247,8 @@ namespace AdminPortal.Helpers
                 foreach (DataRow data in datatable.Rows)
                 {
                     string msgdata = msgdata1;
-
-                    while (msgdata.IndexOf('$') >= 0)
+                    
+                    while (msgdata.IndexOf('$') == 0)
                     {
                         personalizedMessageString(msgdata);
 
@@ -281,7 +282,7 @@ namespace AdminPortal.Helpers
                     {
                         DataRow dr = dt.NewRow();
 
-                        dr["camp_id"] = camp_id;
+                        dr["camp_id"] = campaign.id;
                         dr["user_id"] = campaign.user_id;
                         dr["sender"] = campaign.sender;
                         dr["receiver"] = keyVal.Key;

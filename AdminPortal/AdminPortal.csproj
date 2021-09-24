@@ -159,12 +159,9 @@
     <Compile Include="Codebase\MessageProcessing.cs" />
     <Compile Include="Codebase\UserProcessing.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
-    <Compile Include="Controllers\MaskingController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
-    <Compile Include="Controllers\ResellerPartialsController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -239,10 +236,6 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Partials\Edit_Form\Edit_Form.cshtml">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="Views\Partials\Create_Form\Create_Form.cshtml" />
     <Content Include="Views\Group\CreateGroup.cshtml" />
     <Content Include="Views\Group\EditGroup.cshtml" />
     <Content Include="Views\Group\Index.cshtml" />
@@ -255,14 +248,12 @@
     <Content Include="Views\Message\QuickSMS.cshtml" />
     <Content Include="Views\Message\CampaignSMS.cshtml" />
     <Content Include="Views\Message\PersonalizedSMS.cshtml" />
-    <Content Include="Views\Campaign\Index.cshtml" />
-    <Content Include="Views\Home\Reseller.cshtml" />
     <Content Include="Views\Partials\_Menu.cshtml" />
     <Content Include="Views\Partials\_updateUser.cshtml" />
+    <Content Include="Views\Message\CampaignManagement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Masking\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

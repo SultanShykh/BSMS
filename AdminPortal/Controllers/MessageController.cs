@@ -12,6 +12,7 @@ using System.Data;
 using CSVLibraryAK;
 using System.Diagnostics;
 using System.Data.SqlClient;
+using System.Collections;
 
 namespace AdminPortal.Controllers
 {
@@ -21,7 +22,7 @@ namespace AdminPortal.Controllers
         List<Masking> maskings;
         MessageProcessing m = new MessageProcessing();
         List<string> list = new List<string>();
-        
+        IDictionary<string,string> dict = new Dictionary<string, string>();
         DataTable dt = new DataTable();
 
         public ActionResult QuickSMS()
@@ -34,22 +35,33 @@ namespace AdminPortal.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult QuickSMS(Campaign campaign)
         {
+            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["UserId"]), out maskings);
+            ViewBag.maskings = new SelectList(maskings, "id", "masking");
+
             ModelState.Remove("camp_name");
             if (!ModelState.IsValid)
-                return Json(new { status = false, message = "sending failed" });
+                return Json(new { status = false, message = "Fields are missing" });
 
             if (campaign.receiver.Split(',').Count() < 0 || campaign.receiver.Split(',').Count() > 50) 
                 return Json(new { status = false, message = "please enter less than 50 or greater than 0 contacts" });
 
             var validReceivers = "";
+            list.Clear();
 
             foreach (var v in campaign.receiver.Split(','))
             {
                 if (Validation.ValidateRecipient(v.ToString(), out string validNum) == true)
-                    validReceivers += validNum + ',';
+                    list.Add(validNum);
             }
 
-            if (validReceivers.Equals("")) return Json(new { status = false, message = "Please insert atleast 1 number" });
+            list = list.Distinct().ToList();
+
+            if (list.Count <= 0) return Json(new { status = false, message = "Please insert atleast 1 number" });
+
+            foreach (var v in list) 
+            {
+                validReceivers += v + ',';
+            }
 
             try
             {
@@ -62,8 +74,8 @@ namespace AdminPortal.Controllers
             {
                 return Json(new { status = false, message = ex });
             }
-
-            return Json(new { status = true, message = "sent successfully"});
+            
+            return Json(new { status = true, message = "Sent: " + list.Count() + " Failed: 0" });
         }
 
         public ActionResult CampaignSMS()
@@ -152,9 +164,10 @@ namespace AdminPortal.Controllers
                         file.SaveAs(path);
 
                         var result = m.COR_WEB_createCampaign(campaign);
-                        int camp_id = result.camp_id;
+                        campaign.user_id = Convert.ToInt32(Session["UserId"]);
+                        campaign.id = result.camp_id;
 
-                        if (CSVExtension.getContactsFromCSV(path, out list, out int count, out DataTable dt, campaign, camp_id))
+                        if (CSVExtension.getContactsFromCSV(path, out list, out int count, out DataTable dt, campaign))
                         {
                             using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
@@ -184,7 +197,7 @@ namespace AdminPortal.Controllers
                                 }
                             }
 
-                            m.COR_WEB_updateCampaign(camp_id, count);
+                            m.COR_WEB_updateCampaign(campaign.id, count);
                         }
                         else
                         {
@@ -214,50 +227,11 @@ namespace AdminPortal.Controllers
                 return View();
             }
 
-            ViewBag.result = "successfully sent";
-            ViewBag.status = "success";
+            ViewBag.result = "Sent "+list.Count()+" Failed: 0";
+            ViewBag.status = "info";
             return View();
 
         }
-
-        //[HttpPost]
-        //public ActionResult FetchContacts()
-        //{
-        //    list.Clear();
-        //    if (Request.Files.Count == 1) 
-        //    {
-        //        try
-        //        {
-        //            HttpFileCollectionBase files = Request.Files;
-        //            HttpPostedFileBase file = files[0];
-
-        //            string fileName = Path.GetFileName(file.FileName);
-        //            string extension = Path.GetExtension(fileName);
-        //            string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
-
-        //            if (extension == ".xls" || extension == ".xlsx")
-        //            {
-        //                file.SaveAs(path);
-        //                if (!CSVExtension.geContactsFromExcel(path, out list)) return Json(new { status = false, message = "Empty / corrupt File" });
-        //            }
-        //            else if (extension == ".csv")
-        //            {
-        //                file.SaveAs(path);
-        //                if (!CSVExtension.getContactsFromCSV(path, out list)) return Json(new { status = false, message = "Empty / corrupt File" });
-        //            }
-        //            else
-        //            {
-        //                return Json(new { status = false, message = "Please attach csv, xls or xlsx files" });
-        //            }
-        //        }
-        //        catch (Exception ex) 
-        //        {
-        //            return Json(new { status = false, message = "Error while Fetching" });
-        //        }
-        //    }
-
-        //    return Json(new { status = true, message = list });
-        //}
 
         public ActionResult PersonalizedSMS()
         {
@@ -280,8 +254,6 @@ namespace AdminPortal.Controllers
             {
                 try
                 {
-                    string numbers = "";
-                    string msg = "";
                     string msgdata = campaign.msgdata;
                     HttpFileCollectionBase files = Request.Files;
                     HttpPostedFileBase file = files[0];
@@ -296,10 +268,11 @@ namespace AdminPortal.Controllers
                         
                         campaign.msgdata = "";
                         var result = m.COR_WEB_createCampaign(campaign);
-                        int camp_id = result.camp_id;
+                        campaign.id = result.camp_id;
+                        campaign.user_id = Convert.ToInt32(Session["UserId"]);
                         campaign.msgdata = msgdata;
 
-                        if (CSVExtension.getDataFromExcel(path, campaign.msgdata, out IDictionary<string, string> list,out DataTable dt, campaign, out int count, camp_id))
+                        if (CSVExtension.getDataFromExcel(path, campaign.msgdata, out dict,out DataTable dt, campaign, out int count))
                         {
                             using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
@@ -330,7 +303,7 @@ namespace AdminPortal.Controllers
                                 }
                             }
 
-                            m.COR_WEB_updateCampaign(camp_id,count);
+                            m.COR_WEB_updateCampaign(campaign.id, count);
                         }
                         else
                         {
@@ -338,9 +311,6 @@ namespace AdminPortal.Controllers
                             ViewBag.status = "danger";
                             return View();
                         }
-
-                        campaign.receiver = numbers;
-                        campaign.msgdata = msg;
                     }
                     else if (extension == ".csv")
                     {
@@ -348,10 +318,11 @@ namespace AdminPortal.Controllers
 
                         campaign.msgdata = "";
                         var result = m.COR_WEB_createCampaign(campaign);
-                        int camp_id = result.camp_id;
+                        campaign.id = result.camp_id;
+                        campaign.user_id = Convert.ToInt32(Session["UserId"]);
                         campaign.msgdata = msgdata;
                         
-                        if (CSVExtension.getDataFromCSV(path, campaign.msgdata, out IDictionary<string,string> list, out DataTable dt,campaign ,out int count, camp_id))
+                        if (CSVExtension.getDataFromCSV(path, campaign.msgdata, out dict, out DataTable dt,campaign ,out int count))
                         {
                             using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
@@ -382,7 +353,7 @@ namespace AdminPortal.Controllers
                                 }
                             }
 
-                            m.COR_WEB_updateCampaign(camp_id, count);
+                            m.COR_WEB_updateCampaign(campaign.id, count);
                         }
                         else
                         {
@@ -390,9 +361,6 @@ namespace AdminPortal.Controllers
                             ViewBag.status = "danger";
                             return View();
                         }
-
-                        campaign.receiver = numbers;
-                        campaign.msgdata = msg;
                     }
                     else
                     {
@@ -414,9 +382,15 @@ namespace AdminPortal.Controllers
                 ViewBag.status = "danger";
                 return View();
             }
+            
+            ViewBag.result = "Sent " + dict.Count() + " Failed: 0";
+            ViewBag.status = "info";
 
-            ViewBag.result = "successfully sent";
-            ViewBag.status = "success";
+            return View();
+        }
+
+        public ActionResult CampaignManagement() 
+        {
             return View();
         }
     }

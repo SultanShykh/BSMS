@@ -20,6 +20,7 @@ namespace AdminPortal.Helpers
                 {
                     flag = false;
                 }
+
                 if (action == "")
                 {
                     foreach (var i in listdata)

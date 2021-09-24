@@ -6,6 +6,15 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
+            @{
+                if (ViewBag.result != null)
+                {
+                    <div class="alert alert-dismissable alert-@ViewBag.status">
+                        <p style="color: white">@ViewBag.result</p>
+                    </div>
+                    <br />
+                }
+            }
             <div class="card">
                 <div class="card-header">
                     <h6 class="font-weight-bolder mb-0">Compose Message</h6>
@@ -63,7 +72,7 @@
                             <div class="col-md-6 col-lg-6">
                                 <div class="form-group">
                                     <button type="button" class="btn bg-gradient-dark" id="btnSave">Urdu</button>
-                                    @Html.TextAreaFor(model => model.msgdata, new { @class = "form-control mb-2", placeholder = "Enter Contacts", rows = "5", cols = "68" })
+                                    @Html.TextAreaFor(model => model.msgdata, new { @class = "form-control mb-2", placeholder = "Enter Message", rows = "5", cols = "68" })
                                     @Html.ValidationMessageFor(model => model.msgdata, "", new { @class = "text-danger" })
                                     <button type="button" class="btn bg-gradient-dark" id="btnMessage">0 characters / 0 SMS</button>
                                 </div>
@@ -86,7 +95,8 @@
     <script>
         var contactsCount = 0;
         $(document).ready(function () {
-            $("#Masking").selectpicker('refresh');
+            $(".alert").fadeIn();
+            $('.alert').fadeOut(3000);
 
             $('#receiver').keyup(function () {
                 var msgVal = $('#receiver').val();
@@ -127,11 +137,13 @@
                 e.preventDefault();
             }
 
-            debugger
             if (form.valid()) {
                 CrudScript.makeAjaxRequest('Post', '/Message/QuickSMS', form.serialize()).then(function (data) {
                     if (data.status == true) {
                         ShowDivSuccess(data.message);
+                        setTimeout(function () {
+                            location.reload();
+                        },3000);
                     }
                     else {
                         ShowDivError(data.message);

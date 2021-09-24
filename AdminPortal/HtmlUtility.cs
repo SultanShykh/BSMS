@@ -11,17 +11,20 @@ namespace AdminPortal
         public static string IsActive(this HtmlHelper html, string action, string controller) 
         {
             var routeData = html.ViewContext.RouteData;
+            var info = "";
+            bool isActive;
+
             if (action == "")
             {
-                var info = (string)(routeData.Values["controller"]);
-                var isActive = controller == info;
+                info = (string)(routeData.Values["controller"]);
+                isActive = controller == info;
                 return isActive ? "active" : "";
             }
             else
             {
                 var routeAction = (string)routeData.Values["action"];
                 var routeController = (string)routeData.Values["controller"];
-                var isActive = controller == routeController && action == routeAction;
+                isActive = controller == routeController && action == routeAction;
                 return isActive ? "active" : "";
             }
         }
