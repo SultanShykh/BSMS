@@ -27,7 +27,7 @@ namespace AdminPortal.Models
         public static void CreateMenu(MenuModel menuModel, out bool result)
         {
             result = false;
-            dynamic Records = AppDB.COR_USP_CreateMenu(action:menuModel.Action, menuName: menuModel.MenuName, menuURL: menuModel.MenuUrl, Controller:menuModel.Controller,isActive: menuModel.IsActive);
+            dynamic Records = AppDB.COR_USP_CreateMenu(action:menuModel.Action, menuName: menuModel.MenuName, menuURL: menuModel.MenuUrl, Controller:menuModel.Controller, sortOrder: menuModel.SortOrder,formMasterId: menuModel.formMasterId , isActive: menuModel.IsActive);
             if (Records.FirstOrDefault() != null && Records.FirstOrDefault().Message == "Menu Created")
             {
                 result = true;
@@ -58,7 +58,7 @@ namespace AdminPortal.Models
         {
             result = false;
 
-            dynamic Records = AppDB.COR_USP_UpdateMenu(action: menuModel.Action, menuName: menuModel.MenuName, menuURL: menuModel.MenuUrl, controller: menuModel.Controller, isActive: menuModel.IsActive,MenuId: menuModel.Id);
+            dynamic Records = AppDB.COR_USP_UpdateMenu(action: menuModel.Action, menuName: menuModel.MenuName, menuURL: menuModel.MenuUrl, controller: menuModel.Controller, sortOrder: menuModel.SortOrder, formMasterId: menuModel.formMasterId, isActive: menuModel.IsActive,MenuId: menuModel.Id);
 
             if (Records.FirstOrDefault() != null && Records.FirstOrDefault().Message == "Menu Updated")
             {

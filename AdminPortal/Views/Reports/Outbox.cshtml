@@ -1,0 +1,187 @@
+﻿@using AdminPortal.Models
+@using Newtonsoft.Json 
+@model IEnumerable<dynamic>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<dynamic> details = new List<dynamic>();
+}
+
+<style>
+    .details-control:hover {
+        cursor:pointer;
+    }
+</style>
+<div class="container-fluid border-radius-lg">
+    <div class="row">
+        <div class="card shadow">
+            <div class="card-header mb-0 pb-0">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a class="btn bg-gradient-dark" href="/Reports/DownloadData">Download</a>
+                    </div>
+                    <div class="col-md-9">
+                        <form id="form" method="post" action="/Reports/OutboxLive/@ViewBag.pageNumber">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" name="sender" class="form-control" placeholder="Sender" value="" />
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" name="receiver" class="form-control" placeholder="Receiver" value="" />
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn bg-gradient-dark sender-button" id="fetch">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body mt-0 pt-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-borderless" id="MainTable">
+                        <thead>
+                            <tr>
+                                <td></td>
+                                <td>Id</td>
+                                <td>User Id</td>
+                                <td>SMS Type</td>
+                                <td>Sender</td>
+                                <td>Message</td>
+                                <td>Sent Time</td>
+                                <td>Network Time</td>
+                                <td>Status</td>
+                                <td>Cost</td>
+                                <td hidden>Route</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (Model.Count() > 0)
+                                {
+                                    foreach (var v in Model)
+                                    {
+                                        v.status = v.status == 1 ? "active" : "In Active";
+                                        details.Add(new { route = v.route });
+                                        <tr>
+                                            <td class="details-control">
+                                                <i class="ni ni-fat-add"></i>
+                                            </td>
+                                            <td>@v.outbox_id</td>
+                                            <td>@v.user_id</td>
+                                            <td>@v.smstype</td>
+                                            <td>@v.sender</td>
+                                            <td>@v.msgdata</td>
+                                            <td>@v.senttime</td>
+                                            <td>@v.deliveredtonetwork</td>
+                                            <td>@v.status</td>
+                                            <td>@v.cost</td>
+                                            <td>@JsonConvert.SerializeObject(details)</td>
+                                        </tr>
+                                        details.Clear();
+                                    }
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example align-middle">
+                    <ul class="pagination">
+                        @if ((int)ViewBag.PageNumber == 1)
+                        {
+                            <li><a class="btn disabled bg-gradient-dark m-1" href="#">First</a></li>
+                            <li><a class="btn disabled bg-gradient-dark m-1" href="#">Previous</a></li>
+                        }
+                        else
+                        {
+                            <li><a class="btn bg-gradient-dark m-1" href="/Reports/Outbox">First</a></li>
+                            <li><a class="btn bg-gradient-dark m-1" href="/Reports/Outbox/@((int)ViewBag.PageNumber - 1)">Previous</a></li>
+                        }
+                        <li class="m-2"><strong>&nbsp;&nbsp;&nbsp;@ViewBag.PageNumber&nbsp;&nbsp;&nbsp;</strong></li>
+                        @if (Model.Count() == 0)
+                        {
+                            <li><a class="btn disabled bg-gradient-dark m-1" href="#">Next</a></li>
+                        }
+                        else
+                        {
+                            <li><a class="btn bg-gradient-dark m-1" href="/Reports/Outbox/@((int)ViewBag.PageNumber + 1)">Next</a></li>
+                        }
+
+                        @if ((int)ViewBag.PageNumber <= ViewBag.totalPages)
+                        {
+                            <li><a class="btn bg-gradient-dark m-1" href="/Reports/Outbox/@ViewBag.totalPages">Last Page</a></li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+    {
+    <script>
+        var table = $('#MainTable').DataTable({
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false,
+            columns: [
+                { data: "expandIcon" },
+                { data: "outbox_id" },
+                { data: "user_id" },
+                { data: "smstype" },
+                { data: "sender" },
+                { data: "senttime" },
+                { data: "deliveredtonetwork" },
+                { data: "senttime" },
+                { data: "status" },
+                { data: "cost" },
+                { data: "details" }
+            ],
+            columnDefs: [
+                {
+                    targets: [10],
+                    visible: false,
+                }
+            ]
+        });
+
+        function format(rowData) {
+            var details = JSON.parse(rowData.details);
+            var str = '<table class="table table-striped no-margin dataTable no-footer hover cell-border" id="detailsTable" role="grid">' +
+                '<thead><tr>' +
+                '<th> Route Name </th>' +
+                '</tr></thead><tbody>';
+            for (var i = 0; i < details.length; i++) {
+                str += '<tr>' +
+                    '<td>' + details[i].route + '</td>' +
+                    '</tr>';
+            }
+
+            return str + '</tbody></table>';
+        }
+
+        $(function () {
+            $('#MainTable tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var td = tr.find('.details-control').first();
+                var i = td.find('.ni').first();
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    i.removeClass("ni ni-fat-delete");
+                    i.addClass("ni ni-fat-add");
+                }
+                else {
+                    row.child(format(row.data())).show();
+                    i.removeClass("ni ni-fat-add");
+                    i.addClass("ni ni-fat-delete");
+                }
+            });
+        });
+
+    </script>
+}

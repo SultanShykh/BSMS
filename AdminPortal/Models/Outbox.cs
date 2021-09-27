@@ -19,6 +19,7 @@ namespace AdminPortal.Models
 
         [Required]
         [DataType(DataType.MultilineText)]
+        [Display(Name = "Receiver")]
         public string receiver { get; set; }
 
         [Required]

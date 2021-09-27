@@ -157,6 +157,7 @@
     <Compile Include="Codebase\GroupProcessing.cs" />
     <Compile Include="Codebase\MenuProcessing.cs" />
     <Compile Include="Codebase\MessageProcessing.cs" />
+    <Compile Include="Codebase\OutboxProcessing.cs" />
     <Compile Include="Codebase\UserProcessing.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -251,6 +253,7 @@
     <Content Include="Views\Partials\_Menu.cshtml" />
     <Content Include="Views\Partials\_updateUser.cshtml" />
     <Content Include="Views\Message\CampaignManagement.cshtml" />
+    <Content Include="Views\Reports\Outbox.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

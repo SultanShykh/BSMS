@@ -59,23 +59,23 @@ namespace AdminPortal.Controllers
                 string msg = "Error, Please try again.";
                 return Json(new { status = false, message = msg });
             }
-          
         }
 
         [HttpPost]
         public ActionResult DeleteMenu(string Id)
         {
+
+            bool result = false;
+            string msg = "";
             try
             {
-                bool result;
-                string msg;
                 MenuProcessing.DeleteMenu(Id, out result, out msg);
-                return Json(true);
+                return Json(new { status = result, message = msg });
 
             }
             catch (Exception e)
             {
-                return Json("Error");
+                return Json(new { status = result, message = msg });
             }
         }
 
@@ -95,7 +95,6 @@ namespace AdminPortal.Controllers
             {
                 return Json("Error");
             }
-
         }
     }
 }

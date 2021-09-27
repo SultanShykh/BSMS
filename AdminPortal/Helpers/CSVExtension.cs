@@ -151,15 +151,15 @@ namespace AdminPortal.Helpers
                     foreach (IXLRow row in xLWorksheet.RowsUsed())
                     {
                         string msgdata = msgdata1;
-                        
-                        while (msgdata.IndexOf('$') > 0)
+                        Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string mobile_number);
+
+                        while (msgdata.IndexOf('$') >= 0)
                         {
                             personalizedMessageString(msgdata);
 
                             if (cols.ContainsKey(column))
                             {
                                 column = cols[column].ToString();
-                                Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string mobile_number) ;
                                     
                                 cellValue = row.Cell(column).Value.ToString() != null ? row.Cell(column).Value.ToString() : "";
                                 nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
@@ -247,8 +247,9 @@ namespace AdminPortal.Helpers
                 foreach (DataRow data in datatable.Rows)
                 {
                     string msgdata = msgdata1;
-                    
-                    while (msgdata.IndexOf('$') == 0)
+                    Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string mobile_number);
+
+                    while (msgdata.IndexOf('$') >= 0)
                     {
                         personalizedMessageString(msgdata);
 
@@ -256,10 +257,8 @@ namespace AdminPortal.Helpers
                         {
                             colNum = cols[column];
 
-                            Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string mobile_number);
-
                             cellValue = data.ItemArray[colNum].ToString() != null ? data.ItemArray[colNum].ToString() : "";
-                           
+                               
                             nextStr = (msgdata.IndexOf('$') + 3) >= msgdata.Length ? "" : msgdata.Substring(msgdata.IndexOf('$') + 3, msgdata.Length - (msgdata.IndexOf('$') + 3));
 
                             msgdata = prevStr + "" + cellValue + "" + nextStr;

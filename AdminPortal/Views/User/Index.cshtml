@@ -22,7 +22,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form id="form" method="post" action="/User/Index/@ViewBag.pageNumber">
+                    <form id="form1" method="post" action="/User/Index/@ViewBag.pageNumber">
                         <div class="row">
                             <div class="col-md-3">
                                 @Html.LabelFor(model => model.Item1[0].username)
@@ -188,7 +188,6 @@
 
             CrudScript.makeAjaxRequest('Post', '/User/CheckUsername', { username: username }).then(function (data) {
                 if (data == false) {
-
                     $('#msg').css('display', 'block');
                     $('#username').attr('readonly', false);
 
@@ -230,7 +229,7 @@
         $('#email').val(currentRow.find("td:eq(3)").text());
         $('#user_mobile').val(currentRow.find("td:eq(6)").text());
         $('#user_expiry').val(currentRow.find("td:eq(7)").text());
-
+        debugger
         CrudScript.makeAjaxRequest('Post', '/User/SelectedMaskings/' + currentRow.find("td:eq(0)").text()).then(function (data) {
             if (data.maskings != null) {
                 for (var i in data.maskings) {

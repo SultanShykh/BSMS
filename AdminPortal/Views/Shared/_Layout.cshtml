@@ -334,6 +334,26 @@
                                     </li>
                                 }
 
+                                @if (Permission.HasPermission("Reports", "Outbox"))
+                                {
+                                    <li class="nav-item Users">
+                                        <a class="nav-link @Html.IsActive("Outbox", "Reports")" href="@Url.Action("Outbox", "Reports")">
+                                            <i class="fas fa-user-cog"></i>
+                                            <span class="nav-link-text">Outbox</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Permission.HasPermission("Reports", "OutboxLive"))
+                                {
+                                    <li class="nav-item Users">
+                                        <a class="nav-link @Html.IsActive("OutboxLive", "Reports")" href="@Url.Action("OutboxLive", "Reports")">
+                                            <i class="fas fa-user-cog"></i>
+                                            <span class="nav-link-text">Outbox Live</span>
+                                        </a>
+                                    </li>
+                                }
+
                             </ul>
                         </div>
                     </li>

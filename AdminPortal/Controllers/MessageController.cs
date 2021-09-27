@@ -307,7 +307,7 @@ namespace AdminPortal.Controllers
                         }
                         else
                         {
-                            ViewBag.result = "Empty / Corrupt File";
+                            ViewBag.result = "Please select a column or Add a selected column in the file";
                             ViewBag.status = "danger";
                             return View();
                         }
@@ -357,7 +357,7 @@ namespace AdminPortal.Controllers
                         }
                         else
                         {
-                            ViewBag.result = "Empty / Corrupt File";
+                            ViewBag.result = "Please select a column or Add a column in the file";
                             ViewBag.status = "danger";
                             return View();
                         }

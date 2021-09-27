@@ -46,6 +46,8 @@
                                     <th>Menu URL</th>
                                     <th>Controller</th>
                                     <th>Action Method</th>
+                                    <th hidden>Sort Order</th>
+                                    <th hidden>Form Master Id</th>
                                     <th>Is Active</th>
                                     <th>Action</th>
                                 </tr>
@@ -61,6 +63,8 @@
                                             <td>@menuItems.MenuUrl</td>
                                             <td>@menuItems.Controller</td>
                                             <td>@menuItems.Action</td>
+                                            <td hidden>@menuItems.SortOrder</td>
+                                            <td hidden>@menuItems.formMasterId</td>
                                             <td>@menuItems.IsActive</td>
                                             <td><button class="btn bg-gradient-dark edit" data-toggle="modal" data-target="#addRowModal">Edit</button><button class="btn bg-gradient-danger delete">Delete</button></td>
                                         </tr>
@@ -180,13 +184,17 @@
         var menuURL = currentRow.find("td:eq(2)").text();
         var controller = currentRow.find("td:eq(3)").text();
         var action = currentRow.find("td:eq(4)").text();
-        var isactive = currentRow.find("td:eq(5)").text();
+        var sortOrder = currentRow.find("td:eq(5)").text();
+        var formMasterId = currentRow.find("td:eq(6)").text();
+        var isactive = currentRow.find("td:eq(7)").text();
 
         $('#Id').val(menuId);
         $('#MenuName').val(menuName);
         $('#MenuUrl').val(menuURL);
         $('#Controller').val(controller);
         $('#Action').val(action);
+        $('#SortOrder').val(sortOrder);
+        $('#formMasterId').val(formMasterId);
         $("input[value='"+isactive+"']").prop('checked', true);
     });
 

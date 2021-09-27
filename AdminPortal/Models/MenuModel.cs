@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -27,8 +27,8 @@ namespace AdminPortal.Models
         public bool IsActive { get; set; }
         public int SortOrder { get; set; }
         public string IconClass { get; set; }
-
         public string MenuTree { get; set; }
+        public int formMasterId { get; set; }
         public IEnumerable<MenuModel> List { get; set; }
     }
 }
