@@ -177,8 +177,8 @@ D:\wwwroot\AdminPortal\AdminPortal\bin\System.Web.WebPages.Razor.xml
 D:\wwwroot\AdminPortal\AdminPortal\bin\Newtonsoft.Json.xml
 D:\wwwroot\AdminPortal\AdminPortal\bin\Antlr3.Runtime.pdb
 D:\wwwroot\AdminPortal\AdminPortal\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CoreCompileInputs.cache
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CopyComplete
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.dll
 D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.pdb
+D:\wwwroot\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache

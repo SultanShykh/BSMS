@@ -118,6 +118,7 @@ namespace AdminPortal.Controllers
                         file.SaveAs(path);
 
                         var result = m.COR_WEB_createCampaign(campaign);
+                        campaign.user_id = Convert.ToInt32(Session["UserId"]);
                         int camp_id = result.camp_id;
 
                         if (CSVExtension.getContactsFromExcel(path,out list, out int count, out DataTable dt, campaign,camp_id))

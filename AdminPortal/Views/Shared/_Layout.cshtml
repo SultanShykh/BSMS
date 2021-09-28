@@ -344,6 +344,16 @@
                                     </li>
                                 }
 
+                                @if (Permission.HasPermission("Reports", "OutboxCamp"))
+                                {
+                                    <li class="nav-item Users">
+                                        <a class="nav-link @Html.IsActive("OutboxCamp", "Reports")" href="@Url.Action("OutboxCamp", "Reports")">
+                                            <i class="fas fa-user-cog"></i>
+                                            <span class="nav-link-text">Outbox Campaign</span>
+                                        </a>
+                                    </li>
+                                }
+
                                 @if (Permission.HasPermission("Reports", "OutboxLive"))
                                 {
                                     <li class="nav-item Users">

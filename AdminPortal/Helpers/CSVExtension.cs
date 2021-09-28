@@ -49,8 +49,8 @@ namespace AdminPortal.Helpers
                         dr["receiver"] = v;
                         dr["status"] = 1;
                         dr["route"] = 4;
-                        dr["cost"] = 0;
-                        dr["senttime"] = "2021-08-31";
+                        dr["cost"] = Math.Ceiling(Convert.ToDecimal(campaign.msgdata.Length) / Convert.ToDecimal(160));
+                        dr["senttime"] = DateTime.Now;
                         dr["smstype"] = campaign.camp_smstype;
                         dr["operator"] = 4;
                         dr["isswallow"] = 1;
@@ -95,15 +95,15 @@ namespace AdminPortal.Helpers
                 foreach (var v in list) 
                 {
                     DataRow dr = dt.NewRow();
-
+                    
                     dr["camp_id"] = campaign.id;
                     dr["user_id"] = campaign.user_id;
                     dr["sender"] = campaign.sender;
                     dr["receiver"] = v;
                     dr["status"] = 1;
                     dr["route"] = 4;
-                    dr["cost"] = 0;
-                    dr["senttime"] = "2021-08-31";
+                    dr["cost"] = Math.Ceiling(Convert.ToDecimal(campaign.msgdata.Length) / Convert.ToDecimal(160));
+                    dr["senttime"] = DateTime.Now;
                     dr["smstype"] = campaign.camp_smstype;
                     dr["operator"] = 4;
                     dr["isswallow"] = 1;
@@ -191,8 +191,8 @@ namespace AdminPortal.Helpers
                             dr["msgdata"] = keyVal.Value;
                             dr["status"] = 1;
                             dr["route"] = 4;
-                            dr["cost"] = 0;
-                            dr["senttime"] = "2021-08-31";
+                            dr["cost"] = Math.Ceiling(Convert.ToDecimal(keyVal.Value.Length) / Convert.ToDecimal(160));
+                            dr["senttime"] = DateTime.Now;
                             dr["smstype"] = campaign.camp_smstype;
                             dr["operator"] = 4;
                             dr["isswallow"] = 1;
@@ -288,8 +288,8 @@ namespace AdminPortal.Helpers
                         dr["msgdata"] = keyVal.Value;
                         dr["status"] = 1;
                         dr["route"] = 4;
-                        dr["cost"] = 0;
-                        dr["senttime"] = "2021-08-31";
+                        dr["cost"] = Math.Ceiling(Convert.ToDecimal(keyVal.Value.Length) / Convert.ToDecimal(160)); ;
+                        dr["senttime"] = DateTime.Now;
                         dr["smstype"] = campaign.camp_smstype;
                         dr["operator"] = 4;
                         dr["isswallow"] = 1;
