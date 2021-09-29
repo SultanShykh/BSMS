@@ -340,5 +340,20 @@ namespace AdminPortal.Helpers
 
             column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim(' ');
         }
+
+        public static DataTable getData(DataTable dt) 
+        {
+            dt.TableName = "Outbox";
+            dt.Columns.Add("username", typeof(string));
+            dt.Columns.Add("smstype", typeof(int));
+            dt.Columns.Add("masking", typeof(string));
+            dt.Columns.Add("receiver", typeof(string));
+            dt.Columns.Add("msgdata", typeof(string));
+            dt.Columns.Add("senttime", typeof(DateTime));
+            dt.Columns.Add("status", typeof(string));
+            dt.Columns.Add("cost", typeof(int));
+            dt.Columns.Add("route", typeof(int));
+            return dt;
+        }
     }
 }
