@@ -20,6 +20,8 @@ namespace AdminPortal.Controllers
         {
             ViewBag.datetime = datetime;
             datetime = datetime != null ? datetime.Replace(" ", ""): datetime;
+            sender = sender == "" ? null : sender;
+            receiver = receiver == "" ? null : receiver;
             OutboxProcessing.COR_USP_Outbox(Convert.ToInt32(Session["UserId"]), Id, sender,receiver,datetime, out List<dynamic> outbox, out int totalPages);
             
             ViewBag.PageNumber = Id;
@@ -35,6 +37,8 @@ namespace AdminPortal.Controllers
         {
             ViewBag.datetime = datetime;
             datetime = datetime != null ? datetime.Replace(" ", "") : datetime;
+            sender = sender == "" ? null : sender;
+            receiver = receiver == "" ? null : receiver;
             OutboxProcessing.COR_USP_Outbox_Camp(Convert.ToInt32(Session["UserId"]), Id, sender, receiver, datetime, out List<dynamic> outbox, out int totalPages);
 
             ViewBag.PageNumber = Id;    

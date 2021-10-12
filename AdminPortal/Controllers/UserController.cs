@@ -104,9 +104,7 @@ namespace AdminPortal.Controllers
         {
             try
             {
-                bool result;
-                string msg;
-                UserProcessing.DeleteUser(Id,out result, out msg);
+                UserProcessing.DeleteUser(Id,out bool result, out string msg);
                 return Json(new { status = result, message = msg});
 
             }

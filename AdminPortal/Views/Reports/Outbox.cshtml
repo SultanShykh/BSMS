@@ -47,8 +47,8 @@
             </div>
             <div class="card-body mt-0 pt-0">
                 <div class="table-responsive">
-                    <table class="table table-striped table-borderless" id="MainTable">
-                        <thead>
+                    <table class="table table-sm" id="MainTable">
+                        <thead class="bg-gradient-dark text-white">
                             <tr>
                                 <td></td>
                                 <td>Id</td>
@@ -73,7 +73,7 @@
                                         details.Add(new { route = v.route });
                                         <tr>
                                             <td class="details-control">
-                                                <i class="ni ni-fat-add"></i>
+                                                <i class="ni ni-fat-add text-dark"></i>
                                             </td>
                                             <td>@v.outbox_id</td>
                                             <td>@v.username</td>
@@ -178,8 +178,8 @@
 
         function format(rowData) {
             var details = JSON.parse(rowData.details);
-            var str = '<table class="table no-margin dataTable no-footer" id="detailsTable">' +
-                '<thead><tr>' +
+            var str = '<table class="table no-margin dataTable no-footer " id="detailsTable">' +
+                '<thead class="bg-gradient-dark text-white"><tr>' +
                 '<th> Route Name </th>' +
                 '</tr></thead><tbody>';
             for (var i = 0; i < details.length; i++) {

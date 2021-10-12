@@ -402,7 +402,6 @@
     UpdateGroup: function () {
         CrudScript.makeAjaxRequest('Post', '/Group/UpdateGroup', $("form").serialize()).then(function (data) {
             ShowDivSuccess("Updated Successfully");
-            window.location = "/Group/Index";
         })
     },
 

@@ -17,14 +17,13 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card mb-4">
-                       
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table align-items-center mb-0 tblmanage" id="mainTable">
                                     <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th> Name</th>
+                                            <th>Name</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -37,74 +36,6 @@
                 </div>
             </div>
         </div>
-<!-- ADD MODAL -->
-<div class="modal fadeIn modal-primary" id="add_modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title col-md-10">Add Purchase Detail</h1>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-            </div>
-            <form role="form" id="form">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="card-body">
-                            <div class="form-group form-show-validation row">
-                                <label for="name" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-right">Group Name <span class="required-label">*</span></label>
-                                <div class="col-lg-4 col-md-9 col-sm-8">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Group Name" required>
-                                </div>
-                            </div>
-                            <div class="form-group form-show-validation row">
-                                <label for="name" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-right">Permissions <span class="required-label">*</span></label>
-                                <div class="forms col-lg-4 col-md-9 col-sm-8">
-                                    <ul class="tree" id="Menus">
-                                        <li class="has">
-                                            <input type="checkbox" name="domain[]" value="Agricultural Sciences">
-                                            <label>Agricultural Sciences <span class="total">(15)</span></label>
-                                            <ul>
-                                                <li class="">
-                                                    <input type="checkbox" name="subdomain[]" value="Agriculture, Dairy &amp; Animal Science">
-                                                    <label>Agriculture, Dairy &amp; Animal Science </label>
-                                                </li>
-
-                                                <li class="">
-                                                    <input type="checkbox" name="subdomain[]" value="Biodiversity Conservation">
-                                                    <label>Biodiversity Conservation </label>
-                                                <li class="has">
-                                                    <input type="checkbox" name="subdomain[]" value="Biochemistry &amp; Molecular Biology">
-                                                    <label>Biochemistry &amp; Molecular Biology <span class="total">(1)</span></label>
-                                                    <ul>
-                                                        <li>
-                                                            <input type="checkbox" name="subject[]" value="Analytical Biochemistry">
-                                                            <label>Analytical Biochemistry</label>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Add</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-
-            </form>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- END ADD MODAL -->
-
-
 <script src="~/Scripts/ProjectScript/GroupScript.js"></script>
 <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
 <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>

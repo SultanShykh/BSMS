@@ -31,7 +31,6 @@
             $('#addRowModal').modal("hide");
             if (data.status == true) {
                 ShowDivSuccess(data.message);
-                window.location.reload();
             }
             else {
                 ShowDivError(data.message);
@@ -56,7 +55,6 @@
         CrudScript.makeAjaxRequest('Post', '/Menu/UpdateMenu', $("form").serialize()).then(function (data) {
             $('#addRowModal').modal("hide");
             ShowDivSuccess("Updated Successfully");
-            location.reload();
         })
     },
 

@@ -125,7 +125,7 @@ function DeleteConfirm(url,Id) {
 }
 
 function ShowDivError(msg) {
-    swal("Error!!",msg, {
+    swal("Error!!", msg, {
         icon: "error",
         buttons: {
             confirm: {
@@ -156,6 +156,8 @@ function ShowDivSuccess(msg) {
                 closeModal: true
             }
         }
+    }).then(() => {
+        location.reload();
     });
 }
 
