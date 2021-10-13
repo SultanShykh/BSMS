@@ -28,5 +28,14 @@ namespace AdminPortal.Codebase
             
             return result;
         }
+
+        public void COR_WEB_CampaignManagement(int user_id, out List<dynamic> stats, out List<dynamic> details)
+        {
+            var result = connection.COR_WEB_CampaignManagement(user_id: user_id);
+            stats = result.ToList<dynamic>();
+
+            result.NextResult();
+            details = result.ToList<dynamic>();
+        }
     }
 }

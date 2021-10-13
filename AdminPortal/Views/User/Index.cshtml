@@ -43,12 +43,6 @@
                     </form>
 
                     <hr />
-
-                    <!-- Modal -->
-                    @{
-                        Html.RenderAction("_updateUser", "User");
-                    }
-                    <!-- Modal -->
                     <div class="table-responsive">
                         <table class="table mb-0">
                             <thead>
@@ -82,7 +76,7 @@
                                             <td>@userItems.user_expiry.ToString("yyyy-MM-dd")</td>
                                             <td hidden>@userItems.status</td>
                                             <td hidden>@userItems.otp_access</td>
-                                            <td><button class="btn bg-gradient-dark edit" data-toggle="modal" data-target="#addRowModal">Edit</button><button class="btn bg-gradient-danger delete">Delete</button></td>
+                                            <td><button class="btn bg-gradient-dark edit" data-toggle="modal" data-target="#addRowModal">Edit</button></td>
                                         </tr>
 
                                     }
@@ -177,11 +171,18 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+@{
+    Html.RenderAction("_updateUser", "User");
+}
+<!-- Modal -->
+
 <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
 <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
 <script>
     var form = $("#form");
-    
+
     $(document).on("focusout", "#username", function () {
         var username = $(this).val();
         if (username != null && username != '') {
@@ -211,13 +212,6 @@
         }
     });
 
-    $(document).on('click', '.delete', async function () {
-        debugger
-        var Id = $(this).closest('tr').find("td:eq(0)").text();
-        var url = '/User/DeleteUser';
-
-        await DeleteConfirm(url,Id);
-    });
     $(document).on('click', '.edit', function () {
         var currentRow = $(this).closest('tr');
         $('#addRowModal').modal("show");
@@ -229,7 +223,7 @@
         $('#email').val(currentRow.find("td:eq(3)").text());
         $('#user_mobile').val(currentRow.find("td:eq(6)").text());
         $('#user_expiry').val(currentRow.find("td:eq(7)").text());
-        debugger
+
         CrudScript.makeAjaxRequest('Post', '/User/SelectedMaskings/' + currentRow.find("td:eq(0)").text()).then(function (data) {
             if (data.maskings != null) {
                 for (var i in data.maskings) {
@@ -251,8 +245,18 @@
         })
 
         $('#GroupId').val(currentRow.find("td:eq(4)").text()).prop("selected", "selected");
-        $('#status').attr('checked', currentRow.find("td:eq(8)").text());
-        $('#otp_access').attr('checked', currentRow.find("td:eq(9)").text());
+
+        if (currentRow.find("td:eq(8)").text() == "True") {
+            $('#status').attr('checked', true);
+        } else {
+            $('#status').attr('checked', false);
+        }
+
+        if (currentRow.find("td:eq(9)").text() == "True") {
+            $('#otp_access').attr('checked', true);
+        } else {
+            $('#otp_access').attr('checked', false);
+        }
     });
 
     $('#btnUpdate').click(function () {
@@ -271,7 +275,6 @@
                 $('#addRowModal').modal("hide");
                 if (data.status == true) {
                     ShowDivSuccess(data.message);
-                    window.location.reload();
                 }
                 else {
                     ShowDivError(data.message);
@@ -281,7 +284,6 @@
         else {
             ShowDivError("Input Data is not valid");
         }
-
     });
 
     function ClearFields() {

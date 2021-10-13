@@ -17,20 +17,6 @@ namespace AdminPortal.Codebase
             return result;
         }
 
-        public dynamic CheckEmail(string email, string host)
-        {
-            var checkEmail = AppDB.INV_USP_CheckEmail(Email: email).FirstOrDefault();
-            if(checkEmail != null)
-            {
-               var sendEmail = SendMail(checkEmail.Email,checkEmail.username, checkEmail.Name, host);
-              
-                return "Reset Link Has Been Sent To Your Email";
-            }
-
-            return "Email Not Found Please Register Your Email First";
-        }
-
-
         public string SendMail(string email,string username, string name, string host)
         {
             
@@ -61,21 +47,5 @@ namespace AdminPortal.Codebase
             }
             return msg;
         }
-
-        public string ChangePassword(string password, string username)
-        {
-            try
-            {
-                var updatePassword = AppDB.INV_WEB_ChangePassword(Username: username, Password: password);
-                return "Password Changed Successfully";
-            }
-            catch(Exception e)
-            {
-                return "Password Changing Failed";
-            }
-            
-        }
-
-
     }
 }

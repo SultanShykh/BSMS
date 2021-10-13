@@ -11,10 +11,6 @@ namespace AdminPortal.Controllers
 {
     public class UserController : Controller
     {
-        public const string PARTIAL_VIEW_FOLDER = "~/Views/Partials/";
-        CommonProcessing c = new CommonProcessing();
-        List<GroupMasterModel> groups;
-        // GET: Users
         public ActionResult Index(int Id = 1, FormCollection collection = null)
         {
             List<UserModel> userModel = new List<UserModel>();
@@ -40,32 +36,18 @@ namespace AdminPortal.Controllers
         [HttpPost]
         public ActionResult CheckUsername(string username)
         {
-            bool result;
-            UserProcessing.CheckUser(username, out result);
+            UserProcessing.CheckUser(username, out bool result);
             return Json(result);
         }
 
         public ActionResult CreateUser()
         {
-            try
-            {
-                CommonProcessing.GetAllGroups(out groups);
-                ViewBag.userGroup = new SelectList(groups, "Id", "Name");
-
-                var GetMaskings = c.GetMaskings();
-                ViewBag.maskings = new SelectList(GetMaskings,"id","masking");
-                return View();
-            }
-            catch (Exception ex)
-            {
-                return Json(false);
-            }
+            return View();
         }
 
         [HttpPost]
         public ActionResult CreateUser(UserModel userModel)
         {
-           
             bool result;
             string msg;
 
@@ -79,51 +61,15 @@ namespace AdminPortal.Controllers
             }
             catch (Exception ex)
             {
-                msg = "Error, Please try again.";
+                msg = "Please try again.";
                 return Json(new { status = false, message = msg });
-            }
-        }
-
-        [HttpPost]
-        public ActionResult UpdateUserGroup(string GroupId, string UserId ) {
-
-            try
-            {
-                bool result;
-                UserProcessing.UpdateUserGroup(UserId, GroupId, out result);
-                return Json(result);
-            }
-            catch(Exception e)
-            {
-                return Json("Error");
-            }
-        }
-
-        [HttpPost]
-        public ActionResult DeleteUser(string Id)
-        {
-            try
-            {
-                UserProcessing.DeleteUser(Id,out bool result, out string msg);
-                return Json(new { status = result, message = msg});
-
-            }
-            catch(Exception e)
-            {
-                return Json(new { status = false, message = "Error" });
             }
         }
 
         [ChildActionOnly]
         public ActionResult _updateUser()
         {
-            CommonProcessing.GetAllGroups(out groups);
-            ViewBag.userGroup = new SelectList(groups, "Id", "Name");
-
-            var GetMaskings = c.GetMaskings();
-            ViewBag.maskings = new SelectList(GetMaskings, "id", "masking");
-
-            return PartialView(PARTIAL_VIEW_FOLDER + "_updateUser.cshtml");
+            return PartialView();
         }
 
         [HttpPost]
@@ -134,9 +80,7 @@ namespace AdminPortal.Controllers
                 return Json(new { status = false, message = "Fields are empty" });
             try
             {
-                bool result;
-
-                UserProcessing.UpdateUser(userModel, out result);
+                UserProcessing.UpdateUser(userModel, out bool result);
                 return Json(new { status = result, message = "Successfully Updated!!!" });
             }
             catch (Exception e)

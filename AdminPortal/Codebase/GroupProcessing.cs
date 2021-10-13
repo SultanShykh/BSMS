@@ -11,25 +11,24 @@ namespace AdminPortal.Codebase
     public class GroupProcessing
     {
         static dynamic AppDB = Database.OpenNamedConnection("MainDB");
-        public static void Get(DTParameters param, out DTResult<GroupMasterModel> result)
+        public static void Get(out List<GroupMasterModel> result)
         {
-            result = new DTResult<GroupMasterModel>();
-            dynamic Records = AppDB.COR_USP_GetAllGroups();
-            var SingleRecord = Records.FirstOrDefault();
-            if (Records.FirstOrDefault() != null)
-            {
-                foreach (var rec in Records)
-                {
-                    result.data.Add(new GroupMasterModel()
-                    {
-                        id = rec.Id,
-                        Name = rec.Name,
-                        isActive = rec.Status == 1 ? "Active" : "Deactive",
-                        Status = rec.Status,
-                    });
+            result = AppDB.COR_USP_GetAllGroups() ?? new List<GroupMasterModel>();
+            //var SingleRecord = Records.FirstOrDefault();
+            //if (Records.FirstOrDefault() != null)
+            //{
+            //    foreach (var rec in Records)
+            //    {
+            //        result.data.Add(new GroupMasterModel()
+            //        {
+            //            id = rec.Id,
+            //            Name = rec.Name,
+            //            isActive = rec.Status == 1 ? "Active" : "Deactive",
+            //            Status = rec.Status,
+            //        });
 
-                }
-            }
+            //    }
+            //}
         }
 
         public static void checkGroupName(string groupName, out bool result)
@@ -48,22 +47,12 @@ namespace AdminPortal.Codebase
         }
 
 
-        public static void CreateGroup(GroupMasterModel groupMastermodel, GroupMenuModel groupMenu, out bool result)
+        public static void CreateGroup(GroupMasterModel groupMastermodel, GroupMenuModel groupMenu)
         {
-            result = false;
             dynamic Records = AppDB.COR_USP_CreateGroup(Name: groupMastermodel.Name, CreatedDateTime: DateTime.Now, MenuId: groupMenu.MenuId, AllowEdit: groupMenu.AllowEdit, AllowCreate: groupMenu.AllowCreate, AllowDelete: groupMenu.AllowDelete, AllowView: groupMenu.AllowView);
-            var msg = Records.FirstOrDefault().Message;
-            if (Records.FirstOrDefault() != null && Records.FirstOrDefault().Message == "Group Created")
-            {
-                result = true;
-            }
-            else
-            {
-                result = false;
-            }
         }
 
-        public static void DeleteGroup(string groupId, out bool result, out string msg)
+        public static void DeleteGroup(int groupId, out bool result, out string msg)
         {
             result = false;
             dynamic Records = AppDB.COR_USP_DeleteGroup(GroupId: groupId);

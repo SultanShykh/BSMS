@@ -14,32 +14,10 @@ namespace AdminPortal.Codebase
     {
         static dynamic AppDB = Database.OpenNamedConnection("MainDB");
         
-        public static void GetUserByGroupId(out string selectedUsers, out List<UserModel> users, int? groupId = null)
+        public static List<GroupMasterModel> GetAllGroups()
         {
-            users = new List<UserModel>();
-            selectedUsers = "";
-
-            dynamic Records = AppDB.COR_USP_GetUsersByGroupId(groupId: groupId);
-
-            if (Records.FirstOrDefault() != null)
-            {
-                users = Records.ToList<UserModel>();
-            }
-
-            Records.NextResult();
-            if (Records.FirstOrDefault() != null)
-            {
-                foreach (var rec in Records)
-                {
-                    selectedUsers += rec.Id+ ",";
-                }
-            }
-            selectedUsers = selectedUsers.TrimEnd(',');
-        }
-        
-        public static void GetAllGroups(out List<GroupMasterModel> groups)
-        {
-            groups = AppDB.COR_USP_GetAllGroups() ?? new List<GroupMasterModel>();
+            List<GroupMasterModel> groups = AppDB.COR_USP_GetAllGroups() ?? new List<GroupMasterModel>();
+            return groups;
         }
 
         
@@ -87,7 +65,6 @@ namespace AdminPortal.Codebase
                         MenuUrl = rec.MenuUrl,
                         Controller = rec.Controller,
                         Action = rec.Action,
-                        PermissionId = rec.PermissionId,
                         AllowCreate = rec.AllowCreate,
                         AllowDelete = rec.AllowDelete,
                         AllowEdit = rec.AllowEdit,
@@ -97,9 +74,9 @@ namespace AdminPortal.Codebase
             }
         }
 
-        public dynamic GetMaskings() 
+        public static List<Masking> GetMaskings() 
         {
-            List<Masking> m = AppDB.GetMaskings() ?? new List<Masking>();
+            List<Masking> m = AppDB.COR_USP_GetMaskings() ?? new List<Masking>();
             return m;
         }
     }

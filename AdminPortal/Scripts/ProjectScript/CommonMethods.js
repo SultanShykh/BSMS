@@ -91,7 +91,8 @@ function CallAsyncService1(url, Param, funSucc, Type, funError) {
     return false;
 }
 
-function DeleteConfirm(url,Id) {
+function DeleteConfirm(url, Id) {
+    debugger
     swal({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -108,10 +109,9 @@ function DeleteConfirm(url,Id) {
         }
     }).then((Delete) => {
         if (Delete) {
-            debugger
             CrudScript.makeAjaxRequest('POST', url + "/"+Id).then(function (data) {
                 if (data.status == true) {
-                    location.reload();
+                    ShowDivSuccess(data.message);
                 }
                 else {
                     ShowDivError(data.message);

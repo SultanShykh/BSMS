@@ -1,11 +1,4 @@
-﻿@using AdminPortal.Models
-@model IEnumerable<User>
-
-@{
-
-    ViewBag.Title = "Index";
-}
-@section style
+﻿@section style
     {
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 }
@@ -107,106 +100,6 @@
             </div>
         </div>
 
-        <div class="row my-4">
-            @if (Model.Count() > 0)
-            {
-                <div class="col-6">
-                    <div class="card shadow">
-                        <div class="card-header pb-0">
-                            <h6>Delivery SMS</h6>
-                        </div>
-                        <div class="card-body px-0 pt-0 pb-0">
-                            <div class="table-responsive p-0">
-                                <div class="table align-items-center mb-0">
-                                    <table class="table mb-0">
-
-
-                                        <thead>
-                                            <tr>
-                                                <th class="text-uppercase text-dark text-xs">@Html.DisplayNameFor(model => model.id)</th>
-                                                <th class="text-uppercase text-dark text-xs ps-2">@Html.DisplayNameFor(Model => Model.username)</th>
-                                                <th class="text-uppercase text-dark text-xs">@Html.DisplayNameFor(Model => Model.email)</th>
-                                                <th class="text-uppercase text-dark text-xs">@Html.DisplayNameFor(Model => Model.password)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (User u in Model)
-                                            {
-
-                                                <tr>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0 px-3">@u.id</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">@u.username</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">@u.email</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">@u.password</p>
-                                                    </td>
-
-                                                </tr>
-                                            }
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-
-            @if (Model.Count() > 0)
-            {
-                <div class="col-6">
-                    <div class="card shadow">
-                        <div class="card-header pb-0">
-                            <h6>Delivery Failed SMS</h6>
-                        </div>
-                        <div class="card-body px-0 pt-0 pb-0">
-                            <div class="table-responsive p-0">
-                                <div class="table align-items-center mb-0">
-                                    <table class="table mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-uppercase text-dark text-xs">@Html.DisplayNameFor(model => model.id)</th>
-                                                <th class="text-uppercase text-dark text-xs ps-2">@Html.DisplayNameFor(Model => Model.username)</th>
-                                                <th class="text-uppercase text-dark text-xs">@Html.DisplayNameFor(Model => Model.email)</th>
-                                                <th class="text-uppercase text-dark text-xs">@Html.DisplayNameFor(Model => Model.password)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (User u in Model)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0 px-3">@u.id</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">@u.username</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">@u.email</p>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">@u.password</p>
-                                                    </td>
-
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-
         <div class="row my-4 border-radius-lg">
             <div class="col-6">
                 <div class="card shadow mb-4">
@@ -288,8 +181,6 @@
     {
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
-    <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
         $(function () {
             $('input[name="daterange"]').daterangepicker({
@@ -301,21 +192,6 @@
                 console.log("A new date selection was made: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
             });
         });
-
-        $(document).ready(function () {
-            debugger
-            CrudScript.makeAjaxRequest('POST', '/Home/GetUsers').then(function (data) {
-                $.each(data, function (key, value) {
-                    $('#Users').append($('<option>', {
-                        value: value.Id,
-                        text: value.fullname
-                    }));
-                })
-
-                $('#Users').selectpicker('refresh');
-            })
-        });
-
     </script>
 }
 

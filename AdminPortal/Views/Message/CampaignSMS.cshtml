@@ -33,12 +33,12 @@
                             @Html.ValidationMessageFor(model => model.camp_name, "", new { @class = "text-danger" })
 
                             @Html.LabelFor(model => model.sender):
-                            @Html.DropDownListFor(model => model.sender, (IEnumerable<SelectListItem>)ViewBag.maskings, new
-                            {
-                                @class = "form-control mb-1",
-                                required = "true",
-                                id = "Masking"
-                            })
+                            @Html.DropDownListFor(model => model.sender, new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
+                       {
+                           @class = "form-control mb-1",
+                           required = "true",
+                           id = "Masking"
+                       })
 
                             <br />
                             <input type="file" class="form-control mt-2" name="contactsFile" id="contactsFile" />

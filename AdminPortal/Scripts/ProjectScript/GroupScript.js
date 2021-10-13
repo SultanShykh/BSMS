@@ -49,15 +49,9 @@
     SaveGroup: function (formData) {
         CrudScript.makeAjaxRequest('Post', '/Group/CreateGroup', $("form").serialize()).then(function (data) {
             debugger
-            if (data.message == "Successfully Created!!!") {
-                window.location = '/Group/Index';
-                var mainTable = $('#mainTable').DataTable();
-                mainTable.destroy();
-                GroupScript.RenderDataTable();
+            if (data.status == true) {
                 ShowDivSuccess(data.message);
-                $('#message').css('display', 'none');
             }
-
             else {
                 ShowDivError(data.message);
             }
@@ -405,9 +399,9 @@
         })
     },
 
-    DeleteGroup: function (data) {
+    DeleteGroup: function (Id) {
         var url = '/Group/DeleteGroup';
-        DeleteConfirm(url, data.id, GroupScript);
+        DeleteConfirm(url, Id, GroupScript);
     },
 
     GetSelectedUsers: function () {

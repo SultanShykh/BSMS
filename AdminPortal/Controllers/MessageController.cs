@@ -19,7 +19,6 @@ namespace AdminPortal.Controllers
     [AuthorizeUser]
     public class MessageController : Controller
     {
-        List<Masking> maskings;
         MessageProcessing m = new MessageProcessing();
         List<string> list = new List<string>();
         IDictionary<string,string> dict = new Dictionary<string, string>();
@@ -27,17 +26,12 @@ namespace AdminPortal.Controllers
 
         public ActionResult QuickSMS()
         {
-            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
-            ViewBag.maskings = new SelectList(maskings,"id", "masking");
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult QuickSMS(Campaign campaign)
         {
-            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["UserId"]), out maskings);
-            ViewBag.maskings = new SelectList(maskings, "id", "masking");
-
             ModelState.Remove("camp_name");
             if (!ModelState.IsValid)
                 return Json(new { status = false, message = "Fields are missing" });
@@ -80,18 +74,12 @@ namespace AdminPortal.Controllers
 
         public ActionResult CampaignSMS()
         {
-            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
-            ViewBag.maskings = new SelectList(maskings, "id", "masking");
-
             return View();
         }
 
         [HttpPost]
         public ActionResult CampaignSMS(Campaign campaign)
         {
-            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
-            ViewBag.maskings = new SelectList(maskings, "id", "masking");
-
             ModelState.Remove("camp_time");
             ModelState.Remove("receiver");
             if (!ModelState.IsValid)
@@ -117,8 +105,8 @@ namespace AdminPortal.Controllers
                     {
                         file.SaveAs(path);
 
-                        var result = m.COR_WEB_createCampaign(campaign);
                         campaign.user_id = Convert.ToInt32(Session["UserId"]);
+                        var result = m.COR_WEB_createCampaign(campaign);
                         int camp_id = result.camp_id;
 
                         if (CSVExtension.getContactsFromExcel(path,out list, out int count, out DataTable dt, campaign,camp_id))
@@ -164,8 +152,8 @@ namespace AdminPortal.Controllers
                     {
                         file.SaveAs(path);
 
-                        var result = m.COR_WEB_createCampaign(campaign);
                         campaign.user_id = Convert.ToInt32(Session["UserId"]);
+                        var result = m.COR_WEB_createCampaign(campaign);
                         campaign.id = result.camp_id;
 
                         if (CSVExtension.getContactsFromCSV(path, out list, out int count, out DataTable dt, campaign))
@@ -236,17 +224,12 @@ namespace AdminPortal.Controllers
 
         public ActionResult PersonalizedSMS()
         {
-            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
-            ViewBag.maskings = new SelectList(maskings, "id", "masking");
             return View();
         }
 
         [HttpPost]
         public ActionResult PersonalizedSMS(Campaign campaign)
         {
-            UserProcessing.SelectedMaskings(Convert.ToInt32(Session["userId"]), out maskings);
-            ViewBag.maskings = new SelectList(maskings, "id", "masking");
-
             ModelState.Remove("receiver");
             if (!ModelState.IsValid)
                 return View();
@@ -268,9 +251,9 @@ namespace AdminPortal.Controllers
                         file.SaveAs(path);
                         
                         campaign.msgdata = "";
+                        campaign.user_id = Convert.ToInt32(Session["UserId"]);
                         var result = m.COR_WEB_createCampaign(campaign);
                         campaign.id = result.camp_id;
-                        campaign.user_id = Convert.ToInt32(Session["UserId"]);
                         campaign.msgdata = msgdata;
 
                         if (CSVExtension.getDataFromExcel(path, campaign.msgdata, out dict,out DataTable dt, campaign, out int count))
@@ -318,9 +301,9 @@ namespace AdminPortal.Controllers
                         file.SaveAs(path);
 
                         campaign.msgdata = "";
+                        campaign.user_id = Convert.ToInt32(Session["UserId"]);
                         var result = m.COR_WEB_createCampaign(campaign);
                         campaign.id = result.camp_id;
-                        campaign.user_id = Convert.ToInt32(Session["UserId"]);
                         campaign.msgdata = msgdata;
                         
                         if (CSVExtension.getDataFromCSV(path, campaign.msgdata, out dict, out DataTable dt,campaign ,out int count))
@@ -392,7 +375,8 @@ namespace AdminPortal.Controllers
 
         public ActionResult CampaignManagement() 
         {
-            return View();
+            m.COR_WEB_CampaignManagement(Convert.ToInt32(Session["UserId"]), out List<dynamic> stats, out List<dynamic> details);
+            return View(Tuple.Create(stats, details));
         }
     }
 }

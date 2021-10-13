@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-md-6 col-lg-6">
                                 <div class="form-group">
-                                    @Html.DropDownListFor(model => model.sender, (IEnumerable<SelectListItem>)ViewBag.maskings, new
+                                    @Html.DropDownListFor(model => model.sender, new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
                                {
                                    @class = "form-control mb-1",
                                    required = "true",

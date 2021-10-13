@@ -8,7 +8,6 @@ namespace AdminPortal.Models
     public class GroupMasterModel
     {
         public int id { get; set; }
-        public int applicationId { get; set; }
         public string Name { get; set; }
         public string createdBy { get; set; }
         public string isActive { get;set; }

@@ -12,29 +12,11 @@ namespace AdminPortal.Controllers
     [AuthorizeUser]
     public class GroupController : Controller
     {
-        // GET: Group
         public ActionResult Index()
         {
-            return View();
+            GroupProcessing.Get(out List<GroupMasterModel> result);
+            return View(result);
         }
-
-
-        [HttpGet]
-        public ActionResult GetGroups(DTParameters param)
-        {
-            try
-            {
-                DTResult<GroupMasterModel> result;
-                GroupProcessing.Get(param, out result);
-                return Json(result, JsonRequestBehavior.AllowGet);
-
-            }
-            catch (Exception ex)
-            {
-                return Json(false);
-            }
-        }
-
 
         [HttpGet]
         public ActionResult CreateGroup()
@@ -64,7 +46,6 @@ namespace AdminPortal.Controllers
             try
             {
                 var users = model["Users"] == null ? null : model["Users"].ToString();
-                bool result = true;
 
                 GroupMasterModel Model = new GroupMasterModel();
                 GroupMenuModel groupMenu = new GroupMenuModel();
@@ -80,7 +61,7 @@ namespace AdminPortal.Controllers
                 {
                     if (MenuName != "" && !v.ToString().Contains(MenuName) && count > 0 && count < 5)
                     {
-                        GroupProcessing.CreateGroup(Model, groupMenu, out result);
+                        GroupProcessing.CreateGroup(Model, groupMenu);
                         groupMenu.AllowCreate = false;
                         groupMenu.AllowView = false;
                         groupMenu.AllowEdit = false;
@@ -122,7 +103,7 @@ namespace AdminPortal.Controllers
                     }
                     if (count == 5)
                     {
-                        GroupProcessing.CreateGroup(Model, groupMenu, out result);
+                        GroupProcessing.CreateGroup(Model, groupMenu);
                         groupMenu.AllowCreate = false;
                         groupMenu.AllowView = false;
                         groupMenu.AllowEdit = false;
@@ -135,10 +116,10 @@ namespace AdminPortal.Controllers
 
                 if (count > 0 && count < 5)
                 {
-                    GroupProcessing.CreateGroup(Model, groupMenu, out result);
+                    GroupProcessing.CreateGroup(Model, groupMenu);
                 }
 
-                return Json(new { status = result, message = "Successfully Created!!!" });
+                return Json(new { status = true, message = "Successfully Created!!!" });
             }
 
             catch (Exception ex)
@@ -150,7 +131,7 @@ namespace AdminPortal.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteGroup(string Id)
+        public ActionResult DeleteGroup(int Id)
         {
             try
             {
@@ -158,12 +139,12 @@ namespace AdminPortal.Controllers
                 string msg;
                 GroupProcessing.DeleteGroup(Id, out result, out msg);
 
-                return Json(true);
+                return Json(new { status = true, message = msg });
 
             }
             catch (Exception e)
             {
-                return Json("Error");
+                return Json(new { status = false, message = e });
             }
         }
 
@@ -274,14 +255,6 @@ namespace AdminPortal.Controllers
                 return Json("Error");
             }
 
-        }
-
-        [HttpPost]
-        public ActionResult GetAllGroups() 
-        {
-            List<GroupMasterModel> groups;
-            CommonProcessing.GetAllGroups(out groups);
-            return Json(new { groups });
         }
     }
 }

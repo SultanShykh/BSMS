@@ -16,7 +16,7 @@ namespace AdminPortal.Codebase
         {
             userModel = new List<UserModel>();
 
-            dynamic Records = AppDB.COR_getuserwithgroups2(currentPage: pageNum, username: username,email: email, mobile_number: user_mobile, userId: userId);
+            dynamic Records = AppDB.COR_USP_GetUserWithGroups(currentPage: pageNum, username: username,email: email, mobile_number: user_mobile, userId: userId);
 
             if (Records.FirstOrDefault() != null)
             {
@@ -61,32 +61,7 @@ namespace AdminPortal.Codebase
 
 
         }
-        public static void UpdateUserGroup(string userid , string groupid, out bool result)
-        {
-            result = false;
-
-            dynamic Records = AppDB.COR_USP_UpdateUserGroup(UserId: userid, GroupId: groupid);
-            if (Records.FirstOrDefault() != null && Records.FirstOrDefault().Message == "User updated")
-            {
-                result = true;
-            }
-            
-
-        }
-
-        public static void DeleteUser(string userid, out bool result, out string msg)
-        {
-            result = false;
-            msg = null;
-            dynamic Records = AppDB.COR_USP_DeleteUser(UserId: userid);
-             
-            if (Records.FirstOrDefault() != null && Records.FirstOrDefault().Message == "User Deleted")
-            {
-                result = true;
-            }
-            
-            msg = Records.FirstOrDefault().Message;
-        }
+        
         public static void UpdateUser(UserModel model, out bool result)
         {
             result = false;
@@ -106,7 +81,7 @@ namespace AdminPortal.Codebase
         public static void SelectedUserMaskings(int id, out string selectedMaskings,out List<Masking> masking) 
         {
             selectedMaskings = "";
-            var Records = AppDB.SelectedUserMaskings(id);
+            var Records = AppDB.COR_USP_SelectedUserMaskings(id);
 
             if (Records.FirstOrDefault() != null)
             {
@@ -122,9 +97,10 @@ namespace AdminPortal.Codebase
             selectedMaskings = selectedMaskings.TrimEnd(',');
         }
 
-        public static void SelectedMaskings(int id, out List<Masking> masking)
+        public static List<Masking> SelectedMaskings()
         {
-            masking = AppDB.SelectedUserMaskings(id).ToList<Masking>();
+            List<Masking> masking = AppDB.COR_USP_SelectedUserMaskings(Convert.ToInt32(HttpContext.Current.Session["UserId"])).ToList<Masking>();
+            return masking;
         }
     }
 }

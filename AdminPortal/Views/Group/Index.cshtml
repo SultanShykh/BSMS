@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<AdminPortal.Models.GroupMasterModel>
+@{
     ViewBag.Title = "Groups";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -6,7 +7,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="@Url.Action("CreateGroup","Group")" class="btn bg-gradient-dark">
+                    <a href="@Url.Action("CreateGroup", "Group")" class="btn bg-gradient-dark">
                         <i class='fas fa-plus'></i> Create
                     </a>
                 </div>
@@ -22,13 +23,29 @@
                                 <table class="table align-items-center mb-0 tblmanage" id="mainTable">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
+                                            <th hidden>Id</th>
                                             <th>Name</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody></tbody>
+                                    <tbody>
+                                        @{
+                                            foreach (var v in Model)
+                                            {
+                                                var status = v.Status == 1 ? "Active" : "In Active";
+                                                <tr>
+                                                    <td hidden>@v.id</td>
+                                                    <td>@v.Name</td>
+                                                    <td>@status</td>
+                                                    <td>
+                                                        <button type="button" class="btn bg-gradient-dark edit mr-2" id="' + @v.id + '" value="Edit"><i class="fa fa-edit"></i></button>
+                                                        <button type="button" class="btn btn-danger delete" id="' + @v.id + '" value="Delete"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -42,7 +59,8 @@
 <script>
 
     $(document).ready(function () {
-        GroupScript.RenderDataTable();
+        $('#mainTable').DataTable();
+        //GroupScript.RenderDataTable();
     })
     $(document).on('click', '.tree label', function (e) {
         $(this).next('ul').fadeToggle();
@@ -77,19 +95,15 @@
         GroupScript.SaveGroup();
     })
     $(document).on('click', '.edit', function () {
-        var data = $('#mainTable').DataTable().row($(this).closest('tr')).data();
-        debugger
-        GroupScript.EditForm(data.id);
+        var id = $(this).closest('tr').find("td:eq(0)").text();
+        GroupScript.EditForm(id);
 
     });
 
 
 
     $(document).on('click', '.delete', function () {
-        debugger
-        var data = $('#mainTable').DataTable().row($(this).closest('tr')).data();
-        GroupScript.DeleteGroup(data);
-        
+        GroupScript.DeleteGroup($(this).closest('tr').find("td:eq(0)").text());        
     });
 
     $('#add').click(function () {

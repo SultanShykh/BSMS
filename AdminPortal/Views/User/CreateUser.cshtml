@@ -48,18 +48,18 @@
                             @Html.ValidationMessageFor(model => model.user_expiry, "", new { @class = "text-danger" })
 
                             @Html.LabelFor(model => model.masking):
-                            @Html.DropDownListFor(model => model.masking, (IEnumerable<SelectListItem>)ViewBag.maskings, new
-                            {
-                                required = "required",
-                                id = "masking",
-                                multiple = true
-                            })
+                            @Html.DropDownListFor(model => model.masking, new SelectList(AdminPortal.Codebase.CommonProcessing.GetMaskings(), "id", "masking"), new
+                       {
+                           required = "required",
+                           id = "masking",
+                           multiple = true
+                       })
                         </fieldset>
 
                         <h3>Account Information</h3>
                         <fieldset class="form-input">
                             <label>usertype</label>
-                            @Html.DropDownListFor(model => model.GroupId, (IEnumerable<SelectListItem>)ViewBag.userGroup, new
+                            @Html.DropDownListFor(model => model.GroupId, new SelectList(AdminPortal.Codebase.CommonProcessing.GetAllGroups(), "Id", "Name"), new
                            {
                                @class = "form-control",
                                id = "GroupId"

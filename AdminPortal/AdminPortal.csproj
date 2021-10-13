@@ -149,7 +149,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountProcessing\AccountProcessingController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -253,9 +252,9 @@
     <Content Include="Views\Message\CampaignSMS.cshtml" />
     <Content Include="Views\Message\PersonalizedSMS.cshtml" />
     <Content Include="Views\Partials\_Menu.cshtml" />
-    <Content Include="Views\Partials\_updateUser.cshtml" />
     <Content Include="Views\Message\CampaignManagement.cshtml" />
     <Content Include="Views\Reports\Outbox.cshtml" />
+    <Content Include="Views\User\_updateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

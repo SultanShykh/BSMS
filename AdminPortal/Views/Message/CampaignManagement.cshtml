@@ -1,4 +1,4 @@
-﻿
+﻿@model Tuple<List<dynamic>, List<dynamic>>
 <div class="container-fluid border-radius-lg">
     <div class="row">
         <div class="col-md-12">
@@ -9,28 +9,29 @@
             </div>
         </div>
     </div>
-
+@{ foreach (var v in Model.Item1)
+    {
     <div class="row my-4">
         <div class="col-xl-3 col-sm-6">
-            <div class="card shadow">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="numbers">
-                                <p class="mb-0 text-capitalize font-weight-bold mb-2">Today</p>
-                                <p class="text-sm">
-                                    Total Campaigns:
-                                </p>
+                <div class="card shadow">
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="numbers">
+                                    <p class="mb-0 text-capitalize font-weight-bold mb-2">Today</p>
+                                    <p class="text-sm">
+                                        @v.Today
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-dark shadow text-center border-radius-md">
-                                <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                            <div class="col-4 text-end">
+                                <div class="icon icon-shape bg-gradient-dark shadow text-center border-radius-md">
+                                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
         <div class="col-xl-3 col-sm-6">
             <div class="card shadow">
@@ -40,7 +41,7 @@
                             <div class="numbers">
                                 <p class=" mb-0 text-capitalize font-weight-bold mb-2">This Week</p>
                                 <p class="text-sm">
-                                    Total Campaigns:
+                                    @v.ThisWeek
                                 </p>
                             </div>
                         </div>
@@ -61,7 +62,7 @@
                             <div class="numbers">
                                 <p class=" mb-0 text-capitalize font-weight-bold mb-2">This Month</p>
                                 <p class="text-sm">
-                                    Total Campaigns:
+                                    @v.ThisMonth
                                 </p>
                             </div>
                         </div>
@@ -82,7 +83,7 @@
                             <div class="numbers">
                                 <p class="mb-0 text-capitalize font-weight-bold mb-2">This Year</p>
                                 <p class="text-sm">
-                                    Total Campaigns:
+                                    @v.ThisYear
                                 </p>
                             </div>
                         </div>
@@ -96,12 +97,14 @@
             </div>
         </div>
     </div>
+    }
+}
 
     <div class="row">
         <div class="card shadow">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped" id="table">
+                    <table class="table table-hover table-sm" id="table">
                         <thead>
                             <tr>
                                 <td>Id</td>
@@ -113,62 +116,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>sultan</td>
-                                <td>Daraz</td>
-                                <td>sultan</td>
-                                <td>01/02/2021</td>
-                                <td><button class="btn bg-gradient-dark">Action</button></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>sultan</td>
-                                <td>Daraz</td>
-                                <td>sultan</td>
-                                <td>01/02/2021</td>
-                                <td><button class="btn bg-gradient-dark">Action</button></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>sultan</td>
-                                <td>Daraz</td>
-                                <td>sultan</td>
-                                <td>01/02/2021</td>
-                                <td><button class="btn bg-gradient-dark">Action</button></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>sultan</td>
-                                <td>Daraz</td>
-                                <td>sultan</td>
-                                <td>01/02/2021</td>
-                                <td><button class="btn bg-gradient-dark">Action</button></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>sultan</td>
-                                <td>Daraz</td>
-                                <td>sultan</td>
-                                <td>01/02/2021</td>
-                                <td><button class="btn bg-gradient-dark">Action</button></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>sultan</td>
-                                <td>Daraz</td>
-                                <td>sultan</td>
-                                <td>01/02/2021</td>
-                                <td><button class="btn bg-gradient-dark">Action</button></td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>sultan</td>
-                                <td>Daraz</td>
-                                <td>sultan</td>
-                                <td>01/02/2021</td>
-                                <td><button class="btn bg-gradient-dark">Action</button></td>
-                            </tr>
+                        @{
+                            foreach (var v in Model.Item2)
+                            {
+                                <tr>
+                                    <td>@v.id</td>
+                                    <td>@v.username</td>
+                                    <td>@v.camp_name</td>
+                                    <td>@v.masking</td>
+                                    <td>@v.camp_time</td>
+                                    <td><button class="btn bg-gradient-dark btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
+                                </tr>
+                            }
+                        }
                         </tbody>
                     </table>
                 </div>
@@ -180,7 +140,12 @@
     {
     <script>
         $(document).ready(function (){
-            $('table').DataTable();
+            $('#table').DataTable({
+            //    paging: false,
+            //    searching: false,
+                ordering: false
+             //  info: false,
+            });
         });
     </script>
     }
