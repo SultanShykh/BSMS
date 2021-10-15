@@ -20,8 +20,8 @@
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table align-items-center mb-0 tblmanage" id="mainTable">
-                                    <thead>
+                                <table class="table align-items-center mb-0 tblmanage table-striped table-bordered" id="mainTable">
+                                    <thead class="bg-gradient-dark text-white">
                                         <tr>
                                             <th hidden>Id</th>
                                             <th>Name</th>
@@ -59,8 +59,12 @@
 <script>
 
     $(document).ready(function () {
-        $('#mainTable').DataTable();
-        //GroupScript.RenderDataTable();
+        $('#mainTable').DataTable({
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false
+        });
     })
     $(document).on('click', '.tree label', function (e) {
         $(this).next('ul').fadeToggle();

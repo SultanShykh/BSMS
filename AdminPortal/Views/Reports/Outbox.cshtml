@@ -1,11 +1,7 @@
 ﻿@using AdminPortal.Models
 @using Newtonsoft.Json
 @model IEnumerable<dynamic>
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
 
-    List<dynamic> details = new List<dynamic>();
-}
 @section style
     {
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -45,7 +41,7 @@
             </div>
             <div class="card-body mt-0 pt-0">
                 <div class="table-responsive">
-                    <table class="table table-sm" id="MainTable">
+                    <table class="table table-sm table-bordered table-striped" id="MainTable">
                         <thead class="bg-gradient-dark text-white">
                             <tr>
                                 <td></td>
@@ -68,31 +64,27 @@
                                 {
                                     foreach (var v in Model)
                                     {
-                                        details.Add(new { route = v.route });
                                         <tr>
                                             <td class="details-control">
-                                                <i class="ni ni-fat-add text-dark"></i>
+                                                <i class="fa fa-plus-circle"></i>
                                             </td>
                                             <td>@v.outbox_id</td>
                                             <td>@v.username</td>
                                             <td>@v.smstype</td>
                                             <td>@v.masking</td>
                                             <td>@v.receiver</td>
-                                            <td>
-                                                <textarea class="form-control" rows="2" cols="20" readonly>@v.msgdata</textarea>
-                                            </td>
+                                            <td><textarea class="form-control" rows="2" cols="20" readonly>@v.msgdata</textarea></td>
                                             <td>@v.senttime</td>
                                             <td>@v.deliveredtonetwork</td>
                                             <td>@v.status</td>
                                             <td>@v.cost</td>
-                                            <td>@JsonConvert.SerializeObject(details)</td>
+                                            <td hidden>@v.route</td>
                                         </tr>
-                                        details.Clear();
+
                                     }
                                 }
                             }
                         </tbody>
-
                     </table>
                 </div>
                 <nav aria-label="Page navigation example align-middle">
@@ -151,60 +143,34 @@
             paging: false,
             searching: false,
             ordering: false,
-            info: false,
-            columns: [
-                { data: "expandIcon" },
-                { data: "outbox_id" },
-                { data: "username" },
-                { data: "smstype" },
-                { data: "masking" },
-                { data: "receiver" },
-                { data: "msgdata" },
-                { data: "senttime" },
-                { data: "deliveredtonetwork" },
-                { data: "status" },
-                { data: "cost" },
-                { data: "details" }
-            ],
-            columnDefs: [
-                {
-                    targets: [11],
-                    visible: false,
-                }
-            ]
+            info: false
         });
 
         function format(rowData) {
-            var details = JSON.parse(rowData.details);
-            var str = '<table class="table no-margin dataTable no-footer " id="detailsTable">' +
-                '<thead class="bg-gradient-dark text-white"><tr>' +
-                '<th> Route Name </th>' +
-                '</tr></thead><tbody>';
-            for (var i = 0; i < details.length; i++) {
-                str += '<tr>' +
-                    '<td>' + details[i].route + '</td>' +
-                    '</tr>';
-            }
 
+            var str = '<table class="table no-margin dataTable no-footer bg-gradient-dark table-bordered" id="detailsTable">' +
+                '<tbody><tr class="text-white"><td><b>Route Name</b></td><td>' + rowData + '</td></tr>';
+            
             return str + '</tbody></table>';
         }
 
         $(function () {
             $('#MainTable tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
+                var data = $('#MainTable').DataTable().row($(this).closest('tr')).data();
                 var td = tr.find('.details-control').first();
-                var i = td.find('.ni').first();
+                var i = td.find('.fa').first();
                 var row = table.row(tr);
 
                 if (row.child.isShown()) {
                     row.child.hide();
-                    i.removeClass("ni ni-fat-delete");
-                    i.addClass("ni ni-fat-add");
+                    i.removeClass("fa fa-minus-circle");
+                    i.addClass("fa fa-plus-circle");
                 }
                 else {
-                    row.child(format(row.data())).show();
-                    i.removeClass("ni ni-fat-add");
-                    i.addClass("ni ni-fat-delete");
+                    row.child(format(data[11])).show();
+                    i.removeClass("fa fa-plus-circle");
+                    i.addClass("fa fa-minus-circle");
                 }
             });
         });

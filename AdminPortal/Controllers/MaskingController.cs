@@ -10,12 +10,21 @@ namespace AdminPortal.Controllers
     public class MaskingController : Controller
     {
         CommonProcessing c = new CommonProcessing();
-        // GET: Masking
-        public ActionResult Index()
+        public ActionResult MaskingRoute()
         {
             return View();
         }
-
-
+        public ActionResult AddMaskingRoutes()
+        {
+            return View();
+        }
+        public ActionResult EditMaskingRoute()
+        {
+            return View();
+        }
+        public ActionResult MaskingApproval()
+        {
+            return View();
+        }
     }
 }

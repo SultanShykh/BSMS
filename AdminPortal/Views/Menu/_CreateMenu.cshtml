@@ -52,21 +52,21 @@
                         </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-6 pr-0">
-                        <div class="form-group form-group-default">
-                            @Html.LabelFor(model => model.SortOrder)
-                            @Html.EditorFor(model => model.SortOrder, new { htmlAttributes = new { @class = "form-control", placeholder = "Sort Order" } })
-                            @Html.ValidationMessageFor(model => model.SortOrder, "", new { @class = "text-danger" })
+                        <div class="col-md-6 pr-0">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.SortOrder)
+                                @Html.EditorFor(model => model.SortOrder, new { htmlAttributes = new { @class = "form-control", placeholder = "Sort Order" } })
+                                @Html.ValidationMessageFor(model => model.SortOrder, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.formMasterId)
+                                @Html.EditorFor(model => model.formMasterId, new { htmlAttributes = new { @class = "form-control", placeholder = "Form Master Id" } })
+                                @Html.ValidationMessageFor(model => model.formMasterId, "", new { @class = "text-danger" })
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group form-group-default">
-                            @Html.LabelFor(model => model.formMasterId)
-                            @Html.EditorFor(model => model.formMasterId, new { htmlAttributes = new { @class = "form-control", placeholder = "Form Master Id" } })
-                            @Html.ValidationMessageFor(model => model.formMasterId, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
                     <div class="row">
                         <div class="col-md-6 pr-0">
                             <div class="form-group form-group-default">
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                 }
-                </div>
+            </div>
             <div class="modal-footer border-0">
                 <button type="submit" id="btnSubmit" class="btn bg-gradient-dark">Add</button>
                 <button type="submit" id="btnUpdate" class="btn bg-gradient-dark" style="display:none">Update</button>

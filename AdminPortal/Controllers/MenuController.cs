@@ -12,8 +12,6 @@ namespace AdminPortal.Controllers
     [AuthorizeUser]
     public class MenuController : Controller
     {
-        public const string PARTIAL_VIEW_FOLDER = "~/Views/Partials/";
-
         public ActionResult Index(int Id = 1, FormCollection collection = null)
         {
             List<MenuModel> result = new List<MenuModel>();
@@ -36,9 +34,9 @@ namespace AdminPortal.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult _createMenu()
+        public ActionResult _CreateMenu()
         {
-            return PartialView(PARTIAL_VIEW_FOLDER + "_Menu.cshtml");
+            return PartialView();
         }
 
         [HttpPost]
@@ -93,7 +91,7 @@ namespace AdminPortal.Controllers
             }
             catch (Exception e)
             {
-                return Json("Error");
+                return Json(new { status = false, message = "Successfully Updated!!!" });
             }
         }
     }

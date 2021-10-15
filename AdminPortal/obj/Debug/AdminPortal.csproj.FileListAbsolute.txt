@@ -269,8 +269,8 @@ D:\Deviniti_Git\AdminPortal\AdminPortal\bin\System.Web.WebPages.Razor.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Newtonsoft.Json.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Antlr3.Runtime.pdb
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CoreCompileInputs.cache
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CopyComplete
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.pdb
+D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache

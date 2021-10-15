@@ -104,14 +104,20 @@
         <div class="card shadow">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-sm" id="table">
-                        <thead>
+                    <table class="table table-hover table-sm table-bordered text-sm table-striped"  id="table">
+                        <thead class="bg-gradient-dark text-white">
                             <tr>
                                 <td>Id</td>
-                                <td>User Name</td>
-                                <td>Campaign Name</td>
+                                <td>User <br /> Name</td>
+                                <td>Campaign <br /> Name</td>
                                 <td>Sender</td>
-                                <td>Start Date</td>
+                                <td>Start <br /> Date</td>
+                                <td>End <br /> Date</td>
+                                <td>Total <br /> SMS</td>
+                                <td>Sent <br />SMS</td>
+                                <td>Remaining <br /> SMS</td>
+                                <td>Status</td>
+                                <td>Priority</td>
                                 <td>Action</td>
                             </tr>
                         </thead>
@@ -125,7 +131,13 @@
                                     <td>@v.camp_name</td>
                                     <td>@v.masking</td>
                                     <td>@v.camp_time</td>
-                                    <td><button class="btn bg-gradient-dark btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
+                                    <td>@v.camp_end_time</td>
+                                    <td>@v.total_sms</td>
+                                    <td>@v.sent_sms</td>
+                                    <td></td>
+                                    <td>@v.status</td>
+                                    <td>@v.sent_sms</td>
+                                    <td><button class="btn bg-gradient-dark btn-sm"><i class="fa fa-circle-pause"></i></button></td>
                                 </tr>
                             }
                         }

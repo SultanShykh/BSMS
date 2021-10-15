@@ -48,17 +48,16 @@
                             <br />
                             <div class="row">
                                 <label>Upload Multiple Option:</label>
-                                <div class="col-md-2">
-                                    <input type="button" class="btn bg-gradient-dark" value="Add Contact" data-toggle="modal" data-target="#contactModal" />
+                                <div class="col-md-2 p-0 m-0">
+                                    <input type="button" class="btn bg-gradient-dark" id="contactModal" value="Add Contact" data-toggle="modal" data-target="#contactModal" />
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-2 p-0 m-0">
                                     <input type="button" class="btn bg-gradient-dark" value="Add Group" data-toggle="modal" data-target="#groupModal" />
                                 </div>
-                                <div class="col-md-2">
-                                    <input type="reset" class="btn bg-gradient-dark" value="Reset" />
+                                <div class="col-md-2 p-0 m-0">
+                                    <button type="reset" class="btn bg-gradient-dark">Reset</button>
                                 </div>
                             </div>
-
                         </fieldset>
 
                         <h3>Message Content</h3>
@@ -140,19 +139,24 @@
             <!-- Modal body -->
             <div class="modal-body">
                 <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
+                    <table class="table table-striped" id="innerTable">
+                        <thead class="bg-gradient-dark text-white">
                             <tr>
                                 <td>Fullname</td>
                                 <td>Mobile</td>
                                 <td>Email</td>
                                 <td>Option 1</td>
                                 <td>Option 2</td>
-                                <td>Option 3</td>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
@@ -174,6 +178,7 @@
     <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
     <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
+
         $(document).ready(function () {
             $(".alert").fadeIn();
             $('.alert').fadeOut(5000);
@@ -188,14 +193,11 @@
             });
 
             $('#msgdata').keyup(function (e) {
-                debugger
                 var msgVal = $('#msgdata').val().length;
                 $('#btnMessage').text(msgVal + ' characters / ' + Math.ceil(msgVal / 160) + ' SMS');
             });
         });
 
-    </script>
-    <script>
         var form = $('#form');
         form.steps({
             headerTag: "h3",

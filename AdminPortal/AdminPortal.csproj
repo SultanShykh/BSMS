@@ -162,6 +162,7 @@
     <Compile Include="Codebase\UserProcessing.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
+    <Compile Include="Controllers\MaskingController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -179,17 +180,12 @@
     <Compile Include="HtmlUtility.cs" />
     <Compile Include="Models\AuthorizeModel.cs" />
     <Compile Include="Models\Campaign.cs" />
-    <Compile Include="Models\DataTableRequest.cs" />
     <Compile Include="Models\GroupMasterModel.cs" />
     <Compile Include="Models\Masking.cs" />
     <Compile Include="Models\MenuModel.cs" />
     <Compile Include="Models\Outbox.cs" />
     <Compile Include="Models\Pagination.cs" />
-    <Compile Include="Models\Reseller.cs" />
-    <Compile Include="Models\RoleModel.cs" />
-    <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserModel.cs" />
-    <Compile Include="Models\User_roles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -251,10 +247,14 @@
     <Content Include="Views\Message\QuickSMS.cshtml" />
     <Content Include="Views\Message\CampaignSMS.cshtml" />
     <Content Include="Views\Message\PersonalizedSMS.cshtml" />
-    <Content Include="Views\Partials\_Menu.cshtml" />
     <Content Include="Views\Message\CampaignManagement.cshtml" />
     <Content Include="Views\Reports\Outbox.cshtml" />
     <Content Include="Views\User\_updateUser.cshtml" />
+    <Content Include="Views\Menu\_CreateMenu.cshtml" />
+    <Content Include="Views\Masking\MaskingRoute.cshtml" />
+    <Content Include="Views\Masking\AddMaskingRoutes.cshtml" />
+    <Content Include="Views\Masking\EditMaskingRoute.cshtml" />
+    <Content Include="Views\Masking\MaskingApproval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
