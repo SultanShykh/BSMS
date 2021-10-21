@@ -14,16 +14,16 @@
     <link rel="icon" type="image/png" href="/Media/favicon.png">
     <title>BSMS</title>
     <!--     Fonts and icons     -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <link href="~/fonts/google-fonts.css" rel="stylesheet" />
     <!-- Nucleo Icons -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Styles.Render("~/Contents/Dashboard/style")
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link href="~/Content/select2.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.js"></script>
+    <script src="~/Scripts/sweet-alert.js"></script>
     <!-- Font Awesome Icons -->
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <script src="~/fonts/font-awesome.js" crossorigin="anonymous"></script>
     @RenderSection("style", required: false)
 </head>
 
@@ -479,8 +479,7 @@
         </footer>
     </main>
 
-
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script async defer src="~/Scripts/js/github-buttons.js"></script>
     @Scripts.Render("~/bundles/Dashboard/Scripts")
 
     @RenderSection("scripts", required: false)
