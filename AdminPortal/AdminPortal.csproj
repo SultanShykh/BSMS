@@ -156,6 +156,7 @@
     <Compile Include="Codebase\AuthorizeUserAttribute.cs" />
     <Compile Include="Codebase\CommonProcessing.cs" />
     <Compile Include="Codebase\GroupProcessing.cs" />
+    <Compile Include="Codebase\MaskProcessing.cs" />
     <Compile Include="Codebase\MenuProcessing.cs" />
     <Compile Include="Codebase\MessageProcessing.cs" />
     <Compile Include="Codebase\OutboxProcessing.cs" />
@@ -251,7 +252,6 @@
     <Content Include="Views\Reports\Outbox.cshtml" />
     <Content Include="Views\User\_updateUser.cshtml" />
     <Content Include="Views\Menu\_CreateMenu.cshtml" />
-    <Content Include="Views\Masking\MaskingRoute.cshtml" />
     <Content Include="Views\Masking\AddMaskingRoutes.cshtml" />
     <Content Include="Views\Masking\EditMaskingRoute.cshtml" />
     <Content Include="Views\Masking\MaskingApproval.cshtml" />

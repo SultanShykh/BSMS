@@ -1,19 +1,26 @@
-﻿
-<div class="container-fluid">
+﻿<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="card pb-0">
                 <div class="card-header">
                     <h6 class="font-weight-bolder mb-0">Route Information</h6>
+                    @{
+                        if (ViewBag.result != null)
+                        {
+                            <div class="alert alert-dismissable alert-@ViewBag.status">
+                                <p class="text-white">@ViewBag.result</p>
+                            </div>
+                        }
+                    }
                 </div>
                 <div class="card-body">
-                    <form id="form" method="post" action="/Message/PersonalizedSMS" enctype="multipart/form-data">
+                    <form id="form" method="post" action="/Masking/AddMaskingRoutes">
                         <div class="row border">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Maskings:</label>
                                     <div class="form-group">
-                                        @Html.Editor("sender", new { htmlAttributes = new { @class = "form-control form-control-sm", placeholder = "Masking" } })
+                                        @Html.Editor("mask", new { htmlAttributes = new { @class = "form-control", placeholder = "Masking", required = true } })
                                     </div>
                                 </div>
                             </div>
@@ -23,11 +30,11 @@
                                 <div class="form-group">
                                     <label>Mobilink/Warid:</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("sender", new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
+                                        @Html.DropDownList("route_name_mobilink", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByMobilink(), "id", "route_name"), new
                                    {
                                        @class = "form-control form-control-sm",
                                        required = "true",
-                                       id = "sender",
+                                       id = "route_name_mobilink",
                                    })
                                     </div>
                                 </div>
@@ -36,11 +43,11 @@
                                 <div class="form-group">
                                     <label>Ufone:</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("sender", new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
+                                        @Html.DropDownList("route_name_ufone", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByUfone(), "id", "route_name"), new
                                    {
                                        @class = "form-control form-control-sm",
                                        required = "true",
-                                       id = "sender",
+                                       id = "route_name_ufone",
                                    })
                                     </div>
                                 </div>
@@ -49,11 +56,11 @@
                                 <div class="form-group">
                                     <label>Zong:</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("sender", new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
+                                        @Html.DropDownList("route_name_zong", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByZong(), "id", "route_name"), new
                                    {
                                        @class = "form-control form-control-sm",
                                        required = "true",
-                                       id = "sender",
+                                       id = "route_name_zong",
                                    })
                                     </div>
                                 </div>
@@ -62,11 +69,11 @@
                                 <div class="form-group">
                                     <label>Telenor:</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("sender", new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
+                                        @Html.DropDownList("route_name_telenor", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByTelenor(), "id", "route_name"), new
                                    {
                                        @class = "form-control form-control-sm",
                                        required = "true",
-                                       id = "sender",
+                                       id = "route_name_zong",
                                    })
                                     </div>
                                 </div>
@@ -75,11 +82,10 @@
                                 <div class="form-group">
                                     <label>SCOM</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("sender", new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
+                                        @Html.DropDownList("route_name_SCOM", new SelectList(AdminPortal.Codebase.MaskProcessing.FindBySCOM(), "id", "route_name"),new
                                    {
                                        @class = "form-control form-control-sm",
-                                       required = "true",
-                                       id = "sender",
+                                       id = "route_name_SCOM",
                                    })
                                     </div>
                                 </div>
@@ -96,3 +102,9 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $(".alert").fadeIn();
+        $('.alert').fadeOut(4000);
+    });
+</script>

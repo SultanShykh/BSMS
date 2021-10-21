@@ -231,19 +231,15 @@
             }
             if (data.selectedMaskings != "") {
                 var selectedOptions = data.selectedMaskings.split(",");
-                for (var i in selectedOptions) {
-                    var optionVal = selectedOptions[i];
-                    $("#masking").find("option[value=" + optionVal + "]").prop("selected", "selected");
-                }
+                $('.masking').select2();
+                $('.masking').val(selectedOptions);
+                $('.masking').trigger('change');
             }
-            $('#masking').selectpicker({
-                showSubtext: true,
-                liveSearch: true,
-            });
-            $("#masking").selectpicker('refresh');
         })
 
-        $('#GroupId').val(currentRow.find("td:eq(4)").text()).prop("selected", "selected");
+        $('#GroupId').select2();
+        $('#GroupId').val(currentRow.find("td:eq(4)").text());
+        $('#GroupId').trigger('change');
 
         if (currentRow.find("td:eq(8)").text() == "True") {
             $('#status').attr('checked', true);

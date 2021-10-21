@@ -14,7 +14,6 @@
         <div class="row">
             <div class="col-lg-12 login-sec">
                 <div class="login-sec-bg">
-                    @*<h2 class="text-center">Campaign SMS</h2>*@
                     <form id="form" action="">
                         <h3>User Contact Detail</h3>
                         <fieldset class="form-input">
@@ -39,21 +38,24 @@
                             @Html.EditorFor(model => model.user_mobile, new { htmlAttributes = new { @class = "form-control", placeholder = "ex: 923113644859" } })
                             @Html.ValidationMessageFor(model => model.user_mobile, "", new { @class = "text-danger" })
 
+                        <div class="form-group form-group-default">
+                            @Html.LabelFor(model => model.masking)
+                            @Html.DropDownListFor(model => model.masking, new SelectList(AdminPortal.Codebase.CommonProcessing.GetMaskings(), "id", "masking"), new
+                           {
+                               @class = "form-control masking",
+                               required = "true",
+                               id = "masking",
+                               multiple = "true"
+                           })
+                        </div>
+                            
                             @Html.LabelFor(model => model.status):
                             <input class="form-check-input mt-1" type="checkbox" id="status" name="status">
-                            @*@Html.CheckBoxFor(model => model.status, new { @class = "form-check-input" })*@
                             <br />
                             @Html.LabelFor(model => model.user_expiry):
                             @Html.EditorFor(model => model.user_expiry, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.user_expiry, "", new { @class = "text-danger" })
 
-                            @Html.LabelFor(model => model.masking):
-                            @Html.DropDownListFor(model => model.masking, new SelectList(AdminPortal.Codebase.CommonProcessing.GetMaskings(), "id", "masking"), new
-                       {
-                           required = "required",
-                           id = "masking",
-                           multiple = true
-                       })
                         </fieldset>
 
                         <h3>Account Information</h3>
@@ -99,7 +101,8 @@
     <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
         $(document).ready(function () {
-            $('#masking').selectpicker('refresh');
+            $('.masking').select2();
+            //$('#masking').selectpicker('refresh');
         });
         $(document).on("focusout", "#email", function () {
             var re = /\S+@@\S+\.\S+/;
@@ -127,10 +130,7 @@
             }
         });
 
-    </script>
-    <script>
         var form = $('#form');
-
         form.steps({
             headerTag: "h3",
             bodyTag: "fieldset",
@@ -194,8 +194,7 @@
 
             if (form.valid()) {
                 CrudScript.makeAjaxRequest('Post', '/User/CreateUser', form.serialize()).then(function (data) {
-                    if (data.status == true)
-                    {
+                    if (data.status == true) {
                         ShowDivSuccess(data.message);
                     }
                     else {

@@ -293,9 +293,9 @@ table td,
 .wizard>.content>.body ul{
     list-style:disc!important
 }
-.wizard>.content>.body ul>li{
-    display:list-item
-}
+/* .wizard>.content>.body ul>li{ */
+    /* display:list-item */
+/* } */
 .wizard>.content>.body>iframe{
     border:0 none;
     width:100%;

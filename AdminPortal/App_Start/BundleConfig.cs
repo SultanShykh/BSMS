@@ -19,7 +19,7 @@ namespace AdminPortal
                         "~/Scripts/jquery-datatable/dataTables.bootstrap.min.js",
                         "~/Scripts/plugins/bootstrap-datepicker.min.js",
                         "~/Scripts/plugins/jquery.slimscroll.min.js",
-                        "~/Scripts/ProjectScript/bootstrap-select.min.js",
+                        //"~/Scripts/ProjectScript/bootstrap-select.min.js",
                         "~/Scripts/plugins/perfect-scrollbar.min.js",
                         "~/Scripts/plugins/smooth-scrollbar.min.js",
                        "~/Scripts/soft-ui-dashboard.min.js"
@@ -45,7 +45,7 @@ namespace AdminPortal
                       "~/Content/nucleo-icons.css",
                       "~/Content/nucleo-svg.css",
                       "~/Content/soft-ui-dashboard.css",
-                      "~/Content/bootstrap-select.css",
+                      //"~/Content/bootstrap-select.css",
                       "~/Scripts/jquery-datatable/dataTables.bootstrap.css",
                       "~/Content/custom.css"
                       ));

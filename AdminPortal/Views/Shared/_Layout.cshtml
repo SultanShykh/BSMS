@@ -1,7 +1,7 @@
 ﻿
 @using AdminPortal.Models
 @using AdminPortal.Helpers
-@{ 
+@{
     var Permissions = (List<AuthorizeModel>)Session["Authorize"];
 }
 <!DOCTYPE html>
@@ -19,6 +19,8 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Styles.Render("~/Contents/Dashboard/style")
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
@@ -476,7 +478,7 @@
             </div>
         </footer>
     </main>
-    
+
 
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     @Scripts.Render("~/bundles/Dashboard/Scripts")

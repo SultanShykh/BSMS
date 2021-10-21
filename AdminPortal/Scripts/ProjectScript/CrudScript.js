@@ -16,7 +16,6 @@
                     })
                 }
             } else {
-                debugger
                 if (params == null) {
                     $.post(url).done(function (response) {
                         resolve(response)
@@ -25,7 +24,6 @@
                     });
                 }
                 else {
-                    debugger
                     $.post(url, params).done(function (response) {
                         resolve(response)
                     }).fail(function (response) {
@@ -37,7 +35,6 @@
             }
     ,
     JqueryDataTableForReport: function (elem, data, columns) {
-        debugger
         $(elem).DataTable({
             data: data,
             "columns": columns,

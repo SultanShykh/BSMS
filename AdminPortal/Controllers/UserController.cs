@@ -92,7 +92,7 @@ namespace AdminPortal.Controllers
         [HttpPost]
         public ActionResult SelectedMaskings(int id)
         {
-            string selectedMaskings = "";
+            string selectedMaskings;
             List<Masking> maskings;
             UserProcessing.SelectedUserMaskings(id,out selectedMaskings,out maskings);
             return Json(new { selectedMaskings,maskings });
