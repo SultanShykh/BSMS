@@ -1,0 +1,154 @@
+﻿
+@{
+    ViewBag.Title = "MaskingRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @{
+                if (ViewBag.result != null)
+                {
+                    <div class="alert alert-dismissable bg-gradient-@ViewBag.status">
+                        <p style="color: white">@ViewBag.result</p>
+                    </div>
+                    <br />
+                }
+            }
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="font-weight-bolder mb-0">Masking Request Form</h6>
+                </div>
+                <div class="card-body">
+                    <form id="form" method="post" action="/Masking/MaskingRequest" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Masking: </label>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <input type="text" name="masking" id="masking" class="form-control" placeholder="ex: 8484" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Company / Name:</label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <input type="text" name="fullname" id="fullname" class="form-control" placeholder="ex: Name" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">NIC No:</label>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <input type="text" name="nic" id="nic" class="form-control" placeholder="4140989748927" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Contact No:</label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <input type="text" name="contact" id="contact" class="form-control" placeholder="(9231)13696215" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 mt-2">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label style="float:right">Authority Letter Attached:</label>
+                                        <br>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <input type="file" name="masking_letter" id="masking_letter" class="form-control" placeholder="Upload File" required/>
+                                    <p class="text-danger text-sm">*Attach JPEG File Only and size 1MB</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="offset-8 col-md-4 col-lg-4">
+                            <input type="reset" class="btn bg-gradient-dark" value="reset" />
+                            <input type="submit" class="btn bg-gradient-dark" value="send" id="send" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".alert").fadeIn();
+            $('.alert').fadeOut(4000);
+        });
+
+        var form = $("#form");
+        form.validate({
+            rules: {
+                masking: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 11
+                },
+                fullname: {
+                    required: true
+                },
+                nic: {
+                    required: true
+                },
+                contact: {
+                    required: true,
+                },
+                masking_letter: {
+                    required: true,
+                    extension: 'jpeg'
+                }
+            },
+            messages: {
+                masking_letter: {
+                    required: "Masking Letter data field is required",
+                    extension: "Please attach JPEG files only"
+                }
+            }
+        });
+        form.submit(function (e) {
+            if (!form.valid()) {
+                ShowDivError("please fill out the form");
+                e.preventDefault();
+            }
+            else {
+                ShowDivSuccess1("Please wait...");
+            }
+        });
+    </script>
+    }

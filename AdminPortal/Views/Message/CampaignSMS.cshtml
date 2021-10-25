@@ -35,7 +35,7 @@
                             @Html.LabelFor(model => model.sender):
                             @Html.DropDownListFor(model => model.sender, new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
                        {
-                           @class = "form-control mb-1",
+                           @class = "form-control mb-1 masking",
                            required = "true",
                            id = "Masking"
                        })
@@ -180,6 +180,7 @@
     <script>
 
         $(document).ready(function () {
+            $('.masking').select2(); 
             $(".alert").fadeIn();
             $('.alert').fadeOut(4000);
 

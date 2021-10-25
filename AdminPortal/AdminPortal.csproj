@@ -155,6 +155,8 @@
     <Compile Include="Codebase\AccountProcessing.cs" />
     <Compile Include="Codebase\AuthorizeUserAttribute.cs" />
     <Compile Include="Codebase\CommonProcessing.cs" />
+    <Compile Include="Codebase\ContactGroupProcessing.cs" />
+    <Compile Include="Codebase\ContactsProcessing.cs" />
     <Compile Include="Codebase\GroupProcessing.cs" />
     <Compile Include="Codebase\MaskProcessing.cs" />
     <Compile Include="Codebase\MenuProcessing.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Codebase\OutboxProcessing.cs" />
     <Compile Include="Codebase\UserProcessing.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\MaskingController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
@@ -181,6 +184,8 @@
     <Compile Include="HtmlUtility.cs" />
     <Compile Include="Models\AuthorizeModel.cs" />
     <Compile Include="Models\Campaign.cs" />
+    <Compile Include="Models\ContactGroupModel.cs" />
+    <Compile Include="Models\ContactsModel.cs" />
     <Compile Include="Models\GroupMasterModel.cs" />
     <Compile Include="Models\Masking.cs" />
     <Compile Include="Models\MenuModel.cs" />
@@ -255,6 +260,10 @@
     <Content Include="Views\Masking\AddMaskingRoutes.cshtml" />
     <Content Include="Views\Masking\EditMaskingRoute.cshtml" />
     <Content Include="Views\Masking\MaskingApproval.cshtml" />
+    <Content Include="Views\Masking\MaskingRequest.cshtml" />
+    <Content Include="Views\Contacts\ManageContacts.cshtml" />
+    <Content Include="Views\Contacts\_AddContact.cshtml" />
+    <Content Include="Views\Contacts\_UpdateContact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

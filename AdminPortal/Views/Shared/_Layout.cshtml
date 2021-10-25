@@ -421,6 +421,16 @@
                                             </a>
                                         </li>
                                     }
+                                    @if (Permission.HasPermission("Masking", "MaskingRequest"))
+                                    {
+                                        <li class="nav-item Group ">
+                                            <a class="nav-link @Html.IsActive("MaskingRequest","Masking")" href="@Url.Action("MaskingRequest", "Masking")">
+                                                <i class="fas fa-user-friends"></i>
+                                                <span class="nav-link-text">Masking Request</span>
+
+                                            </a>
+                                        </li>
+                                    }
                                 </ul>
                             </div>
                         </li>

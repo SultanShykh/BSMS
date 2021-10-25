@@ -1,0 +1,163 @@
+﻿@model List<AdminPortal.Models.ContactsModel>
+@section style{
+    <style>
+        .select2 {
+            width: 100%
+        }
+    </style>
+}
+<div class="container-fluid border-radius-lg">
+    <div class="row">
+        <div class="card shadow">
+            <div class="card-header mb-0 pb-0">
+                <div class="row">
+                    <div class="col-md-2">
+                        <a class="btn bg-gradient-dark" href="/Contacts/Download/@ViewBag.PageNumber">Download</a>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn bg-gradient-dark" date-toggle="modal" data-target="#ModalAdd">Add Contact</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body mt-0 pt-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-striped" id="MainTable">
+                        <thead class="bg-gradient-dark text-white">
+                            <tr>
+                                <td>Id</td>
+                                <td hidden>User Id</td>
+                                <td>Full Name</td>
+                                <td>Numbers</td>
+                                <td>Email</td>
+                                <td>Option 1</td>
+                                <td>Option 2</td>
+                                <td>Option 3</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (Model.Count > 0)
+                                {
+                                    foreach (var v in Model)
+                                    {
+                                        <tr>
+                                            <td>@v.id</td>
+                                            <td hidden>@v.user_id</td>
+                                            <td>@v.fullname</td>
+                                            <td>@v.numbers</td>
+                                            <td>@v.emails</td>
+                                            <td>@v.option1</td>
+                                            <td>@v.option2</td>
+                                            <td>@v.option3</td>
+                                            <td>
+                                                <button class="border-0 text-dark edit" data-toggle="modal" data-target="#ModalUpdate"><i class="fas fa-edit"></i></button>
+                                                <button class="border-0 text-dark" data-toggle="modal" data-target="#myModal2"><i class="fa fa-plus-square-o"></i></button>
+                                                <button class="border-0 text-dark" data-toggle="modal" data-target="#myModal3"><i class="fa fa-trash-o"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="9" class="text-center">No records found</td></tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example align-middle">
+                    <ul class="pagination">
+                        @if (ViewBag.PageNumber > 1)
+                        {
+                            <li class="page-item text-white"><a class="page-link bg-gradient-dark text-white" href="1">1</a></li>
+                            <li class="page-item text-white">
+                                <a class="page-link bg-gradient-dark text-white" href="@((int)ViewBag.PageNumber - 1)" aria-label="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        }
+
+                        <li class="m-2 border-radius-md bg-light"><strong>&nbsp;&nbsp;&nbsp;@ViewBag.PageNumber&nbsp;&nbsp;&nbsp;</strong></li>
+
+                        @if (ViewBag.PageNumber < ViewBag.totalPages)
+                        {
+                            <!--Next Page-->
+                            <li class="page-item text-white">
+                                <a class="page-link bg-gradient-dark text-white" href="" aria-label="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item text-white"><a class="page-link bg-gradient-dark text-white" href="@((int)ViewBag.PageNumber - 1)">@ViewBag.totalPages</a></li>
+                        }
+                        else
+                        {
+
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+@{
+    Html.RenderAction("_AddContact", "Contacts");
+    Html.RenderAction("_UpdateContact", "Contacts");
+}
+<script src="~/Scripts/ProjectScript/CrudScript.js"></script>
+<script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.groupname').select2();
+        $('#MainTable').DataTable({
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false,
+        });
+    });
+
+    var formAdd = $('#formAddContact');
+    var formUpdate = $('#formUpdateContact');
+
+    formAdd.submit(function (e) {
+        debugger
+        e.preventDefault();
+        if (formAdd.valid()) {
+            CrudScript.makeAjaxRequest('Post', '/Contacts/_AddContact', formAdd.serialize()).then(function (data) {
+                if (data.status == true) {
+                    ShowDivSuccess(data.message);
+                }
+                else {
+                    ShowDivError(data.message);
+                }
+
+            });
+        }
+        else {
+            ShowDivError("Input data is not valid");
+        }
+    });
+
+    formUpdate.submit(function (e) {
+        debugger
+        e.preventDefault();
+        if (formUpdate.valid()) {
+            CrudScript.makeAjaxRequest('Post', '/Contacts/_UpdateContact', formUpdate.serialize()).then(function (data) {
+                if (data.status == true) {
+                    ShowDivSuccess(data.message);
+                }
+                else {
+                    ShowDivError(data.message);
+                }
+
+            });
+        }
+        else {
+            ShowDivError("Input data is not valid");
+        }
+    });
+</script>

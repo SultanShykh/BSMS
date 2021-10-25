@@ -1,4 +1,4 @@
-﻿
+﻿@model List<dynamic>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
@@ -22,13 +22,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                            @{ 
+                                foreach (var v in Model) 
+                                {
+                                    var status = v.approval == 0 ? "In Active":"Active";
+                                    <tr>
+                                        <td>@v.id</td>
+                                        <td>@v.fullname</td>
+                                        <td>@v.nic_no   </td>
+                                        <td>@v.c_numbers</td>
+                                        <td>@v.masking_name</td>
+                                        <td style="cursor:pointer"><img src="/Media/@v.masking_letter" width="50" height="50"/></td>
+                                        <td>@v.crtime</td>
+                                        <td>@status</td>
+                                    </tr>
+                                }
+                            }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="" class="img-thumbnail" id="img"/>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -39,6 +66,12 @@
             searching: false,
             ordering: false,
             info: false
+        });
+
+        $('#mainTable tbody').on('click', 'tr td:eq(5)', function () {
+            var name = $(this).find('img').attr("src");
+            $('#img').attr("src", name);
+            $('#myModal').modal("show");
         });
     </script>
     } 

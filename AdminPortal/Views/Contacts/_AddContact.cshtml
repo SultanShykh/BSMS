@@ -1,0 +1,84 @@
+﻿@model AdminPortal.Models.ContactsModel
+<div id="ModalAdd" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Contact</h3>
+            </div>
+            @using (Html.BeginForm("_AddContact", "Contacts", FormMethod.Post, new { id = "formAddContact" }))
+            {
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6 pr-0">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.fullname)
+                                @Html.EditorFor(model => model.fullname, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Name" } })
+                                @Html.ValidationMessageFor(model => model.fullname, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.numbers)
+                                @Html.EditorFor(model => model.numbers, new { htmlAttributes = new { @class = "form-control", placeholder = "Numbers" } })
+                                @Html.ValidationMessageFor(model => model.numbers, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pr-0">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.emails)
+                                @Html.EditorFor(model => model.emails, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
+                                @Html.ValidationMessageFor(model => model.emails, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.option1)
+                                @Html.EditorFor(model => model.option1, new { htmlAttributes = new { @class = "form-control", placeholder = "option 1" } })
+                                @Html.ValidationMessageFor(model => model.option1, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.option2)
+                                @Html.EditorFor(model => model.option2, new { htmlAttributes = new { @class = "form-control", placeholder = "option 2" } })
+                                @Html.ValidationMessageFor(model => model.option2, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.option3)
+                                @Html.EditorFor(model => model.option3, new { htmlAttributes = new { @class = "form-control", placeholder = "option 3" } })
+                                @Html.ValidationMessageFor(model => model.option3, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.groupname)
+                                @Html.DropDownListFor(model => model.groupname, new SelectList(AdminPortal.Codebase.ContactGroupProcessing.GetContactGroups(), "id", "groupname"), new
+                           {
+                               @class = "form-control groupname",
+                               required = "true",
+                               id = "groupname",
+                               style = "width:100%",
+                           })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="submit" class="btn bg-gradient-dark">Add</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

@@ -37,7 +37,7 @@
                                 <div class="form-group">
                                     @Html.DropDownListFor(model => model.sender, new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id","masking"), new
                                         {
-                                        @class = "form-control",
+                                        @class = "form-control masking",
                                         required = "true",
                                         id = "Masking"
                                         })
@@ -94,6 +94,7 @@
     <script>
         var contactsCount = 0;
         $(document).ready(function () {
+            $('.masking').select2();
             $(".alert").fadeIn();
             $('.alert').fadeOut(4000);
 

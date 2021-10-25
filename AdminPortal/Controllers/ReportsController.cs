@@ -89,8 +89,6 @@ namespace AdminPortal.Controllers
             {
                 DataRow dr = dt.NewRow();
 
-                //dt.Rows.Add(v.username, v.smstype, v.masking, v.receiver, v.msgdata, v.senttime, v.status, v.cost, v.route);
-
                 dr["username"] = v.username;
                 dr["smstype"] = Convert.ToInt32(v.smstype);
                 dr["masking"] = v.masking;

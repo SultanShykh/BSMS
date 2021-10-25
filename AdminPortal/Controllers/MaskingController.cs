@@ -1,6 +1,7 @@
 ﻿using AdminPortal.Codebase;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -83,6 +84,47 @@ namespace AdminPortal.Controllers
         }
         public ActionResult MaskingApproval()
         {
+            return View(MaskProcessing.MaskingRequests());
+        }
+        public ActionResult MaskingRequest()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult MaskingRequest(FormCollection collection)
+        {
+            HttpFileCollectionBase files = Request.Files;
+            if (!string.IsNullOrEmpty(collection["masking"]) && !string.IsNullOrEmpty(collection["fullname"]) && !string.IsNullOrEmpty(collection["nic"]) && !string.IsNullOrEmpty(collection["contact"]) && files.Count != 0)
+            {
+                try
+                {
+                    HttpPostedFileBase file = files[0];
+                    string fileName = Path.GetFileName(file.FileName);
+                    string extension = Path.GetExtension(fileName);
+                    string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
+
+                    if (extension != ".jpeg") 
+                    {
+                        ViewBag.result = "Please Attach JPEG File Only";
+                        ViewBag.status = "danger";
+                        return View();
+                    }
+                    file.SaveAs(path);
+                    string message = MaskProcessing.AddMaskingRequest(collection["masking"], Convert.ToInt32(Session["UserId"]),collection["fullname"], collection["nic"], collection["contact"], fileName);
+                    ViewBag.result = message;
+                    ViewBag.status = "dark";
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.result = ex.ToString();
+                    ViewBag.status = "danger";
+                }
+            }
+            else 
+            {
+                ViewBag.result = "Please Fill out the Form";
+                @ViewBag.status = "danger";
+            }
             return View();
         }
     }
