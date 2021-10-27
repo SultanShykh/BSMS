@@ -15,6 +15,7 @@
                         <div class="col-md-6 pr-0">
                             <div class="form-group form-group-default">
                                 @Html.HiddenFor(model => model.id)
+                                @Html.HiddenFor(model => model.user_id)
                                 @Html.LabelFor(model => model.fullname)
                                 @Html.EditorFor(model => model.fullname, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Name" } })
                                 @Html.ValidationMessageFor(model => model.fullname, "", new { @class = "text-danger" })
@@ -64,20 +65,18 @@
                         <div class="col-md-6">
                             <div class="form-group form-group-default">
                                 @Html.LabelFor(model => model.groupname)
-                                @Html.DropDownListFor(model => model.groupname, new SelectList(AdminPortal.Codebase.ContactGroupProcessing.GetContactGroups(), "id", "groupname"), new
+                                @Html.DropDownListFor(model => model.groupname, new SelectList(AdminPortal.Codebase.ContactsProcessing.GetContactGroups(), "id", "groupname"), "-- Select Group --",new
                            {
-                               @class = "form-control groupname",
-                               required = "true",
+                               @class = "form-control groupname1",
                                id = "groupname",
                                style = "width:100%",
                            })
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer border-0">
-                    <button type="submit" class="btn bg-gradient-dark">Add</button>
+                    <button type="submit" class="btn bg-gradient-dark edit" id="edit">Edit</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             }

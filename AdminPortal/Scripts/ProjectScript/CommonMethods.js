@@ -5,9 +5,10 @@
     AllowView: false,
     AllowDelete: false
 };
-
+function resetValidation() {
+    $('.field-validation-error').text('');
+}
 function CallAsyncService(url, Param, funSucc, Type, funError) {
-    debugger
     try {
         $.ajax({
             type: Type,
@@ -118,6 +119,39 @@ function DeleteConfirm(url, Id) {
                 }
             });
             
+        } else {
+            swal.close();
+        }
+    });
+}
+
+function DeleteConfirmGET(url, Id) {
+    swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        buttons: {
+            confirm: {
+                text: 'Yes, delete it!',
+                className: 'btn btn-success'
+            },
+            cancel: {
+                visible: true,
+                className: 'btn btn-danger'
+            }
+        }
+    }).then((Delete) => {
+        if (Delete) {
+            CrudScript.makeAjaxRequest('GET', url + "/" + Id).then(function (data) {
+                if (data.status == true) {
+                    ShowDivSuccess(data.message);
+                    location.reload();
+                }
+                else {
+                    ShowDivError(data.message);
+                }
+            });
+
         } else {
             swal.close();
         }

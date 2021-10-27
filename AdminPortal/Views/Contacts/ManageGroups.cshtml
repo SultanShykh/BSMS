@@ -1,4 +1,4 @@
-﻿@model List<AdminPortal.Models.ContactsModel>
+﻿@model List<dynamic>
 @section style{
     <style>
         .select2 {
@@ -11,16 +11,14 @@
         <div class="col-md-12">
             <div class="card shadow">
                 <div class="card-body">
-                    <a class="btn bg-gradient-dark m-0" href="/Contacts/Download/@ViewBag.PageNumber" id="add">Download</a>
-                    <button class="btn bg-gradient-dark m-0 add" data-toggle="modal" data-target="#ModalAdd">Add Contact</button>
-                    <button class="btn bg-gradient-dark m-0">Import</button>
+                    <button class="btn bg-gradient-dark m-0 add" data-toggle="modal" data-target="#ModalAdd">Add Group</button>
                     <form id="form" method="post" action="/Menu/Index/@ViewBag.pageNumber" class="mt-2">
                         <div class="row">
                             <div class="col-md-4">
-                                <input type="Email" name="menu_name" class="form-control" placeholder="Enter Email" value="" />
+                                <input type="Email" name="menu_name" class="form-control" placeholder="Enter Name" value="" />
                             </div>
                             <div class="col-md-4">
-                                <input type="text" name="menu_url" class="form-control" placeholder="F" value="" />
+                                <input type="text" name="menu_url" class="form-control" placeholder="Enter Id" value="" />
                             </div>
                             <div class="col-md-4">
                                 <button type="submit" class="btn bg-gradient-dark sender-button" id="fetch">Search</button>
@@ -32,15 +30,10 @@
                             <thead class="bg-gradient-dark text-white">
                                 <tr>
                                     <td>Id</td>
-                                    <td hidden>User Id</td>
-                                    <td>Full Name</td>
-                                    <td>Numbers</td>
-                                    <td>Email</td>
-                                    <td>Group Name</td>
-                                    <td>Option 1</td>
-                                    <td>Option 2</td>
-                                    <td>Option 3</td>
-                                    <td hidden>Group Id</td>
+                                    <td>Name</td>
+                                    <td>Description</td>
+                                    <td>Created On</td>
+                                    <td>Total Contacts</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
@@ -52,18 +45,14 @@
                                         {
                                             <tr>
                                                 <td>@v.id</td>
-                                                <td hidden>@v.user_id</td>
-                                                <td>@v.fullname</td>
-                                                <td>@v.numbers</td>
-                                                <td>@v.emails</td>
-                                                <td>@v.groupname</td>
-                                                <td>@v.option1</td>
-                                                <td>@v.option2</td>
-                                                <td>@v.option3</td>
-                                                <td hidden>@v.groupid</td>
+                                                <td>@v.name</td>
+                                                <td>@v.description</td>
+                                                <td>@v.crtime</td>
+                                                <td>@v.count</td>
                                                 <td>
-                                                    <button class="border-0 text-dark edit" title="Edit" data-toggle="modal" data-target="#ModalUpdate"><i class="fas fa-edit"></i></button>
-                                                    <button class="border-0 text-dark" title="Group Assign" data-toggle="modal" data-target="#ModelAddAssign"><i class="fa fa-plus-square-o"></i></button>
+                                                    <button class="border-0 text-dark edit" title="Rename" data-toggle="modal" data-target="#ModalUpdate"><i class="fas fa-edit"></i></button>
+                                                    <button class="border-0 text-dark" title="Assign" data-toggle="modal" data-target="#myModal2"><i class="fa fa-plus-square-o"></i></button>
+                                                    <button class="border-0 text-dark" title="View" data-toggle="modal" data-target="#myModal2"><i class="fa fa-eye"></i></button>
                                                     <button class="border-0 text-dark delete" title="Delete"><i class="fa fa-trash-o"></i></button>
                                                 </td>
                                             </tr>
@@ -116,13 +105,10 @@
 </div>
 <!-- Modal -->
 @{
-    Html.RenderAction("_UpdateContact", "Contacts");
+    Html.RenderAction("_UpdateGroup", "Contacts");
 }
 @{
-    Html.RenderAction("_AddContact", "Contacts");
-}
-@{
-    Html.RenderAction("_AssignMultipleGroup", "Contacts");
+    Html.RenderAction("_AddGroup", "Contacts");
 }
 
 <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
@@ -137,38 +123,25 @@
             info: false,
         });
     });
-    var formAdd = $('#formAddContact');
-    var formUpdate = $('#formUpdateContact');
+    var formAdd = $('#formAddGroup');
+    var formUpdate = $('#formUpdateGroup');
     $('.edit').click(function () {
         resetValidation();
         var table = $('#MainTable').DataTable();
         var data = table.row($(this).closest('tr')).data();
-
         $('#id').val(data[0]);
-        $('#user_id').val(data[1]);
-        $('#fullname').val(data[2]);
-        $('#numbers').val(data[3]);
-        $('#emails').val(data[4]);
-        $('#option1').val(data[6]);
-        $('#option2').val(data[7]);
-        $('#option3').val(data[8]);
-        $('.groupname1').val(data[9]);
-        $('.groupname1').select2();
+        $('#groupname').val(data[1]);
+        $('#description').val(data[2]);
     });
     $('.add').click(function () {
         resetValidation();
         formAdd.trigger('reset');
     });
-    $('.delete').click(function () {
-        var table = $('#MainTable').DataTable();
-        var table_data = table.row($(this).closest('tr')).data();
-        DeleteConfirmGET('/Contacts/DeleteContact', table_data[0]);
-    });
     formAdd.submit(function (e) {
         e.preventDefault();
         if (formAdd.valid()) {
-            CrudScript.makeAjaxRequest('Post', '/Contacts/_AddContact', formAdd.serialize()).then(function (data) {
-                if (data.status == true) {
+            CrudScript.makeAjaxRequest('Post', '/Contacts/_AddGroup', formAdd.serialize()).then(function (data) {
+                if (data.status == 'true') {
                     ShowDivSuccess(data.message);
                 }
                 else {
@@ -183,8 +156,8 @@
     formUpdate.submit(function (e) {
         e.preventDefault();
         if (formUpdate.valid()) {
-            CrudScript.makeAjaxRequest('Post', '/Contacts/_UpdateContact', formUpdate.serialize()).then(function (data) {
-                if (data.status == true) {
+            CrudScript.makeAjaxRequest('Post', '/Contacts/_UpdateGroup', formUpdate.serialize()).then(function (data) {
+                if (data.status == 'true') {
                     ShowDivSuccess(data.message);
                 }
                 else {
@@ -195,5 +168,10 @@
         else {
             ShowDivError("Input data is not valid");
         }
+    });
+    $('.delete').click(function () {
+        var table = $('#MainTable').DataTable();
+        var table_data = table.row($(this).closest('tr')).data();
+        DeleteConfirmGET('/Contacts/DeleteGroup', table_data[0]);
     });
 </script>

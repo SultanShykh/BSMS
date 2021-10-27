@@ -1,0 +1,39 @@
+﻿@model AdminPortal.Models.ContactsModel
+<div id="ModelAddAssign" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Assign Multiple Group</h5>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("_AssignMultipleGroup", "Contacts", FormMethod.Post, new { id = "formAssignAddGroup" }))
+                {
+                    <div class="row">
+                        <div class="col-md-12 pr-0">
+                            <div class="form-group form-group-default">
+                                @Html.LabelFor(model => model.groupname)
+                                @Html.DropDownListFor(model => model.groupname, new SelectList(AdminPortal.Codebase.ContactsProcessing.GetContactGroups(), "id", "groupname"), new
+                               {
+                                   @class = "form-control groupname",
+                                   style = "width:100%",
+                                   multiple = true
+                               })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pr-0 offset-6 float-right">
+                            <div class="form-group form-group-default">
+                                <input type="submit" value="Assign" class="btn bg-gradient-dark" />
+                                <input type="button" value="Cancel" class="btn bg-gradient-danger" data-dismiss="modal" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

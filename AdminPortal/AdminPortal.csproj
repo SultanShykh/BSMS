@@ -155,7 +155,6 @@
     <Compile Include="Codebase\AccountProcessing.cs" />
     <Compile Include="Codebase\AuthorizeUserAttribute.cs" />
     <Compile Include="Codebase\CommonProcessing.cs" />
-    <Compile Include="Codebase\ContactGroupProcessing.cs" />
     <Compile Include="Codebase\ContactsProcessing.cs" />
     <Compile Include="Codebase\GroupProcessing.cs" />
     <Compile Include="Codebase\MaskProcessing.cs" />
@@ -264,6 +263,10 @@
     <Content Include="Views\Contacts\ManageContacts.cshtml" />
     <Content Include="Views\Contacts\_AddContact.cshtml" />
     <Content Include="Views\Contacts\_UpdateContact.cshtml" />
+    <Content Include="Views\Contacts\ManageGroups.cshtml" />
+    <Content Include="Views\Contacts\_AddGroup.cshtml" />
+    <Content Include="Views\Contacts\_UpdateGroup.cshtml" />
+    <Content Include="Views\Contacts\_AssignMultipleGroup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

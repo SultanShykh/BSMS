@@ -10,7 +10,6 @@ namespace AdminPortal.Models
     {
         [Required]
         public int id { get; set; }
-        [Required]
         public int user_id { get; set; }
         public string fullname { get; set; }
         [Required]
@@ -20,6 +19,7 @@ namespace AdminPortal.Models
         public string option2 { get; set; }
         public string option3 { get; set; }
         public DateTime crtime { get; set; }
+        public int groupid { get; set; }
         [Display(Name = "Group Name")]
         public string groupname { get; set; }
     }

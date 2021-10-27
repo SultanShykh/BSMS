@@ -62,10 +62,9 @@
                         <div class="col-md-6">
                             <div class="form-group form-group-default">
                                 @Html.LabelFor(model => model.groupname)
-                                @Html.DropDownListFor(model => model.groupname, new SelectList(AdminPortal.Codebase.ContactGroupProcessing.GetContactGroups(), "id", "groupname"), new
+                                @Html.DropDownListFor(model => model.groupname, new SelectList(AdminPortal.Codebase.ContactsProcessing.GetContactGroups(), "id", "groupname"), "-- Select Group --",new
                            {
                                @class = "form-control groupname",
-                               required = "true",
                                id = "groupname",
                                style = "width:100%",
                            })
@@ -74,7 +73,7 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0">
-                    <button type="submit" class="btn bg-gradient-dark">Add</button>
+                    <button type="submit" class="btn bg-gradient-dark add">Add</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             }
