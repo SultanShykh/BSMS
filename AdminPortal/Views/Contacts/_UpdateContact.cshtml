@@ -16,6 +16,7 @@
                             <div class="form-group form-group-default">
                                 @Html.HiddenFor(model => model.id)
                                 @Html.HiddenFor(model => model.user_id)
+                                @Html.HiddenFor(model => model.ugc_id)
                                 @Html.LabelFor(model => model.fullname)
                                 @Html.EditorFor(model => model.fullname, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Name" } })
                                 @Html.ValidationMessageFor(model => model.fullname, "", new { @class = "text-danger" })

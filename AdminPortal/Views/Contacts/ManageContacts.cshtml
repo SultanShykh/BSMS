@@ -41,6 +41,7 @@
                                     <td>Option 2</td>
                                     <td>Option 3</td>
                                     <td hidden>Group Id</td>
+                                    <td hidden>ugc_id</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
@@ -61,9 +62,10 @@
                                                 <td>@v.option2</td>
                                                 <td>@v.option3</td>
                                                 <td hidden>@v.groupid</td>
+                                                <td hidden>@v.ugc_id</td>
                                                 <td>
                                                     <button class="border-0 text-dark edit" title="Edit" data-toggle="modal" data-target="#ModalUpdate"><i class="fas fa-edit"></i></button>
-                                                    <button class="border-0 text-dark" title="Group Assign" data-toggle="modal" data-target="#ModelAddAssign"><i class="fa fa-plus-square-o"></i></button>
+                                                    <button class="border-0 text-dark assign" title="Group Assign" data-toggle="modal" data-target="#ModelAddAssign"><i class="fa fa-plus-square-o"></i></button>
                                                     <button class="border-0 text-dark delete" title="Delete"><i class="fa fa-trash-o"></i></button>
                                                 </td>
                                             </tr>
@@ -129,7 +131,6 @@
 <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
 <script>
     $(document).ready(function () {
-        $('.groupname').select2();
         $('#MainTable').DataTable({
             paging: false,
             searching: false,
@@ -139,6 +140,7 @@
     });
     var formAdd = $('#formAddContact');
     var formUpdate = $('#formUpdateContact');
+    var formAssignAddGroup = $('#formAssignAddGroup');
     $('.edit').click(function () {
         resetValidation();
         var table = $('#MainTable').DataTable();
@@ -154,15 +156,27 @@
         $('#option3').val(data[8]);
         $('.groupname1').val(data[9]);
         $('.groupname1').select2();
+        $('#ugc_id').val(data[10]);
     });
     $('.add').click(function () {
+        $('.groupname').select2();
+    });
+    $('.assign').click(function () {
+        debugger
         resetValidation();
-        formAdd.trigger('reset');
+        $('.groupname3').val('');
+        $('.groupname3').select2({
+            placeholder: "Select Multiple",
+        });
+        formAssignAddGroup.trigger('reset');
+        var table = $('#MainTable').DataTable();
+        var data = table.row($(this).closest('tr')).data();
+        $('#contact_id').val(data[0]);
     });
     $('.delete').click(function () {
         var table = $('#MainTable').DataTable();
         var table_data = table.row($(this).closest('tr')).data();
-        DeleteConfirmGET('/Contacts/DeleteContact', table_data[0]);
+        DeleteConfirmGET('/Contacts/DeleteContact', table_data[10]);
     });
     formAdd.submit(function (e) {
         e.preventDefault();
@@ -185,6 +199,30 @@
         if (formUpdate.valid()) {
             CrudScript.makeAjaxRequest('Post', '/Contacts/_UpdateContact', formUpdate.serialize()).then(function (data) {
                 if (data.status == true) {
+                    ShowDivSuccess(data.message);
+                }
+                else {
+                    ShowDivError(data.message);
+                }
+            });
+        }
+        else {
+            ShowDivError("Input data is not valid");
+        }
+    });
+    formAssignAddGroup.submit(function (e) {
+        debugger
+        var groupname = "";
+        $.each($('#groupname3').val(), function (key, val) {
+            groupname += val + ",";
+        });
+        var obj = {};
+        obj.id = $('#contact_id').val();
+        obj.groupname = groupname;
+        e.preventDefault();
+        if (formAdd.valid()) {
+            CrudScript.makeAjaxRequest('Post', '/Contacts/_AssignMultipleGroup', obj).then(function (data) {
+                if (data.status == 'true') {
                     ShowDivSuccess(data.message);
                 }
                 else {

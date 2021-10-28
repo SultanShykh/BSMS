@@ -24,7 +24,7 @@ namespace AdminPortal.Codebase
         }
         public static string COR_Contacts_UpdateContact(ContactsModel contacts) 
         {
-            var result = AppDB.COR_Contacts_UpdateContact(contacts.id, contacts.user_id, contacts.fullname, contacts.groupname, contacts.numbers, contacts.emails, contacts.option1, contacts.option2, contacts.option3).FirstOrDefault();
+            var result = AppDB.COR_Contacts_UpdateContact(contacts.id, contacts.user_id, contacts.fullname, contacts.groupname, contacts.numbers, contacts.emails, contacts.option1, contacts.option2, contacts.option3, contacts.ugc_id).FirstOrDefault();
             return result.message.ToString();
         }
         public static string COR_Contacts_AddContact(ContactsModel contacts)
@@ -51,7 +51,6 @@ namespace AdminPortal.Codebase
         }
         public static void COR_Contacts_AddGroup(ContactGroupModel group, out string result, out string status)
         {
-            result = "";
             var record = AppDB.COR_Contacts_AddGroup(group.user_id, group.groupname, group.description);
             result = record.FirstOrDefault().message;
             record.NextResult();
@@ -59,7 +58,6 @@ namespace AdminPortal.Codebase
         }
         public static void COR_Contacts_UpdateGroup(ContactGroupModel group, out string result, out string status)
         {
-            result = "";
             var record = AppDB.COR_Contacts_UpdateGroup(group.id, group.groupname, group.description);
             result = record.FirstOrDefault().message;
             record.NextResult();
@@ -70,10 +68,16 @@ namespace AdminPortal.Codebase
             AppDB.groups.DeleteById(Id);
             AppDB.user_groups_contacts.Delete(group_id: Id);
         }
-        public static void DeleteContact(int Id)
+        public static void DeleteContact(int Id, int user_id)
         {
-            AppDB.contacts.DeleteById(Id);
-            AppDB.user_groups_contacts.Delete(contact_id: Id);
+            AppDB.user_groups_contacts.Delete(id:Id, user_id: user_id);
+        }
+        public static void AssignMultipleGroup(ContactsModel model, out string result, out string status) 
+        {
+            var record = AppDB.COR_Contacts_AssignMultipleGroup(model.id, model.user_id, model.groupname);
+            result = record.FirstOrDefault().message;
+            record.NextResult();
+            status = record.FirstOrDefault().status;
         }
     }
 }

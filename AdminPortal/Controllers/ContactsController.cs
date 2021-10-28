@@ -152,5 +152,21 @@ namespace AdminPortal.Controllers
         {
             return PartialView();
         }
+        [HttpPost]
+        public JsonResult _AssignMultipleGroup(ContactsModel contactsModel)
+        {
+            ModelState.Remove("numbers");
+            if (!ModelState.IsValid) return Json(new { status = false, message = "Fields are empty" });
+            try
+            {
+                contactsModel.user_id = Convert.ToInt32(Session["UserId"]);
+                ContactsProcessing.AssignMultipleGroup(contactsModel, out string result, out string status);
+                return Json(new { status = status, message = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message.ToString() });
+            }
+        }
     }
 }

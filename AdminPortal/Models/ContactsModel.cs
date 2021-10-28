@@ -11,6 +11,7 @@ namespace AdminPortal.Models
         [Required]
         public int id { get; set; }
         public int user_id { get; set; }
+        public int ugc_id { get; set; }
         public string fullname { get; set; }
         [Required]
         public string numbers { get; set; }
