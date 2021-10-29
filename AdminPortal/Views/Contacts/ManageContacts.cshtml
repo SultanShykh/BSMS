@@ -174,9 +174,10 @@
         $('#contact_id').val(data[0]);
     });
     $('.delete').click(function () {
+        debugger
         var table = $('#MainTable').DataTable();
         var table_data = table.row($(this).closest('tr')).data();
-        DeleteConfirmGET('/Contacts/DeleteContact', table_data[10]);
+        DeleteConfirmGET('/Contacts/DeleteContact', table_data[0]);
     });
     formAdd.submit(function (e) {
         e.preventDefault();

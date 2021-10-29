@@ -10,10 +10,10 @@ namespace AdminPortal.Codebase
     public class ContactsProcessing
     {
         static dynamic AppDB = Database.OpenNamedConnection("MainDB");
-        public static void GetContacts(int currentPage, out List<ContactsModel> contacts, out int totalPages) 
+        public static void GetContacts(int currentPage, int user_id, out List<ContactsModel> contacts, out int totalPages) 
         {
             contacts = new List<ContactsModel>();
-            var list = AppDB.COR_Contacts_GetContacts(currentPage: currentPage);
+            var list = AppDB.COR_Contacts_GetContacts(currentPage: currentPage, user_id: user_id);
 
             if (list.FirstOrDefault() != null)
             {
@@ -34,13 +34,13 @@ namespace AdminPortal.Codebase
         }
         public static List<ContactGroupModel> GetContactGroups() 
         {
-            var list = AppDB.groups.All().ToList<ContactGroupModel>();
+            var list = AppDB.groups.FindAllBy(user_id: Convert.ToInt32(HttpContext.Current.Session["UserId"])).ToList<ContactGroupModel>();
             return list;
         }
-        public static void GetGroups(int currentPage, out List<dynamic> contacts, out int totalPages)
+        public static void GetGroups(int currentPage, int user_id, out List<dynamic> contacts, out int totalPages)
         {
             contacts = new List<dynamic>();
-            var list = AppDB.COR_Contacts_GetGroups(currentPage: currentPage);
+            var list = AppDB.COR_Contacts_GetGroups(currentPage: currentPage, user_id: user_id);
 
             if (list.FirstOrDefault() != null)
             {
@@ -63,14 +63,15 @@ namespace AdminPortal.Codebase
             record.NextResult();
             status = record.FirstOrDefault().status;
         }
-        public static void DeleteGroup(int Id) 
+        public static void DeleteGroup(int Id, int user_id) 
         {
-            AppDB.groups.DeleteById(Id);
-            AppDB.user_groups_contacts.Delete(group_id: Id);
+            AppDB.groups.Delete(id:Id, user_id:user_id);
+            AppDB.user_groups_contacts.Delete(group_id: Id, user_id: user_id);
         }
         public static void DeleteContact(int Id, int user_id)
         {
-            AppDB.user_groups_contacts.Delete(id:Id, user_id: user_id);
+            AppDB.contacts.Delete(id: Id, user_id: user_id);
+            AppDB.user_groups_contacts.Delete(contact_id:Id, user_id: user_id);
         }
         public static void AssignMultipleGroup(ContactsModel model, out string result, out string status) 
         {

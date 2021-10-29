@@ -141,6 +141,7 @@ function DeleteConfirmGET(url, Id) {
             }
         }
     }).then((Delete) => {
+        debugger
         if (Delete) {
             CrudScript.makeAjaxRequest('GET', url + "/" + Id).then(function (data) {
                 if (data.status == true) {

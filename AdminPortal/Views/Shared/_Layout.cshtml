@@ -312,16 +312,6 @@
 
                         <div class="collapse" id="Report-app-nav">
                             <ul class="nav nav-collapse">
-                                @if (Permission.HasPermission("Reports", "Inbox"))
-                                {
-                                    <li class="nav-item Users">
-                                        <a class="nav-link @Html.IsActive("Inbox", "Reports")" href="@Url.Action("Inbox", "Reports")">
-                                            <i class="fas fa-user-cog"></i>
-                                            <span class="nav-link-text">Inbox</span>
-                                        </a>
-                                    </li>
-                                }
-
                                 @if (Permission.HasPermission("Reports", "Outbox"))
                                 {
                                     <li class="nav-item Users">
@@ -341,17 +331,6 @@
                                         </a>
                                     </li>
                                 }
-
-                                @if (Permission.HasPermission("Reports", "OutboxLive"))
-                                {
-                                    <li class="nav-item Users">
-                                        <a class="nav-link @Html.IsActive("OutboxLive", "Reports")" href="@Url.Action("OutboxLive", "Reports")">
-                                            <i class="fas fa-user-cog"></i>
-                                            <span class="nav-link-text">Outbox Live</span>
-                                        </a>
-                                    </li>
-                                }
-
                             </ul>
                         </div>
                     </li>
@@ -465,6 +444,17 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                                <div class="sidenav-toggler-inner">
+                                    <i class="sidenav-toggler-line"></i>
+                                    <i class="sidenav-toggler-line"></i>
+                                    <i class="sidenav-toggler-line"></i>
+                                </div>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -490,8 +480,18 @@
     </main>
 
     <script async defer src="~/Scripts/js/github-buttons.js"></script>
-    @Scripts.Render("~/bundles/Dashboard/Scripts")
-
+    @*@Scripts.Render("~/bundles/Dashboard/Scripts")*@
+    <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+    @Scripts.Render("~/bundles/softui")
+    
     @RenderSection("scripts", required: false)
 </body>
 

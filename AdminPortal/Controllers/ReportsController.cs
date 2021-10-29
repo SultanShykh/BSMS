@@ -14,9 +14,7 @@ namespace AdminPortal.Controllers
 {
     public class ReportsController : Controller
     {
-        OutboxProcessing op = new OutboxProcessing();
-        
-        public ActionResult Outbox(int Id = 1,string sender = null, string receiver = null, string datetime = "01-01-2021 - 01-12-2021")
+        public ActionResult Outbox(int Id = 1,string sender = null, string receiver = null, string datetime = null)
         {
             ViewBag.datetime = datetime;
             datetime = datetime != null ? datetime.Replace(" ", ""): datetime;
@@ -32,8 +30,7 @@ namespace AdminPortal.Controllers
 
             return View("Outbox", outbox);
         }
-
-        public ActionResult OutboxCamp(int Id = 1, string sender = null, string receiver = null, string datetime = "01-01-2021 - 01-12-2021")
+        public ActionResult OutboxCamp(int Id = 1, string sender = null, string receiver = null, string datetime = null)
         {
             ViewBag.datetime = datetime;
             datetime = datetime != null ? datetime.Replace(" ", "") : datetime;
@@ -49,8 +46,7 @@ namespace AdminPortal.Controllers
 
             return View("Outbox", outbox);
         }
-
-        public ActionResult OutboxArchive(int Id = 1, string sender = null, string receiver = null, string datetime = "01-01-2021 - 01-12-2021")
+        public ActionResult OutboxArchive(int Id = 1, string sender = null, string receiver = null, string datetime = null)
         {
             OutboxProcessing.COR_USP_Outbox(Convert.ToInt32(Session["UserId"]), Id, sender, receiver, datetime, out List<dynamic> outbox, out int totalPages);
 
@@ -62,24 +58,12 @@ namespace AdminPortal.Controllers
 
             return View("Outbox", outbox);
         }
-
-        public ActionResult OutboxLive(int Id = 1, string sender = null, string receiver = null, string datetime = "01-01-2021 - 01-12-2021")
-        {
-            OutboxProcessing.COR_USP_Outbox(Convert.ToInt32(Session["UserId"]), Id, sender, receiver, datetime, out List<dynamic> outbox, out int totalPages);
-
-            ViewBag.PageNumber = Id;
-            ViewBag.totalPages = totalPages;
-            ViewBag.action = "Outbox";
-            ViewBag.sender = sender;
-            ViewBag.receiver = receiver;
-
-            return View("Outbox", outbox);
-        }
-
-        public ActionResult Download(int Id = 1, string sender = null, string receiver = null, string datetime = "01-01-2021 - 01-12-2021",string action= "Outbox")
+        public ActionResult Download(string sender = null, string receiver = null, string datetime = null, string action="Outbox")
         {
             datetime = datetime != null ? datetime.Replace(" ", "") : datetime;
-            OutboxProcessing.COR_USP_Outbox(Convert.ToInt32(Session["UserId"]), Id, sender, receiver, datetime, out List<dynamic> outbox, out int totalPages);
+            sender = sender == "" ? null : sender;
+            receiver = receiver == "" ? null : receiver;
+            OutboxProcessing.COR_USP_OutboxDownload(Convert.ToInt32(Session["UserId"]), sender, receiver, datetime, out List<dynamic> outbox);
 
             DataTable dt = new DataTable();
             CSVExtension.getData(dt);
@@ -104,13 +88,61 @@ namespace AdminPortal.Controllers
             using (XLWorkbook wb = new XLWorkbook()) 
             {
                 wb.Worksheets.Add(dt);
+                Response.Clear();
+                Response.Buffer = true;
+                Response.Charset = "";
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".xlsx");
                 using (MemoryStream stream = new MemoryStream()) 
                 {
                     wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                    return RedirectToAction(action,"Reports");
                 }
             }
             
+        }
+        public ActionResult DownloadCamp(string sender = null, string receiver = null, string datetime = null, string action="OutboxCamp")
+        {
+            datetime = datetime != null ? datetime.Replace(" ", "") : datetime;
+            sender = sender == "" ? null : sender;
+            receiver = receiver == "" ? null : receiver;
+            OutboxProcessing.COR_USP_OutboxCampDownload(Convert.ToInt32(Session["UserId"]), sender, receiver, datetime, out List<dynamic> outbox);
+
+            DataTable dt = new DataTable();
+            CSVExtension.getData(dt);
+            string fileName = "outbox campaign.xlsx";
+
+            foreach (var v in outbox)
+            {
+                DataRow dr = dt.NewRow();
+
+                dr["username"] = v.username;
+                dr["smstype"] = Convert.ToInt32(v.smstype);
+                dr["masking"] = v.masking;
+                dr["receiver"] = v.receiver;
+                dr["msgdata"] = v.msgdata;
+                dr["senttime"] = Convert.ToDateTime(v.senttime).ToString("dd/MM/yyyy HH:mm:ss");
+                dr["status"] = v.status;
+                dr["cost"] = Convert.ToInt32(v.cost);
+                dr["route"] = Convert.ToInt32(v.route);
+                dt.Rows.Add(dr);
+            }
+
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+                Response.Clear();
+                Response.Buffer = true;
+                Response.Charset = "";
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".xlsx");
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return RedirectToAction(action, "Reports");
+                }
+            }
+
         }
     }
 }

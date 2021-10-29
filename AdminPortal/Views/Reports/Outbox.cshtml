@@ -17,7 +17,18 @@
             <div class="card-header mb-0 pb-0">
                 <div class="row">
                     <div class="col-md-2">
-                        <a class="btn bg-gradient-dark" href="/Reports/Download?Id=@ViewBag.PageNumber&sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime&action=@ViewBag.action">Download</a>
+                        @{
+                            string downloadAction = "";
+                            if (ViewBag.action == "Outbox")
+                            {
+                                downloadAction = "Download";
+                            }
+                            else
+                            {
+                                downloadAction = "DownloadCamp";
+                            }
+                        }
+                        <a class="btn bg-gradient-dark downloadlink" href="/Reports/@downloadAction?sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime">Download</a>
                     </div>
                     <div class="col-md-10">
                         <form id="form" method="GET" action="/Reports/@ViewBag.action">
@@ -29,7 +40,7 @@
                                     <input type="text" name="receiver" class="form-control" placeholder="Receiver" value="@ViewBag.receiver" />
                                 </div>
                                 <div class="col-md-3">
-                                    <input class="form-control bg-light shadow border-0" type="text" name="datetime" id="datetime" value="@ViewBag.datetime"/>
+                                    <input class="form-control bg-light shadow border-0" type="text" name="datetime" id="datetime" value="@ViewBag.datetime" />
                                 </div>
                                 <div class="col-md-3">
                                     <button type="submit" class="btn bg-gradient-dark sender-button" id="fetch">Search</button>
@@ -127,15 +138,14 @@
     {
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
         $(function () {
             $('input[name="datetime"]').daterangepicker({
                 opens: 'left',
                 locale: {
-                    format: 'DD-MM-YYYY'
+                    format: 'YYYY-MM-DD'
                 }
-            }, function (start, end, label) {
-                console.log("A new date selection was made: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
             });
         });
 
@@ -150,7 +160,7 @@
 
             var str = '<table class="table no-margin dataTable no-footer bg-gradient-dark table-bordered" id="detailsTable">' +
                 '<tbody><tr class="text-white"><td><b>Route Name</b></td><td>' + rowData + '</td></tr>';
-            
+
             return str + '</tbody></table>';
         }
 
@@ -173,6 +183,9 @@
                     i.addClass("fa fa-minus-circle");
                 }
             });
+        });
+        $('.downloadlink').click(function () {
+            ShowDivSuccess1("Please wait...");
         });
 
     </script>

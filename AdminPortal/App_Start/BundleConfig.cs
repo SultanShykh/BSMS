@@ -21,12 +21,14 @@ namespace AdminPortal
                         "~/Scripts/plugins/jquery.slimscroll.min.js",
                         //"~/Scripts/ProjectScript/bootstrap-select.min.js",
                         "~/Scripts/plugins/perfect-scrollbar.min.js",
-                        "~/Scripts/plugins/smooth-scrollbar.min.js",
-                       "~/Scripts/soft-ui-dashboard.min.js"
+                        "~/Scripts/plugins/smooth-scrollbar.min.js"
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/softui").Include(
+                        "~/Scripts/soft-ui-dashboard.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

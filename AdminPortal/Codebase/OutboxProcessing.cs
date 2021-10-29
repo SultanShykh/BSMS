@@ -23,6 +23,15 @@ namespace AdminPortal.Codebase
             totalPages = Records.FirstOrDefault().totalPages;
         }
 
+        public static void COR_USP_OutboxDownload(int user_id, string sender, string receiver, string date, out List<dynamic> outbox)
+        {
+            outbox = AppDB.COR_USP_OutboxDownload(user_id: user_id, sender: sender, receiver: receiver, date: date).ToList<dynamic>();           
+        }
+        public static void COR_USP_OutboxCampDownload(int user_id, string sender, string receiver, string date, out List<dynamic> outbox)
+        {
+            outbox = AppDB.COR_USP_OutboxCampDownload(user_id: user_id, sender: sender, receiver: receiver, date: date).ToList<dynamic>();
+        }
+
         public static void COR_USP_Outbox_Camp(int user_id, int pageNo, string sender, string receiver, string date, out List<dynamic> outbox, out int totalPages)
         {
             outbox = new List<dynamic>();

@@ -12,14 +12,14 @@ namespace AdminPortal.Controllers
     {
         public ActionResult ManageContacts(int Id=1)
         {
-            ContactsProcessing.GetContacts(Id, out List<ContactsModel> contacts, out int totalPages);
+            ContactsProcessing.GetContacts(Id, Convert.ToInt32(Session["UserId"]), out List<ContactsModel> contacts, out int totalPages);
             ViewBag.pageNumber = Id;
             ViewBag.totalPages = totalPages;
             return View(contacts);
         }
         public ActionResult ManageGroups(int Id=1)
         {
-            ContactsProcessing.GetGroups(Id, out List<dynamic> contacts, out int totalPages);
+            ContactsProcessing.GetGroups(Id, Convert.ToInt32(Session["UserId"]), out List<dynamic> contacts, out int totalPages);
             ViewBag.pageNumber = Id;
             ViewBag.totalPages = totalPages;
             return View(contacts);
@@ -127,7 +127,7 @@ namespace AdminPortal.Controllers
         {
             try
             {
-                ContactsProcessing.DeleteGroup(Id);
+                ContactsProcessing.DeleteGroup(Id, Convert.ToInt32(Session["UserId"]));
             }
             catch (Exception ex) 
             {
@@ -140,7 +140,7 @@ namespace AdminPortal.Controllers
         {
             try
             {
-                ContactsProcessing.DeleteContact(Id);
+                ContactsProcessing.DeleteContact(Id, Convert.ToInt32(Session["UserId"]));
             }
             catch (Exception ex)
             {
