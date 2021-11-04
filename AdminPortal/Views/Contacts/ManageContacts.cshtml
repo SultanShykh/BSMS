@@ -11,16 +11,32 @@
         <div class="col-md-12">
             <div class="card shadow">
                 <div class="card-body">
-                    <a class="btn bg-gradient-dark m-0" href="/Contacts/Download/@ViewBag.PageNumber" id="add">Download</a>
-                    <button class="btn bg-gradient-dark m-0 add" data-toggle="modal" data-target="#ModalAdd">Add Contact</button>
-                    <button class="btn bg-gradient-dark m-0">Import</button>
-                    <form id="form" method="post" action="/Menu/Index/@ViewBag.pageNumber" class="mt-2">
+                    <div class="row">
+                        @{
+                            if (TempData["result"] != null)
+                            {
+                                <div class="alert alert-dismissable alert-@TempData["status"]" style="background-color: @TempData["status"]">
+                                    <p style="color: white">@TempData["result"]</p>
+                                </div>
+                            }
+                        }
+                        <div class="col-md-4">
+                            <a class="btn bg-gradient-dark m-0" href="/Contacts/Download?fullname=@ViewBag.fullname&email=@ViewBag.email" id="add">Download</a>
+                            <button class="btn bg-gradient-dark m-0 add" data-toggle="modal" data-target="#ModalAdd">Add Contact</button>
+                        </div>
+                        <div class="col-md-4 col-md-offset-4">
+                            <form action="/Contacts/ImportContacts" method="POST" id="formImport" enctype="multipart/form-data">
+                                <input class="btn btn-sm bg-gradient-dark" value="Import" type="file" name="fileUpload" id="fileUpload" onchange="this.form.submit()" accept=".csv,.xls,.xlsx">
+                            </form>
+                        </div>
+                    </div>
+                    <form id="form" method="GET" action="/Contacts/ManageContacts/@ViewBag.pageNumber" class="mt-2">
                         <div class="row">
                             <div class="col-md-4">
-                                <input type="Email" name="menu_name" class="form-control" placeholder="Enter Email" value="" />
+                                <input type="email" name="email" class="form-control" placeholder="Enter Email" value="@ViewBag.email" />
                             </div>
                             <div class="col-md-4">
-                                <input type="text" name="menu_url" class="form-control" placeholder="F" value="" />
+                                <input type="text" name="fullname" class="form-control" placeholder="Enter Full Name" value="@ViewBag.fullname" />
                             </div>
                             <div class="col-md-4">
                                 <button type="submit" class="btn bg-gradient-dark sender-button" id="fetch">Search</button>
@@ -98,7 +114,7 @@
                             {
                                 <!--Next Page-->
                                 <li class="page-item text-white">
-                                    <a class="page-link bg-gradient-dark text-white" href="" aria-label="Next">
+                                    <a class="page-link bg-gradient-dark text-white" href="?Id=@ViewBag.pageNumber&fullname=@ViewBag.fullname&email=@ViewBag.email" aria-label="Next">
                                         <i class="fa fa-angle-right"></i>
                                         <span class="sr-only">Next</span>
                                     </a>
@@ -116,7 +132,6 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
 @{
     Html.RenderAction("_UpdateContact", "Contacts");
 }
@@ -126,7 +141,6 @@
 @{
     Html.RenderAction("_AssignMultipleGroup", "Contacts");
 }
-
 <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
 <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
 <script>
@@ -137,6 +151,8 @@
             ordering: false,
             info: false,
         });
+        $(".alert").fadeIn();
+        $('.alert').fadeOut(4000);
     });
     var formAdd = $('#formAddContact');
     var formUpdate = $('#formUpdateContact');
@@ -162,7 +178,6 @@
         $('.groupname').select2();
     });
     $('.assign').click(function () {
-        debugger
         resetValidation();
         $('.groupname3').val('');
         $('.groupname3').select2({
@@ -174,7 +189,6 @@
         $('#contact_id').val(data[0]);
     });
     $('.delete').click(function () {
-        debugger
         var table = $('#MainTable').DataTable();
         var table_data = table.row($(this).closest('tr')).data();
         DeleteConfirmGET('/Contacts/DeleteContact', table_data[0]);
@@ -233,6 +247,30 @@
         }
         else {
             ShowDivError("Input data is not valid");
+        }
+    });
+
+    var formImport = $('#formImport');
+    formImport.submit(function (e) {
+        debugger
+        formImport.validate({
+            rules: {
+                fileUpload: {
+                    extension: "xls|xlsx"
+                }
+            },
+            messages: {
+                fileUpload: {
+                    extension: "Please attach xls or xlsx files only"
+                }
+            }
+        });
+        if (!form.valid()) {
+            e.preventDefault();
+            ShowDivError("please fill out the form");
+        }
+        else {
+            ShowDivSuccess1("Please wait...");
         }
     });
 </script>

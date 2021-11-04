@@ -148,14 +148,12 @@
                 }
             });
         });
-
         var table = $('#MainTable').DataTable({
             paging: false,
             searching: false,
             ordering: false,
             info: false,
         });
-
         function format(rowData) {
 
             var str = '<table class="table no-margin dataTable no-footer bg-gradient-dark table-bordered" id="detailsTable">' +
@@ -163,7 +161,6 @@
 
             return str + '</tbody></table>';
         }
-
         $(function () {
             $('#MainTable tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
@@ -184,9 +181,8 @@
                 }
             });
         });
-        $('.downloadlink').click(function () {
-            ShowDivSuccess1("Please wait...");
-        });
-
+        //$('.downloadlink').click(function () {
+        //    ShowDivSuccess1("Please wait...");
+        //});
     </script>
 }

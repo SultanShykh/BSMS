@@ -93,7 +93,6 @@ function CallAsyncService1(url, Param, funSucc, Type, funError) {
 }
 
 function DeleteConfirm(url, Id) {
-    debugger
     swal({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -141,7 +140,6 @@ function DeleteConfirmGET(url, Id) {
             }
         }
     }).then((Delete) => {
-        debugger
         if (Delete) {
             CrudScript.makeAjaxRequest('GET', url + "/" + Id).then(function (data) {
                 if (data.status == true) {

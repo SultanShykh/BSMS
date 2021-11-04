@@ -171,7 +171,6 @@
         var form = $("#form");
         
         form.submit(function (e) {
-            
             form.validate({
                 rules: {
                     contactsFile: {
@@ -189,8 +188,6 @@
                     }
                 }
             });
-
-            //$("#msgdata").rules("add", { regex: "[^$]" }, "Please add column");
 
             if (!form.valid()) {
                 ShowDivError("please fill out the form");

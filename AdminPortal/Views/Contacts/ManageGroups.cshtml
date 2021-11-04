@@ -34,6 +34,7 @@
                                     <td>Description</td>
                                     <td>Created On</td>
                                     <td>Total Contacts</td>
+                                    <td hidden>user Id</td>
                                     <td>Action</td>
                                 </tr>
                             </thead>
@@ -49,10 +50,12 @@
                                                 <td>@v.description</td>
                                                 <td>@v.crtime</td>
                                                 <td>@v.count</td>
+                                                <td hidden>@v.user_id</td>
+
                                                 <td>
                                                     <button class="border-0 text-dark edit" title="Rename" data-toggle="modal" data-target="#ModalUpdate"><i class="fas fa-edit"></i></button>
-                                                    <button class="border-0 text-dark" title="Assign" data-toggle="modal" data-target="#myModal2"><i class="fa fa-plus-square-o"></i></button>
-                                                    <button class="border-0 text-dark" title="View" data-toggle="modal" data-target="#myModal2"><i class="fa fa-eye"></i></button>
+                                                    <button class="border-0 text-dark assignGroup" title="Assign" data-toggle="modal" data-target="#ModalAssignContact"><i class="fa fa-plus-square-o"></i></button>
+                                                    <button class="border-0 text-dark view" title="View" data-toggle="modal" data-target="#ModalViewContact"><i class="fa fa-eye"></i></button>
                                                     <button class="border-0 text-dark delete" title="Delete"><i class="fa fa-trash-o"></i></button>
                                                 </td>
                                             </tr>
@@ -109,6 +112,12 @@
 }
 @{
     Html.RenderAction("_AddGroup", "Contacts");
+}
+@{
+    Html.RenderAction("_ViewContacts", "Contacts");
+}
+@{
+    Html.RenderAction("_AssignContacts", "Contacts");
 }
 
 <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
@@ -173,5 +182,99 @@
         var table = $('#MainTable').DataTable();
         var table_data = table.row($(this).closest('tr')).data();
         DeleteConfirmGET('/Contacts/DeleteGroup', table_data[0]);
+    });
+    $('.view').click(function () {
+        var tableView = $('#viewTable').DataTable();
+        tableView.destroy();
+        var table = $('#MainTable').DataTable();
+        var tblData = table.row($(this).closest('tr')).data();
+       
+        CrudScript.makeAjaxRequest('POST', '/Contacts/_ViewContacts', { id: tblData[0] }).then(function (data) {
+            $('#viewTable').DataTable({
+                data: data.message,
+                columns: [
+                    { 'data': 'fullname'},
+                    { 'data': 'numbers'},
+                    { 'data': 'emails'},
+                    { 'data': 'option1'},
+                    { 'data': 'option2'},
+                    { 'data': 'option3'}
+                ],
+                ordering: false
+            });
+        });
+    });
+    $('.assign').click(function () {
+        var tableAssign = $('#AssignTable').DataTable();
+        var ss = tableAssign.rows({ selected: true }).data();
+        console.log(ss);
+        var arr = new Array();
+
+        $.each(ss, function (key, val) {
+            debugger
+            var obj = {};
+            obj.id = val.id;
+            obj.groupid = val.groupid;
+            obj.user_id = val.user_id;
+            arr.push(obj);
+        });
+        console.log(JSON.stringify(arr));
+        $.ajax({
+            type: "POST",
+            url: "/Contacts/_AssignContacts",
+            data: JSON.stringify(arr),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger
+                if (data.status == true) {
+                    ShowDivSuccess(data.message);
+                }
+                else {
+                    ShowDivError(data.message);
+                }
+            }
+        });
+    });
+       
+    $('.assignGroup').click(function () {
+        var tableAssign = $('#AssignTable').DataTable();
+        tableAssign.destroy();
+        var table = $('#MainTable').DataTable();
+        var tblData = table.row($(this).closest('tr')).data();
+
+        CrudScript.makeAjaxRequest('POST', '/Contacts/_ViewAssignContacts', { id: tblData[0] }).then(function (data) {
+            $.each(data.message, function (key, val) {
+                data.message[key].groupid = tblData[0];
+            });
+            $('#AssignTable').DataTable({
+                data: data.message,
+                columns: [
+                    {
+                        'mData': null,
+                        "mRender": function (data, type, full) {
+                            return '';
+                        }
+                    },
+                    { 'data': 'id'},
+                    { 'data': 'fullname' },
+                    { 'data': 'numbers' },
+                    { 'data': 'emails' },
+                    { 'data': 'option1' },
+                    { 'data': 'option2' },
+                    { 'data': 'option3' }
+                ],
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: [0],
+                    ordering: false
+                }],
+                select: {
+                    style: 'multi',
+                    selector: 'td:first-child'
+                },
+                ordering: false
+            });
+        });
     });
 </script>

@@ -82,8 +82,7 @@ namespace AdminPortal.Controllers
         {
             ModelState.Remove("camp_time");
             ModelState.Remove("receiver");
-            if (!ModelState.IsValid)
-                return Json(new { status = false, message = "Fields are empty" });
+            if (!ModelState.IsValid) return Json(new { status = false, message = "Fields are empty" });
 
             dt.Clear();
 

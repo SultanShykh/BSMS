@@ -344,6 +344,7 @@ namespace AdminPortal.Helpers
         public static DataTable getData(DataTable dt) 
         {
             dt.TableName = "Outbox";
+            dt.Clear();
             dt.Columns.Add("username", typeof(string));
             dt.Columns.Add("smstype", typeof(int));
             dt.Columns.Add("masking", typeof(string));
@@ -354,6 +355,20 @@ namespace AdminPortal.Helpers
             dt.Columns.Add("cost", typeof(int));
             dt.Columns.Add("route", typeof(int));
             return dt;
+        }
+        public static void makeData(out DataTable dt)
+        {
+            dt = new DataTable();
+            dt.Clear();
+            dt.TableName = "Contacts";
+            dt.Columns.Add("user_id", typeof(string));
+            dt.Columns.Add("emails", typeof(string));
+            dt.Columns.Add("fullname", typeof(string));
+            dt.Columns.Add("numbers", typeof(string));
+            dt.Columns.Add("option1", typeof(string));
+            dt.Columns.Add("option2", typeof(string));
+            dt.Columns.Add("option3", typeof(string));
+            dt.Columns.Add("crtime", typeof(DateTime));
         }
     }
 }

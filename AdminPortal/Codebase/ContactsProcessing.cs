@@ -10,10 +10,10 @@ namespace AdminPortal.Codebase
     public class ContactsProcessing
     {
         static dynamic AppDB = Database.OpenNamedConnection("MainDB");
-        public static void GetContacts(int currentPage, int user_id, out List<ContactsModel> contacts, out int totalPages) 
+        public static void GetContacts(int currentPage, string fullname, string email, int user_id, out List<ContactsModel> contacts, out int totalPages) 
         {
             contacts = new List<ContactsModel>();
-            var list = AppDB.COR_Contacts_GetContacts(currentPage: currentPage, user_id: user_id);
+            var list = AppDB.COR_Contacts_GetContacts(currentPage: currentPage, user_id: user_id, fullname: fullname, email: email) ;
 
             if (list.FirstOrDefault() != null)
             {
@@ -79,6 +79,25 @@ namespace AdminPortal.Codebase
             result = record.FirstOrDefault().message;
             record.NextResult();
             status = record.FirstOrDefault().status;
+        }
+        public static List<ContactsModel> ViewContacts(int userid, int? Id) 
+        {
+            List<ContactsModel> model = AppDB.COR_Contacts_ViewContacts(user_id: userid, groupid: Id) ?? new List<ContactsModel>();
+            return model;
+        }
+        public static List<ContactsModel> ViewAssignContacts(int userid, int groupId, int contactId) 
+        {
+            List<ContactsModel> model = AppDB.COR_Contacts_ViewAssignContacts(user_id: userid, groupid: groupId, contactid: contactId) ?? new List<ContactsModel>();
+            return model;
+        }
+        public static void _AssignContacts(int numbers, int groupId, int user_id) 
+        {
+            AppDB.user_groups_contacts.Insert(user_id: user_id, group_id: groupId, contact_id: numbers);
+        }
+        public static List<ContactsModel> DownloadContacts(int user_id, string fullname, string email) 
+        {
+            var list = AppDB.COR_Contacts_Download(user_id, fullname, email) ?? new List<ContactsModel>();
+            return list;
         }
     }
 }

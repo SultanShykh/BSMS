@@ -3,6 +3,7 @@
         return new Promise(function (resolve, reject) {
             if (methodType == "GET") {
                 if (params == null) {
+                    debugger
                     $.get(url).done(function (response) {
                         resolve(response)
                     }).fail(function (response) {
