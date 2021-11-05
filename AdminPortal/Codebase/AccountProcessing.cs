@@ -16,7 +16,6 @@ namespace AdminPortal.Codebase
             var result = AppDB.COR_WEB_LoginUser(Username: username, Password: password);
             return result;
         }
-
         public string SendMail(string email,string username, string name, string host)
         {
             

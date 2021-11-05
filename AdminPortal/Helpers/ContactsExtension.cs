@@ -16,7 +16,7 @@ namespace AdminPortal.Helpers
             List<string> list = new List<string>(); 
             list.Clear();
             dt.Clear();
-            CSVExtension.makeData(out dt);
+            makeData(out dt, " ");
             try
             {
                 using (XLWorkbook excel = new XLWorkbook(path))
@@ -54,13 +54,34 @@ namespace AdminPortal.Helpers
         public static bool getContactsFromCSV(string path, int user_id, out DataTable dt) 
         {
             dt = new DataTable();
+            List<string> list = new List<string>();
+            list.Clear();
+            dt.Clear();
+            makeData(out dt, " ");
             try
             {
                 DataTable datatable = CSVLibraryAK.CSVLibraryAK.Import(path, false);
 
                 foreach (DataRow data in datatable.Rows)
                 {
-                    Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string mobile_number);
+                    if (Validation.ValidateRecipient(data.ItemArray[2].ToString(), out string mobile_number)) 
+                    {
+                        DataRow dr = dt.NewRow();
+
+                        if (!list.Contains(mobile_number))
+                        {
+                            dr["user_id"] = user_id;
+                            dr["emails"] = data.ItemArray[0].ToString();
+                            dr["fullname"] = data.ItemArray[1].ToString();
+                            dr["numbers"] = mobile_number;
+                            dr["option1"] = data.ItemArray[3].ToString();
+                            dr["option2"] = data.ItemArray[4].ToString();
+                            dr["option3"] = data.ItemArray[5].ToString();
+                            dr["crtime"] = DateTime.Now;
+                            dt.Rows.Add(dr);
+                            list.Add(mobile_number);
+                        }
+                    }
 
                 }
             }
@@ -69,6 +90,27 @@ namespace AdminPortal.Helpers
                 return false;
             }
             return true;
+        }
+        public static void makeData(out DataTable dt, string contact_id)
+        {
+            dt = new DataTable();
+            dt.Clear();
+            dt.TableName = "Contacts";
+
+            if (contact_id == null)
+            {
+                dt.Columns.Add("id", typeof(int));
+                dt.Columns.Add("groupname", typeof(string));
+            }
+
+            dt.Columns.Add("user_id", typeof(string));
+            dt.Columns.Add("emails", typeof(string));
+            dt.Columns.Add("fullname", typeof(string));
+            dt.Columns.Add("numbers", typeof(string));
+            dt.Columns.Add("option1", typeof(string));
+            dt.Columns.Add("option2", typeof(string));
+            dt.Columns.Add("option3", typeof(string));
+            dt.Columns.Add("crtime", typeof(DateTime));
         }
     }
 }

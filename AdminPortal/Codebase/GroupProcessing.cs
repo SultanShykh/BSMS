@@ -14,23 +14,7 @@ namespace AdminPortal.Codebase
         public static void Get(out List<GroupMasterModel> result)
         {
             result = AppDB.COR_USP_GetAllGroups() ?? new List<GroupMasterModel>();
-            //var SingleRecord = Records.FirstOrDefault();
-            //if (Records.FirstOrDefault() != null)
-            //{
-            //    foreach (var rec in Records)
-            //    {
-            //        result.data.Add(new GroupMasterModel()
-            //        {
-            //            id = rec.Id,
-            //            Name = rec.Name,
-            //            isActive = rec.Status == 1 ? "Active" : "Deactive",
-            //            Status = rec.Status,
-            //        });
-
-            //    }
-            //}
         }
-
         public static void checkGroupName(string groupName, out bool result)
         {
             result = false;
@@ -45,13 +29,10 @@ namespace AdminPortal.Codebase
                 result = false;
             }
         }
-
-
         public static void CreateGroup(GroupMasterModel groupMastermodel, GroupMenuModel groupMenu)
         {
             dynamic Records = AppDB.COR_USP_CreateGroup(Name: groupMastermodel.Name, CreatedDateTime: DateTime.Now, MenuId: groupMenu.MenuId, AllowEdit: groupMenu.AllowEdit, AllowCreate: groupMenu.AllowCreate, AllowDelete: groupMenu.AllowDelete, AllowView: groupMenu.AllowView);
         }
-
         public static void DeleteGroup(int groupId, out bool result, out string msg)
         {
             result = false;
@@ -68,7 +49,6 @@ namespace AdminPortal.Codebase
             }
             msg = Records.FirstOrDefault().Message;
         }
-
         public static void DeleteGroupMenu(out bool result, int groupId)
         {
             result = false;
@@ -84,7 +64,6 @@ namespace AdminPortal.Codebase
             }
 
         }
-
         public static void UpdateGroup(GroupMasterModel model, GroupMenuModel groupMenu, out bool result)
         {
             result = false;

@@ -28,7 +28,6 @@ namespace AdminPortal.Controllers
         {
             return View();
         }
-
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult QuickSMS(Campaign campaign)
         {
@@ -71,12 +70,10 @@ namespace AdminPortal.Controllers
             
             return Json(new { status = true, message = "Sent: " + list.Count() + " Failed: 0" });
         }
-
         public ActionResult CampaignSMS()
         {
             return View();
         }
-
         [HttpPost]
         public ActionResult CampaignSMS(Campaign campaign)
         {
@@ -98,7 +95,7 @@ namespace AdminPortal.Controllers
 
                     string fileName = Path.GetFileName(file.FileName);
                     string extension = Path.GetExtension(fileName);
-                    string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
+                    string path = Path.Combine(Server.MapPath("~/UploadFiles/"), fileName);
 
                     if (extension == ".xls" || extension == ".xlsx")
                     {
@@ -220,12 +217,10 @@ namespace AdminPortal.Controllers
             return View();
 
         }
-
         public ActionResult PersonalizedSMS()
         {
             return View();
         }
-
         [HttpPost]
         public ActionResult PersonalizedSMS(Campaign campaign)
         {
@@ -243,7 +238,7 @@ namespace AdminPortal.Controllers
 
                     string fileName = Path.GetFileName(file.FileName);
                     string extension = Path.GetExtension(fileName);
-                    string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
+                    string path = Path.Combine(Server.MapPath("~/UploadFiles/"), fileName);
                         
                     if (extension == ".xls" || extension == ".xlsx")
                     {
@@ -371,7 +366,6 @@ namespace AdminPortal.Controllers
 
             return View();
         }
-
         public ActionResult CampaignManagement() 
         {
             m.COR_WEB_CampaignManagement(Convert.ToInt32(Session["UserId"]), out List<dynamic> stats, out List<dynamic> details);

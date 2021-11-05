@@ -170,18 +170,15 @@
         </div>
     </div>
 </div>
-
 <!-- Modal -->
 @{
     Html.RenderAction("_updateUser", "User");
 }
 <!-- Modal -->
-
 <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
 <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
 <script>
     var form = $("#form");
-
     $(document).on("focusout", "#username", function () {
         var username = $(this).val();
         if (username != null && username != '') {
@@ -200,7 +197,6 @@
         }
 
     });
-
     $(document).on("focusout", "#email", function () {
         var re = /\S+@@\S+\.\S+/;
         if (re.test($(this).val())) {
@@ -210,7 +206,6 @@
 
         }
     });
-
     $(document).on('click', '.edit', function () {
         var currentRow = $(this).closest('tr');
         $('#addRowModal').modal("show");
@@ -229,14 +224,17 @@
                     $("#masking").find("option[value=" + data.maskings[i].id + "]").prop("selected", "");
                 }
             }
+            
             if (data.selectedMaskings != "") {
                 var selectedOptions = data.selectedMaskings.split(",");
                 $('.masking').select2();
                 $('.masking').val(selectedOptions);
                 $('.masking').trigger('change');
             }
+            else {
+                $('.masking').select2();
+            }
         })
-
         $('#GroupId').select2();
         $('#GroupId').val(currentRow.find("td:eq(4)").text());
         $('#GroupId').trigger('change');
@@ -253,7 +251,6 @@
             $('#otp_access').attr('checked', false);
         }
     });
-
     $('#btnUpdate').click(function () {
         $("#otp_access").val(false);
         $("#status").val(false);
@@ -280,7 +277,6 @@
             ShowDivError("Input Data is not valid");
         }
     });
-
     function ClearFields() {
         $('#Id').val();
         $('#msg').css('display', 'none');
@@ -289,7 +285,6 @@
         $('#email').val('');
         $('#password').val('');
     }
-
     function DateFormatString(expireDate) {
         var str = (expireDate).substring(6, 19);
         var date = new Date(parseInt(str));

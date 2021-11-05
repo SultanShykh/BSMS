@@ -11,7 +11,6 @@ namespace AdminPortal.Codebase
     public class UserProcessing
     {
         static dynamic AppDB = Database.OpenNamedConnection("MainDB");
-        
         public static void GetUsers(int pageNum, string username, string email, string user_mobile, out List<UserModel> userModel, out List<Pagination> pagination, int userId) 
         {
             userModel = new List<UserModel>();
@@ -36,7 +35,6 @@ namespace AdminPortal.Codebase
             }
             
         }
-
         public static void CreateUser(UserModel model, out bool result, out string msg)
         {
             result = false;
@@ -61,14 +59,20 @@ namespace AdminPortal.Codebase
 
 
         }
-        
         public static void UpdateUser(UserModel model, out bool result)
         {
             result = false;
             var masking = "";
-            foreach (var maskings in model.masking) 
+            if (model.masking !=null) 
             {
-                masking += maskings + ",";
+                foreach (var maskings in model.masking)
+                {
+                    masking += maskings + ",";
+                }
+            }
+            if (string.IsNullOrEmpty(masking)) 
+            {
+                masking = null;
             }
             dynamic Records = AppDB.COR_USP_UpdateUser(userId:model.Id, fullname: model.fullname, Email: model.email, mobile_number: model.user_mobile,masking: masking,groupId: model.GroupId, password: model.password, otp_access: model.otp_access, expiry: model.user_expiry, status: model.status );
 
@@ -77,7 +81,6 @@ namespace AdminPortal.Codebase
                 result = true;
             }
         }
-
         public static void SelectedUserMaskings(int id, out string selectedMaskings,out List<Masking> masking) 
         {
             selectedMaskings = "";
@@ -96,7 +99,6 @@ namespace AdminPortal.Codebase
             masking = Records.ToList<Masking>();
             selectedMaskings = selectedMaskings.TrimEnd(',');
         }
-
         public static List<Masking> SelectedMaskings()
         {
             List<Masking> masking = AppDB.COR_USP_SelectedUserMaskings(Convert.ToInt32(HttpContext.Current.Session["UserId"])).ToList<Masking>();

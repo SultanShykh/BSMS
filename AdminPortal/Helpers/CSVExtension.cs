@@ -14,7 +14,6 @@ namespace AdminPortal.Helpers
         private static string column;
         private static string nextStr;
         private static IDictionary<string, int> cols = new Dictionary<string, int>();
-        
         public static bool getContactsFromExcel(string path, out List<string> list, out int count, out DataTable dt, Campaign campaign,int camp_id) 
         {
             dt = new DataTable();
@@ -68,7 +67,6 @@ namespace AdminPortal.Helpers
             }
             return true;
         }
-
         public static bool getContactsFromCSV(string path, out List<string> list, out int count, out DataTable dt, Campaign campaign)
         {
             count = 0;
@@ -120,7 +118,6 @@ namespace AdminPortal.Helpers
             }
             return true;
         }
-
         public static bool getDataFromExcel(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt,Campaign campaign, out int count)
         {
             list = new Dictionary<string, string>();
@@ -216,7 +213,6 @@ namespace AdminPortal.Helpers
 
             return true;
         }
-
         public static bool getDataFromCSV(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt, Campaign campaign, out int count)
         {
             list = new Dictionary<string, string>();
@@ -310,7 +306,6 @@ namespace AdminPortal.Helpers
 
             return true;
         }
-
         public static void makeColumns(out DataTable dt) 
         {
             dt = new DataTable();
@@ -331,7 +326,6 @@ namespace AdminPortal.Helpers
             dt.Columns.Add(new DataColumn("RemoteIP", typeof(string)));
             dt.Columns.Add(new DataColumn("CurrentDateTime", typeof(DateTime)));
         }
-
         public static void personalizedMessageString(string msgdata)
         {
             prevStr = msgdata.Substring(0, msgdata.IndexOf('$'));
@@ -340,7 +334,6 @@ namespace AdminPortal.Helpers
 
             column = msgdata.Substring(msgdata.IndexOf('$') + 1, _endIndex - (msgdata.IndexOf('$') + 1)).Trim(' ');
         }
-
         public static DataTable getData(DataTable dt) 
         {
             dt.TableName = "Outbox";
@@ -355,20 +348,6 @@ namespace AdminPortal.Helpers
             dt.Columns.Add("cost", typeof(int));
             dt.Columns.Add("route", typeof(int));
             return dt;
-        }
-        public static void makeData(out DataTable dt)
-        {
-            dt = new DataTable();
-            dt.Clear();
-            dt.TableName = "Contacts";
-            dt.Columns.Add("user_id", typeof(string));
-            dt.Columns.Add("emails", typeof(string));
-            dt.Columns.Add("fullname", typeof(string));
-            dt.Columns.Add("numbers", typeof(string));
-            dt.Columns.Add("option1", typeof(string));
-            dt.Columns.Add("option2", typeof(string));
-            dt.Columns.Add("option3", typeof(string));
-            dt.Columns.Add("crtime", typeof(DateTime));
         }
     }
 }

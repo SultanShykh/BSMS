@@ -39,12 +39,10 @@ namespace AdminPortal.Controllers
             UserProcessing.CheckUser(username, out bool result);
             return Json(result);
         }
-
         public ActionResult CreateUser()
         {
             return View();
         }
-
         [HttpPost]
         public ActionResult CreateUser(UserModel userModel)
         {
@@ -65,13 +63,11 @@ namespace AdminPortal.Controllers
                 return Json(new { status = false, message = msg });
             }
         }
-
         [ChildActionOnly]
         public ActionResult _updateUser()
         {
             return PartialView();
         }
-
         [HttpPost]
         public ActionResult UpdateUser(UserModel userModel)
         {
@@ -88,7 +84,6 @@ namespace AdminPortal.Controllers
                 return Json(new { status = false, message = "Error" });
             }
         }
-
         [HttpPost]
         public ActionResult SelectedMaskings(int id)
         {

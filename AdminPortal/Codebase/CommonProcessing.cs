@@ -19,13 +19,10 @@ namespace AdminPortal.Codebase
             List<GroupMasterModel> groups = AppDB.COR_USP_GetAllGroups() ?? new List<GroupMasterModel>();
             return groups;
         }
-
-        
         public static void GetGroupWithPermissionsTree(out List<AuthorizeModel> groups)
         {
             groups = AppDB.COR_USP_GetAllGroupPermissions() ?? new List<AuthorizeModel>();
         }
-
         public static void SetPermissions(dynamic Records, string userid, out List<AuthorizeModel> groups)
         {
             groups = AppDB.COR_WEB_UserPermissions(Id: userid) ?? new List<AuthorizeModel>();
@@ -73,7 +70,6 @@ namespace AdminPortal.Codebase
                 }
             }
         }
-
         public static List<Masking> GetMaskings() 
         {
             List<Masking> m = AppDB.COR_USP_GetMaskings() ?? new List<Masking>();

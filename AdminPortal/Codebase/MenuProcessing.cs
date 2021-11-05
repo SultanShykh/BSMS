@@ -23,7 +23,6 @@ namespace AdminPortal.Models
             Records.NextResult();
             pagination = Records.ToList<Pagination>();
         }
-
         public static void CreateMenu(MenuModel menuModel, out bool result)
         {
             result = false;
@@ -37,7 +36,6 @@ namespace AdminPortal.Models
                 result = false;
             }
         }
-
         public static void DeleteMenu(string menuId, out bool result, out string msg)
         {
             result = false;
@@ -69,7 +67,5 @@ namespace AdminPortal.Models
                 result = false;
             }
         }
-
-
     }
 }

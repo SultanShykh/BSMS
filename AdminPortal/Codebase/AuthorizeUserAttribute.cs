@@ -13,7 +13,6 @@ namespace AdminPortal.Codebase
     public class AuthorizeUserAttribute : AuthorizeAttribute
     {
         string val;
-        
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             if (HttpContext.Current.Session["UserId"] != null)
@@ -28,7 +27,6 @@ namespace AdminPortal.Codebase
             HttpContext.Current.Response.Redirect("/");
             return false;
         }
-
         public bool GetUserRights(string userId)
         {
             string controllerName = "Home";

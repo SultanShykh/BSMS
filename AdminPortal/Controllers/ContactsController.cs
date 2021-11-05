@@ -245,7 +245,7 @@ namespace AdminPortal.Controllers
                 var list = ContactsProcessing.DownloadContacts(Convert.ToInt32(Session["UserId"]), fullname, email);
 
                 DataTable dt = new DataTable();
-                CSVExtension.makeData(out dt);
+                ContactsExtension.makeData(out dt, null);
                 string fileName = "contacts.xlsx";
 
                 foreach (var v in list)
@@ -266,11 +266,6 @@ namespace AdminPortal.Controllers
                 using (XLWorkbook wb = new XLWorkbook())
                 {
                     wb.Worksheets.Add(dt);
-                    //Response.Clear();
-                    //Response.Buffer = true;
-                    //Response.Charset = "";
-                    //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    //Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".xlsx");
                     using (MemoryStream stream = new MemoryStream())
                     {
                         wb.SaveAs(stream);
@@ -295,7 +290,7 @@ namespace AdminPortal.Controllers
 
                     string fileName = Path.GetFileName(file.FileName);
                     string extension = Path.GetExtension(fileName);
-                    string path = Path.Combine(Server.MapPath("~/Media/"), fileName);
+                    string path = Path.Combine(Server.MapPath("~/UploadFiles/"), fileName);
 
                     if (extension == ".xls" || extension == ".xlsx")
                     {
@@ -330,10 +325,66 @@ namespace AdminPortal.Controllers
                                 }
                             }
                         }
+                        else 
+                        {
+                            if (System.IO.File.Exists(path))
+                            {
+                                System.IO.File.Delete(path);
+                            }
+
+                            TempData["result"] = "Invalid or Curropt File";
+                            TempData["status"] = "danger";
+                            return RedirectToAction("ManageContacts", "Contacts");
+                        }
                     }
-                    else 
+                    else if (extension == ".csv") 
                     {
-                        TempData["result"] = "Please Upload xls or xlsx file only";
+                        file.SaveAs(path);
+
+                        if (ContactsExtension.getContactsFromCSV(path, Convert.ToInt32(Session["UserId"]), out DataTable dt))
+                        {
+                            using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
+                            {
+                                using (SqlBulkCopy sqlbulk = new SqlBulkCopy(con))
+                                {
+                                    sqlbulk.DestinationTableName = "contacts";
+                                    sqlbulk.ColumnMappings.Add("user_id", "user_id");
+                                    sqlbulk.ColumnMappings.Add("emails", "emails");
+                                    sqlbulk.ColumnMappings.Add("fullname", "fullname");
+                                    sqlbulk.ColumnMappings.Add("numbers", "numbers");
+                                    sqlbulk.ColumnMappings.Add("option1", "option1");
+                                    sqlbulk.ColumnMappings.Add("option2", "option2");
+                                    sqlbulk.ColumnMappings.Add("option3", "option3");
+                                    sqlbulk.ColumnMappings.Add("crtime", "crtime");
+
+                                    con.Open();
+                                    sqlbulk.WriteToServer(dt);
+                                    sqlbulk.BatchSize = 5000;
+                                    sqlbulk.Close();
+                                    con.Close();
+
+                                    if (System.IO.File.Exists(path))
+                                    {
+                                        System.IO.File.Delete(path);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (System.IO.File.Exists(path))
+                            {
+                                System.IO.File.Delete(path);
+                            }
+
+                            TempData["result"] = "Invalid or Curropt File";
+                            TempData["status"] = "danger";
+                            return RedirectToAction("ManageContacts", "Contacts");
+                        }
+                    }
+                    else
+                    {
+                        TempData["result"] = "Please Upload csv, xls or xlsx file only";
                         TempData["status"] = "danger";
                         return RedirectToAction("ManageContacts", "Contacts");
                     }
