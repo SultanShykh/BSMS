@@ -32,7 +32,6 @@ namespace AdminPortal.Controllers
                 return View(Tuple.Create(userModel, pagination));
             }
         }
-
         [HttpPost]
         public ActionResult CheckUsername(string username)
         {

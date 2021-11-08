@@ -274,3 +274,6 @@ D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CopyComplet
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.pdb
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache
+D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.dll
+D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.pdb
+D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.xml

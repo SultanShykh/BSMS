@@ -9,6 +9,7 @@ using AdminPortal.Codebase;
 using AdminPortal.Helpers;
 using AdminPortal.Models;
 using ClosedXML.Excel;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace AdminPortal.Controllers
 {
@@ -55,38 +56,91 @@ namespace AdminPortal.Controllers
 
             DataTable dt = new DataTable();
             CSVExtension.getData(dt);
-            string fileName = "outbox.xlsx";
+            string fileName = "outbox.zip";
+            string path = Path.Combine(Server.MapPath("~/UploadFiles/"), fileName);
+            var files = new List<string>();
 
-            foreach (var v in outbox) 
+            using (ZipOutputStream zip = new ZipOutputStream(System.IO.File.Create(path)))
             {
-                DataRow dr = dt.NewRow();
-
-                dr["username"] = v.username;
-                dr["smstype"] = Convert.ToInt32(v.smstype);
-                dr["masking"] = v.masking;
-                dr["receiver"] = v.receiver;
-                dr["msgdata"] = v.msgdata;
-                dr["senttime"] = Convert.ToDateTime(v.senttime).ToString("dd/MM/yyyy HH:mm:ss");
-                dr["status"] = v.status;
-                dr["cost"] = Convert.ToInt32(v.cost);
-                dr["route"] = Convert.ToInt32(v.route);
-                dt.Rows.Add(dr);
-            }
-
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                wb.Worksheets.Add(dt);
-                //Response.Clear();
-                //Response.Buffer = true;
-                //Response.Charset = "";
-                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                //Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".xlsx");
-                using (MemoryStream stream = new MemoryStream())
+                int i = 1;
+                string fname;
+                zip.SetLevel(9);
+                byte[] buffer = new byte[4096];
+                foreach (var v in outbox)
                 {
-                    wb.SaveAs(stream);
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                    DataRow dr = dt.NewRow();
+
+                    dr["username"] = v.username;
+                    dr["smstype"] = Convert.ToInt32(v.smstype);
+                    dr["masking"] = v.masking;
+                    dr["receiver"] = v.receiver;
+                    dr["msgdata"] = v.msgdata;
+                    dr["senttime"] = Convert.ToDateTime(v.senttime).ToString("dd/MM/yyyy HH:mm:ss");
+                    dr["status"] = v.status;
+                    dr["cost"] = Convert.ToInt32(v.cost);
+                    dr["route"] = Convert.ToInt32(v.route);
+                    dt.Rows.Add(dr);
+
+                    if (i%500000 == 0)
+                    {
+                        fname = "outbox" + i + ".xlsx";
+                        using (XLWorkbook wb = new XLWorkbook())
+                        {
+                            wb.Worksheets.Add(dt);
+                            using (MemoryStream stream = new MemoryStream())
+                            {
+                                wb.SaveAs(stream);
+                                FileStream file = new FileStream(Server.MapPath("~/UploadFiles/"+fname), FileMode.Create, FileAccess.Write);
+                                stream.WriteTo(file);
+                                file.Close();
+                                dt.Clear();
+                            }
+                        }
+                        files.Add(Server.MapPath("~/UploadFiles/" + fname));
+                    }
+                    ++i;
                 }
+                fname = "outbox" + i + ".xlsx";
+                files.Add(Server.MapPath("~/UploadFiles/" + fname));
+
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(dt);
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        wb.SaveAs(stream);
+                        FileStream file = new FileStream(Server.MapPath("~/UploadFiles/outbox" + i + ".xlsx"), FileMode.Create, FileAccess.Write);
+                        stream.WriteTo(file);
+                        file.Close();
+                    }
+                }
+
+                for (int j = 0; j < files.Count; j++)
+                {
+                    ZipEntry entry = new ZipEntry(Path.GetFileName(files[j]));
+                    entry.DateTime = DateTime.Now;
+                    entry.IsUnicodeText = true;
+                    zip.PutNextEntry(entry);
+                    using (FileStream fileStream = System.IO.File.OpenRead(files[j])) 
+                    {
+                        int sourceBytes;
+                        do
+                        {
+                            sourceBytes = fileStream.Read(buffer, 0, buffer.Length);
+                            zip.Write(buffer, 0, sourceBytes);
+                        } while (sourceBytes > 0);
+                    }
+                }
+                zip.Finish();
+                zip.Flush();
+                zip.Close();
             }
+            byte[] finalResult = System.IO.File.ReadAllBytes(path);
+            foreach (var v in files) 
+            {
+                System.IO.File.Delete(v);
+            }
+            return File(finalResult, "application/zip", fileName);
         }
         public ActionResult DownloadCamp(string sender = null, string receiver = null, string datetime = null)
         {
@@ -97,42 +151,99 @@ namespace AdminPortal.Controllers
 
             DataTable dt = new DataTable();
             CSVExtension.getData(dt);
-            string fileName = "outbox campaign.xlsx";
+            string fileName = "outbox.zip";
+            string path = Path.Combine(Server.MapPath("~/UploadFiles/"), fileName);
+            var files = new List<string>();
 
-            foreach (var v in outbox)
+            try
             {
-                DataRow dr = dt.NewRow();
-
-                dr["username"] = v.username;
-                dr["smstype"] = Convert.ToInt32(v.smstype);
-                dr["masking"] = v.masking;
-                dr["receiver"] = v.receiver;
-                dr["msgdata"] = v.msgdata;
-                dr["senttime"] = Convert.ToDateTime(v.senttime).ToString("dd/MM/yyyy HH:mm:ss");
-                dr["status"] = v.status;
-                dr["cost"] = Convert.ToInt32(v.cost);
-                dr["route"] = Convert.ToInt32(v.route);
-                dt.Rows.Add(dr);
-            }
-
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                wb.Worksheets.Add(dt);
-                //Response.Clear();
-                //Response.Buffer = true;
-                //Response.Charset = "";
-                //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                //Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".xlsx");
-                using (MemoryStream stream = new MemoryStream())
+                using (ZipOutputStream zip = new ZipOutputStream(System.IO.File.Create(path)))
                 {
-                    wb.SaveAs(stream);
-                    //stream.WriteTo(Response.OutputStream);
-                    //Response.Flush();
-                    //Response.End();
-                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-                }
-            }
+                    int i = 1;
+                    string fname;
+                    zip.SetLevel(9);
+                    byte[] buffer = new byte[1024];
+                    foreach (var v in outbox)
+                    {
+                        DataRow dr = dt.NewRow();
 
+                        dr["username"] = v.username;
+                        dr["smstype"] = Convert.ToInt32(v.smstype);
+                        dr["masking"] = v.masking;
+                        dr["receiver"] = v.receiver;
+                        dr["msgdata"] = v.msgdata;
+                        dr["senttime"] = Convert.ToDateTime(v.senttime).ToString("dd/MM/yyyy HH:mm:ss");
+                        dr["status"] = v.status;
+                        dr["cost"] = Convert.ToInt32(v.cost);
+                        dr["route"] = Convert.ToInt32(v.route);
+                        dt.Rows.Add(dr);
+
+                        if (i % 500000 == 0)
+                        {
+                            fname = "outbox" + i + ".xlsx";
+                            using (XLWorkbook wb = new XLWorkbook())
+                            {
+                                wb.Worksheets.Add(dt);
+                                using (MemoryStream stream = new MemoryStream())
+                                {
+                                    wb.SaveAs(stream);
+                                    FileStream file = new FileStream(Server.MapPath("~/UploadFiles/" + fname), FileMode.Create, FileAccess.Write);
+                                    stream.WriteTo(file);
+                                    file.Close();
+                                    dt.Clear();
+                                }
+                            }
+                            files.Add(Server.MapPath("~/UploadFiles/" + fname));
+                        }
+                        ++i;
+                    }
+                    fname = "outbox" + i + ".xlsx";
+                    files.Add(Server.MapPath("~/UploadFiles/" + fname));
+
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+                        wb.Worksheets.Add(dt);
+                        using (MemoryStream stream = new MemoryStream())
+                        {
+                            wb.SaveAs(stream);
+                            FileStream file = new FileStream(Server.MapPath("~/UploadFiles/outbox" + i + ".xlsx"), FileMode.Create, FileAccess.Write);
+                            stream.WriteTo(file);
+                            file.Close();
+                        }
+                    }
+
+                    for (int j = 0; j < files.Count; j++)
+                    {
+                        ZipEntry entry = new ZipEntry(Path.GetFileName(files[j]));
+                        entry.DateTime = DateTime.Now;
+                        entry.IsUnicodeText = true;
+                        zip.PutNextEntry(entry);
+                        using (FileStream fileStream = System.IO.File.OpenRead(files[j]))
+                        {
+                            int sourceBytes;
+                            do
+                            {
+                                sourceBytes = fileStream.Read(buffer, 0, buffer.Length);
+                                zip.Write(buffer, 0, sourceBytes);
+                            } while (sourceBytes > 0);
+                        }
+                    }
+                    zip.Finish();
+                    zip.Flush();
+                    zip.Close();
+                }
+            } 
+            catch (Exception ex) 
+            {
+                throw new Exception();
+            }
+            byte[] finalResult = System.IO.File.ReadAllBytes(path);
+            if(System.IO.File.Exists(path)) System.IO.File.Delete(path);
+            foreach (var v in files)
+            {
+                System.IO.File.Delete(v);
+            }
+            return File(finalResult, "application/zip", fileName);
         }
     }
 }
