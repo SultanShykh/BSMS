@@ -162,7 +162,7 @@ namespace AdminPortal.Controllers
                     int i = 1;
                     string fname;
                     zip.SetLevel(9);
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[4096];
                     foreach (var v in outbox)
                     {
                         DataRow dr = dt.NewRow();

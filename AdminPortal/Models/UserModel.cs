@@ -9,7 +9,6 @@ namespace AdminPortal.Models
 {
     public class UserModel
     {
-        //[Required]
         public int Id { get; set; }
 
         [Display(Name = "Full Name")]
@@ -19,7 +18,6 @@ namespace AdminPortal.Models
         [Display(Name = "User Name")]
         public string username { get; set; }
 
-        [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string password { get; set; }
