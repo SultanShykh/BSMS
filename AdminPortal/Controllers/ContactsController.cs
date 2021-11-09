@@ -400,5 +400,18 @@ namespace AdminPortal.Controllers
             TempData["status"] = "info";
             return RedirectToAction("ManageContacts", "Contacts");
         }
+        [HttpPost]
+        public JsonResult GetUserContacts() 
+        {
+            try
+            {
+                var list = ContactsProcessing.GetUserContacts(Convert.ToInt32(Session["UserId"]));
+                return Json(new { status = true, message = list });
+            }
+            catch (Exception ex) 
+            {
+                return Json(new { status = false, message = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

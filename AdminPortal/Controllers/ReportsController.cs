@@ -35,8 +35,8 @@ namespace AdminPortal.Controllers
         {
             ViewBag.datetime = datetime;
             datetime = string.IsNullOrEmpty(datetime) ? null : datetime.Replace(" ", "");
-            sender = sender == "" ? null : sender;
-            receiver = receiver == "" ? null : receiver;
+            sender = string.IsNullOrEmpty(sender) ? null : sender;
+            receiver = string.IsNullOrEmpty(receiver) ? null : receiver;
             OutboxProcessing.COR_USP_Outbox_Camp(Convert.ToInt32(Session["UserId"]), Id, sender, receiver, datetime, out List<dynamic> outbox, out int totalPages);
 
             ViewBag.PageNumber = Id;    
@@ -50,8 +50,8 @@ namespace AdminPortal.Controllers
         public ActionResult Download(string sender = null, string receiver = null, string datetime = null)
         {
             datetime = string.IsNullOrEmpty(datetime) ? null : datetime.Replace(" ", "");
-            sender = sender == "" ? null : sender;
-            receiver = receiver == "" ? null : receiver;
+            sender = string.IsNullOrEmpty(sender) ? null : sender;
+            receiver = string.IsNullOrEmpty(receiver) ? null : receiver;
             OutboxProcessing.COR_USP_OutboxDownload(Convert.ToInt32(Session["UserId"]), sender, receiver, datetime, out List<dynamic> outbox);
 
             DataTable dt = new DataTable();
@@ -145,16 +145,16 @@ namespace AdminPortal.Controllers
         public ActionResult DownloadCamp(string sender = null, string receiver = null, string datetime = null)
         {
             datetime = string.IsNullOrEmpty(datetime) ? null : datetime.Replace(" ", "");
-            sender = sender == "" ? null : sender;
-            receiver = receiver == "" ? null : receiver;
-            OutboxProcessing.COR_USP_OutboxCampDownload(Convert.ToInt32(Session["UserId"]), sender, receiver, datetime, out List<dynamic> outbox);
+            sender = string.IsNullOrEmpty(sender) ? null : sender;
+            receiver = string.IsNullOrEmpty(receiver) ? null : receiver;
 
-            DataTable dt = new DataTable();
-            CSVExtension.getData(dt);
             string fileName = "outbox.zip";
             string path = Path.Combine(Server.MapPath("~/UploadFiles/"), fileName);
             var files = new List<string>();
+            DataTable dt = new DataTable();
 
+            OutboxProcessing.COR_USP_OutboxCampDownload(Convert.ToInt32(Session["UserId"]), sender, receiver, datetime, out List<dynamic> outbox);
+            CSVExtension.getData(dt);
             try
             {
                 using (ZipOutputStream zip = new ZipOutputStream(System.IO.File.Create(path)))
@@ -239,6 +239,7 @@ namespace AdminPortal.Controllers
             }
             byte[] finalResult = System.IO.File.ReadAllBytes(path);
             if(System.IO.File.Exists(path)) System.IO.File.Delete(path);
+
             foreach (var v in files)
             {
                 System.IO.File.Delete(v);

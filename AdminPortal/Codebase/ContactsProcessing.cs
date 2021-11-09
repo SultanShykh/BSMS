@@ -13,7 +13,7 @@ namespace AdminPortal.Codebase
         public static void GetContacts(int currentPage, string fullname, string email, int user_id, out List<ContactsModel> contacts, out int totalPages) 
         {
             contacts = new List<ContactsModel>();
-            var list = AppDB.COR_Contacts_GetContacts(currentPage: currentPage, user_id: user_id, fullname: fullname, email: email) ;
+            var list = AppDB.COR_Contacts_GetContacts(currentPage: currentPage, user_id: user_id, fullname: fullname, email: email);
 
             if (list.FirstOrDefault() != null)
             {
@@ -99,5 +99,9 @@ namespace AdminPortal.Codebase
             var list = AppDB.COR_Contacts_Download(user_id, fullname, email) ?? new List<ContactsModel>();
             return list;
         }
+        public static List<ContactsModel> GetUserContacts(int user_id) 
+        {
+            return AppDB.contacts.FindAllBy(user_id: user_id) ?? new List<ContactsModel>();
+        } 
     }
 }

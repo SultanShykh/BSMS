@@ -59,6 +59,31 @@ namespace AdminPortal.Helpers
                         dt.Rows.Add(dr);
                         ++count;
                     }
+                    if (!string.IsNullOrEmpty(campaign.receiver)) 
+                    {
+                        foreach (var v in campaign.receiver.Trim(',').Split(','))
+                        {
+                            DataRow dr = dt.NewRow();
+
+                            dr["camp_id"] = camp_id;
+                            dr["user_id"] = campaign.user_id;
+                            dr["sender"] = campaign.sender;
+                            dr["receiver"] = v;
+                            dr["status"] = 1;
+                            dr["route"] = 4;
+                            dr["cost"] = Math.Ceiling(Convert.ToDecimal(campaign.msgdata.Length) / Convert.ToDecimal(160));
+                            dr["senttime"] = DateTime.Now;
+                            dr["smstype"] = campaign.camp_smstype;
+                            dr["operator"] = 4;
+                            dr["isswallow"] = 1;
+                            dr["isotpallow"] = 1;
+                            dr["RemoteIP"] = "";
+                            dr["CurrentDateTime"] = DateTime.Now;
+                            dt.Rows.Add(dr);
+                            list.Add(v);
+                            ++count;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -110,6 +135,31 @@ namespace AdminPortal.Helpers
                     dr["CurrentDateTime"] = DateTime.Now;
                     dt.Rows.Add(dr);
                     ++count;
+                }
+                if (!string.IsNullOrEmpty(campaign.receiver))
+                {
+                    foreach (var v in campaign.receiver.Trim(',').Split(','))
+                    {
+                        DataRow dr = dt.NewRow();
+
+                        dr["camp_id"] = campaign.id;
+                        dr["user_id"] = campaign.user_id;
+                        dr["sender"] = campaign.sender;
+                        dr["receiver"] = v;
+                        dr["status"] = 1;
+                        dr["route"] = 4;
+                        dr["cost"] = Math.Ceiling(Convert.ToDecimal(campaign.msgdata.Length) / Convert.ToDecimal(160));
+                        dr["senttime"] = DateTime.Now;
+                        dr["smstype"] = campaign.camp_smstype;
+                        dr["operator"] = 4;
+                        dr["isswallow"] = 1;
+                        dr["isotpallow"] = 1;
+                        dr["RemoteIP"] = "";
+                        dr["CurrentDateTime"] = DateTime.Now;
+                        dt.Rows.Add(dr);
+                        list.Add(v);
+                        ++count;
+                    }
                 }
             }
             catch (Exception ex) 

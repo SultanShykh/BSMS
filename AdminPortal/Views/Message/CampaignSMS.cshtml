@@ -34,25 +34,24 @@
 
                             @Html.LabelFor(model => model.sender):
                             @Html.DropDownListFor(model => model.sender, new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
-                       {
-                           @class = "form-control mb-1 masking",
-                           required = "true",
-                           id = "Masking"
-                       })
-
+                            {
+                                @class = "form-control mb-1 masking",
+                                id = "Masking"
+                            })
+                            @Html.LabelFor(model => model.receiver):
+                            @Html.TextAreaFor(model => model.receiver, new { @class = "form-control", cols = "10", rows = "5", id="receiver" })
                             <br />
                             <input type="file" class="form-control mt-2" name="contactsFile" id="contactsFile" />
                             <span id="" style="color: red !important;font-size: 10px;">*Attach .csv/.xlsx file only</span><br />
                             <button type="button" class="btn bg-gradient-dark" id="btnGroup">0 Contact / Group</button>
-
                             <br />
                             <div class="row">
                                 <label>Upload Multiple Option:</label>
                                 <div class="col-md-2 p-0 m-0">
-                                    <input type="button" class="btn bg-gradient-dark" value="Add Contact" data-toggle="modal" data-target="#contactModal" />
+                                    <input type="button" id="btnContact" class="btn bg-gradient-dark" value="Add Contact" data-toggle="modal" data-target="#contactModal" />
                                 </div>
                                 <div class="col-md-2 p-0 m-0">
-                                    <input type="button" class="btn bg-gradient-dark" value="Add Group" data-toggle="modal" data-target="#groupModal" />
+                                    <input type="button" id="btnGroup" class="btn bg-gradient-dark" value="Add Group" data-toggle="modal" data-target="#groupModal" />
                                 </div>
                                 <div class="col-md-2 p-0 m-0">
                                     <button type="reset" class="btn bg-gradient-dark">Reset</button>
@@ -63,7 +62,6 @@
                         <h3>Message Content</h3>
                         <fieldset class="form-input">
                             <h4>Add Message</h4>
-
                             <button type="button" class="btn bg-gradient-dark" id="">Urdu</button>
                             @Html.TextAreaFor(model => model.msgdata, new { @class = "form-control mb-2", placeholder = "Enter Message", rows = "5", cols = "68" })
                             @Html.ValidationMessageFor(model => model.msgdata, "", new { @class = "text-danger" })
@@ -128,44 +126,33 @@
 
 <!-- Contact Modal -->
 <div class="modal" id="contactModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
                 <h5 class="modal-title">Add Contact</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-
             <!-- Modal body -->
             <div class="modal-body">
                 <div class="table-responsive">
                     <table class="table table-striped" id="innerTable">
-                        <thead class="bg-gradient-dark text-white">
+                        <thead>
                             <tr>
-                                <td>Fullname</td>
+                                <td></td>
+                                <td>Full Name</td>
                                 <td>Mobile</td>
                                 <td>Email</td>
                                 <td>Option 1</td>
                                 <td>Option 2</td>
+                                <td>Option 3</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
                     </table>
                 </div>
-                <textarea class="form-control" id="contactsData" name="contactsData" rows="5" cols="68"></textarea>
             </div>
-
             <!-- Modal footer -->
             <div class="modal-footer">
+                <button type="button" id="btnAdd" class="btn bg-gradient-dark">Add</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -178,11 +165,11 @@
     <script src="~/Scripts/ProjectScript/CrudScript.js"></script>
     <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
-
         $(document).ready(function () {
             $('.masking').select2(); 
             $(".alert").fadeIn();
             $('.alert').fadeOut(4000);
+            $('#innerTable').DataTable();
 
             $('#sendNow').change(function () {
                 $('#scheduleMyCamp').hide();
@@ -198,7 +185,6 @@
                 $('#btnMessage').text(msgVal + ' characters / ' + Math.ceil(msgVal / 160) + ' SMS');
             });
         });
-
         var form = $('#form');
         form.steps({
             headerTag: "h3",
@@ -227,13 +213,11 @@
             onFinished: function (event, currentIndex) {
 
             }
-        }).validate({
+        })
+            .validate({
             errorPlacement: function errorPlacement(error, element) { element.before(error); },
             rules: {
                 camp_name: {
-                    required: true
-                },
-                receiver: {
                     required: true
                 },
                 msgdata: {
@@ -241,7 +225,6 @@
                 }
             }
         });
-
         var form = $("#form");
         form.submit(function (e) {
             var filename = $('#contactsFile').val();
@@ -260,7 +243,49 @@
                 ShowDivSuccess1("Please wait...");
             }
         });
-
+        $('#btnContact').click(function () {
+            var tableView = $('#innerTable').DataTable();
+            tableView.destroy();
+            CrudScript.makeAjaxRequest('POST', '/Contacts/GetUserContacts').then(function (data) {
+                $('#innerTable').DataTable({
+                    data: data.message,
+                    columns: [
+                        {
+                            'mData': null,
+                            "mRender": function (data, type, full) {
+                                return '';
+                            }
+                        },
+                        { 'data': 'fullname' },
+                        { 'data': 'numbers' },
+                        { 'data': 'emails' },
+                        { 'data': 'option1' },
+                        { 'data': 'option2' },
+                        { 'data': 'option3' }
+                    ],
+                    columnDefs: [{
+                        className: 'select-checkbox',
+                        targets: [0],
+                        ordering: false
+                    }],
+                    select: {
+                        style: 'multi',
+                        selector: 'td:first-child'
+                    },
+                    ordering: false
+                });
+            });
+        });
+        $('#btnAdd').click(function () {
+            var tableInner = $('#innerTable').DataTable();
+            var ss = tableInner.rows({ selected: true }).data();
+            var receiver = "";
+            $.each(ss, function (key, val) {
+                receiver += val.numbers + ",";
+            });
+            $('#receiver').val(receiver);
+            $('#contactModal').modal('hide');
+        });
     </script>
 
 }
