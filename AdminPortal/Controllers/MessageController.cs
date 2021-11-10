@@ -60,6 +60,7 @@ namespace AdminPortal.Controllers
             {
                 campaign.user_id = Convert.ToInt32(Session["userid"]);
                 campaign.receiver = validReceivers;
+                campaign.camp_smstype = 1;
 
                 m.COR_WEB_createMessage(campaign);
             }
@@ -102,6 +103,8 @@ namespace AdminPortal.Controllers
                         file.SaveAs(path);
 
                         campaign.user_id = Convert.ToInt32(Session["UserId"]);
+                        campaign.camp_smstype = 4;
+
                         var result = m.COR_WEB_createCampaign(campaign);
                         int camp_id = result.camp_id;
 
@@ -149,6 +152,8 @@ namespace AdminPortal.Controllers
                         file.SaveAs(path);
 
                         campaign.user_id = Convert.ToInt32(Session["UserId"]);
+                        campaign.camp_smstype = 4;
+
                         var result = m.COR_WEB_createCampaign(campaign);
                         campaign.id = result.camp_id;
 
@@ -197,6 +202,7 @@ namespace AdminPortal.Controllers
                         ViewBag.status = "danger";
                         return View();
                     }
+                    System.IO.File.Delete(path);
                 }
                 catch (Exception ex)
                 {
@@ -211,7 +217,7 @@ namespace AdminPortal.Controllers
                 ViewBag.status = "danger";
                 return View();
             }
-
+            
             ViewBag.result = "Sent "+list.Count()+" Failed: 0";
             ViewBag.status = "info";
             return View();
@@ -246,11 +252,13 @@ namespace AdminPortal.Controllers
                         
                         campaign.msgdata = "";
                         campaign.user_id = Convert.ToInt32(Session["UserId"]);
+                        campaign.camp_smstype = 3;
+
                         var result = m.COR_WEB_createCampaign(campaign);
                         campaign.id = result.camp_id;
                         campaign.msgdata = msgdata;
 
-                        if (CSVExtension.getDataFromExcel(path, campaign.msgdata, out dict,out DataTable dt, campaign, out int count))
+                        if (CSVExtension.getDataFromExcel(path, out dict, out DataTable dt, campaign, out int count))
                         {
                             using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
@@ -296,11 +304,13 @@ namespace AdminPortal.Controllers
 
                         campaign.msgdata = "";
                         campaign.user_id = Convert.ToInt32(Session["UserId"]);
+                        campaign.camp_smstype = 3;
+
                         var result = m.COR_WEB_createCampaign(campaign);
                         campaign.id = result.camp_id;
                         campaign.msgdata = msgdata;
                         
-                        if (CSVExtension.getDataFromCSV(path, campaign.msgdata, out dict, out DataTable dt,campaign ,out int count))
+                        if (CSVExtension.getDataFromCSV(path, out dict, out DataTable dt,campaign ,out int count))
                         {
                             using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
@@ -346,6 +356,7 @@ namespace AdminPortal.Controllers
                         ViewBag.status = "danger";
                         return View();
                     }
+                    System.IO.File.Delete(path);
                 }
                 catch (Exception ex)
                 {

@@ -28,4 +28,12 @@ namespace AdminPortal.Models
         public int total_sms { get; set; }
         public int sent_sms { get; set; }
     }
+
+    public enum smstype 
+    {
+        QuickSMS=1,
+        API=2,
+        PersonalizedSMS=3,
+        CampaignSMS=4
+    }
 }

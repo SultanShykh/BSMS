@@ -28,15 +28,24 @@
                                 downloadAction = "DownloadCamp";
                             }
                         }
-                        <a class="btn bg-gradient-dark downloadlink" href="/Reports/@downloadAction?sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime">Download</a>
+                        <a class="btn bg-gradient-dark downloadlink" target = "_blank" href="/Reports/@downloadAction?sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime&smstype=@ViewBag.smstype">Download</a>
                     </div>
                     <div class="col-md-10">
                         <form id="form" method="GET" action="/Reports/@ViewBag.action">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <input type="text" name="sender" class="form-control" placeholder="Sender" value="@ViewBag.sender" />
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
+                                    <select class="form-control smstype" name="smstype" id="smstype">
+                                        <option value="""">--Select SMS Type</option>
+                                        <option value="1">Quick SMS</option>
+                                        <option value="2">API</option>
+                                        <option value="3">Personalized SMS</option>
+                                        <option value="4">Campaign SMS</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
                                     <input type="text" name="receiver" class="form-control" placeholder="Receiver" value="@ViewBag.receiver" />
                                 </div>
                                 <div class="col-md-3">
@@ -140,6 +149,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
+        $(document).ready(function () {
+            $('.smstype').select2();
+        });
         $(function () {
             $('input[name="datetime"]').daterangepicker({
                 opens: 'left',
@@ -155,7 +167,6 @@
             info: false,
         });
         function format(rowData) {
-
             var str = '<table class="table no-margin dataTable no-footer bg-gradient-dark table-bordered" id="detailsTable">' +
                 '<tbody><tr class="text-white"><td><b>Route Name</b></td><td>' + rowData + '</td></tr>';
 

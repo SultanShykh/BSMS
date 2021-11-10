@@ -100,7 +100,6 @@ namespace AdminPortal.Helpers
             list.Clear();
             dt.Clear();
             makeColumns(out dt);
-
             try
             {
                 DataTable datatable = CSVLibraryAK.CSVLibraryAK.Import(path, false);
@@ -168,7 +167,7 @@ namespace AdminPortal.Helpers
             }
             return true;
         }
-        public static bool getDataFromExcel(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt,Campaign campaign, out int count)
+        public static bool getDataFromExcel(string path, out IDictionary<string, string> list, out DataTable dt,Campaign campaign, out int count)
         {
             list = new Dictionary<string, string>();
             dt = new DataTable();
@@ -197,7 +196,7 @@ namespace AdminPortal.Helpers
 
                     foreach (IXLRow row in xLWorksheet.RowsUsed())
                     {
-                        string msgdata = msgdata1;
+                        string msgdata = campaign.msgdata;
                         Validation.ValidateRecipient(row.Cell(1).Value.ToString(), out string mobile_number);
 
                         while (msgdata.IndexOf('$') >= 0)
@@ -263,7 +262,7 @@ namespace AdminPortal.Helpers
 
             return true;
         }
-        public static bool getDataFromCSV(string path, string msgdata1, out IDictionary<string, string> list, out DataTable dt, Campaign campaign, out int count)
+        public static bool getDataFromCSV(string path, out IDictionary<string, string> list, out DataTable dt, Campaign campaign, out int count)
         {
             list = new Dictionary<string, string>();
             string cellValue = "";
@@ -292,7 +291,7 @@ namespace AdminPortal.Helpers
                 
                 foreach (DataRow data in datatable.Rows)
                 {
-                    string msgdata = msgdata1;
+                    string msgdata = campaign.msgdata;
                     Validation.ValidateRecipient(data.ItemArray[0].ToString(), out string mobile_number);
 
                     while (msgdata.IndexOf('$') >= 0)
