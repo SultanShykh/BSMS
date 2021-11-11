@@ -112,5 +112,20 @@ namespace AdminPortal.Codebase
             List<dynamic> list = AppDB.masking_request.All().ToList<dynamic>();
             return list;
         }
+        public static List<Masking> GetMasks(int id)
+        {
+            List<Masking> list = new List<Masking>();
+            var maskings = AppDB.maskings.FindAllBy(network_name: 3);
+            foreach (var v in maskings)
+            {
+                list.Add(new Masking
+                {
+                    masking = v.masking,
+                    id = v.id
+                });
+            }
+            return list;
+        }
+
     }
 }

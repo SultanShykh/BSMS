@@ -70,7 +70,6 @@ namespace AdminPortal.Codebase
         }
         public static void DeleteContact(int Id, int user_id)
         {
-            AppDB.contacts.Delete(id: Id, user_id: user_id);
             AppDB.user_groups_contacts.Delete(contact_id:Id, user_id: user_id);
         }
         public static void AssignMultipleGroup(ContactsModel model, out string result, out string status) 

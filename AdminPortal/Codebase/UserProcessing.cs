@@ -99,9 +99,14 @@ namespace AdminPortal.Codebase
             masking = Records.ToList<Masking>();
             selectedMaskings = selectedMaskings.TrimEnd(',');
         }
-        public static List<Masking> SelectedMaskings()
+        public static List<Masking> SelectedMaskings(int? id)
         {
-            List<Masking> masking = AppDB.COR_USP_SelectedUserMaskings(Convert.ToInt32(HttpContext.Current.Session["UserId"])).ToList<Masking>();
+            if (id == null)
+            {
+                id = Convert.ToInt32(HttpContext.Current.Session["UserId"]);
+            }
+
+            List<Masking> masking = AppDB.COR_USP_SelectedUserMaskings(id).ToList<Masking>();
             return masking;
         }
     }

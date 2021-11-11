@@ -127,5 +127,11 @@ namespace AdminPortal.Controllers
             }
             return View();
         }
+        [HttpGet]
+        public JsonResult GetMasks(int Id) 
+        {
+            var masks = UserProcessing.SelectedMaskings(Id);
+            return Json(new { status = true, message = masks}, JsonRequestBehavior.AllowGet);
+        }
     }
 }
