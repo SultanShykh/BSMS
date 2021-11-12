@@ -83,6 +83,21 @@ namespace AdminPortal.Controllers
                 return Json(new { status = false, message = "Error" });
             }
         }
+
+        [HttpPost]
+        public ActionResult UpdateMask(List<Masking> masking)
+        {
+            try
+            {
+                UserProcessing.UpdateMask(masking);
+                return Json(new { status = true, message = "Successfully Updated!!!" });
+            }
+            catch (Exception e)
+            {
+                return Json(new { status = false, message = "Error" });
+            }
+        }
+
         [HttpPost]
         public ActionResult SelectedMaskings(int id)
         {

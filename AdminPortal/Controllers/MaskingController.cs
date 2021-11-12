@@ -19,7 +19,7 @@ namespace AdminPortal.Controllers
         {
             try
             {
-                var result = MaskProcessing.AddMaskingRoute(Convert.ToString(collection["mask"]), Convert.ToInt32(collection["route_name_mobilink"]), Convert.ToInt32(collection["route_name_ufone"]), Convert.ToInt32(collection["route_name_zong"]), Convert.ToInt32(collection["route_name_telenor"]), collection["route_name_SCOM"]);
+                var result = MaskProcessing.AddMaskingRoute(Convert.ToString(collection["mask"]), Convert.ToInt32(Session["UserId"]), Convert.ToInt32(collection["route_name_mobilink"]), Convert.ToInt32(collection["route_name_warid"]), Convert.ToInt32(collection["route_name_ufone"]), Convert.ToInt32(collection["route_name_zong"]), Convert.ToInt32(collection["route_name_telenor"]), collection["route_name_SCOM"]);
                 ViewBag.result = result;
                 ViewBag.status = "info";
 
@@ -35,6 +35,7 @@ namespace AdminPortal.Controllers
         {
             var routes = MaskProcessing.viewRoutes(mask);
             ViewBag.Mobilink = "";
+            ViewBag.Warid = "";
             ViewBag.Ufone = "";
             ViewBag.Zong = "";
             ViewBag.Telenor = "";
@@ -42,7 +43,7 @@ namespace AdminPortal.Controllers
 
             foreach (var v in routes)
             {
-                if (v.operator1.ToLower().Contains("warid") || v.operator1.ToLower().Contains("mobilink"))
+                if (v.operator1.ToLower().Contains("mobilink"))
                 {
                     ViewBag.Mobilink = v.route;
                 }
@@ -60,7 +61,11 @@ namespace AdminPortal.Controllers
                 }
                 if (v.operator1.ToLower().Contains("scom"))
                 {
-                    ViewBag.Scom = v.route.ToString();
+                    ViewBag.Scom = v.route;
+                }
+                if (v.operator1.ToLower().Contains("warid"))
+                {
+                    ViewBag.Warid = v.route;
                 }
             }
             return View();
@@ -70,10 +75,9 @@ namespace AdminPortal.Controllers
         {
             try
             {
-                var result = MaskProcessing.UpdateMaskingRoute(Convert.ToString(collection["masking_hidden"]), Convert.ToInt32(collection["route_name_mobilink"]), Convert.ToInt32(collection["route_name_ufone"]), Convert.ToInt32(collection["route_name_zong"]), Convert.ToInt32(collection["route_name_telenor"]), collection["route_name_SCOM"]);
+                var result = MaskProcessing.UpdateMaskingRoute(Convert.ToString(collection["masking_hidden"]), Convert.ToInt32(Session["UserId"]), Convert.ToInt32(collection["route_name_mobilink"]), Convert.ToInt32(collection["route_name_warid"]), Convert.ToInt32(collection["route_name_ufone"]), Convert.ToInt32(collection["route_name_zong"]), Convert.ToInt32(collection["route_name_telenor"]), collection["route_name_SCOM"]);
                 ViewBag.result = result;
                 ViewBag.status = "info";
-
             }
             catch (Exception ex)
             {

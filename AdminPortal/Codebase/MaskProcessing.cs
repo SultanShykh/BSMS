@@ -85,10 +85,10 @@ namespace AdminPortal.Codebase
             }
             return list;
         }
-        public static string AddMaskingRoute(string mask, int route_name_mobilink, int route_name_ufone, int route_name_zong, int route_name_telenor, string route_name_SCOM)
+        public static string AddMaskingRoute(string mask, int userId, int route_name_mobilink, int route_name_warid, int route_name_ufone, int route_name_zong, int route_name_telenor, string route_name_SCOM)
         {
             route_name_SCOM = route_name_SCOM == "" ? null : route_name_SCOM;
-            var result = AppDB.COR_Mask_AddMaskingRoutes(mask, route_name_mobilink, route_name_ufone, route_name_zong, route_name_telenor, route_name_SCOM).FirstOrDefault();
+            var result = AppDB.COR_Mask_AddMaskingRoutes(mask, userId, route_name_mobilink, route_name_warid, route_name_ufone, route_name_zong, route_name_telenor, route_name_SCOM).FirstOrDefault();
             return result.message;
         }
         public static List<dynamic> viewRoutes(string mask)
@@ -96,10 +96,10 @@ namespace AdminPortal.Codebase
             var list = AppDB.COR_Mask_ViewRoutes(mask).ToList<dynamic>();
             return list;
         }
-        public static string UpdateMaskingRoute(string masking_hidden, int route_name_mobilink, int route_name_ufone, int route_name_zong, int route_name_telenor, string route_name_SCOM)
+        public static string UpdateMaskingRoute(string masking_hidden, int userId, int route_name_mobilink, int route_name_warid, int route_name_ufone, int route_name_zong, int route_name_telenor, string route_name_SCOM)
         {
             route_name_SCOM = route_name_SCOM == "" ? null : route_name_SCOM;
-            var result = AppDB.COR_Mask_UpdateMaskingRoute(masking_hidden, route_name_mobilink, route_name_ufone, route_name_zong, route_name_telenor, route_name_SCOM).FirstOrDefault();
+            var result = AppDB.COR_Mask_UpdateMaskingRoute(masking_hidden, userId, route_name_mobilink, route_name_warid, route_name_ufone, route_name_zong, route_name_telenor, route_name_SCOM).FirstOrDefault();
             return result.message;
         }
         public static string AddMaskingRequest(string masking, int reseller_id,string fullname, string nic, string contact, string masking_letter) 

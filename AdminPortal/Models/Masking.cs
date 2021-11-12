@@ -8,9 +8,8 @@ namespace AdminPortal.Models
 {
     public class Masking
     {
-        [Key]
         public int id { get; set; }
-
+        public int userId { get; set; }
         public string masking { get; set; }
 
         public DateTime crtime { get; set; }

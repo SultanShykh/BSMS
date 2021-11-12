@@ -312,6 +312,15 @@
 
                         <div class="collapse" id="Report-app-nav">
                             <ul class="nav nav-collapse">
+                                @if (Permission.HasPermission("Reports", "Inbox"))
+                                {
+                                    <li class="nav-item Users">
+                                        <a class="nav-link @Html.IsActive("Inbox", "Reports")" href="@Url.Action("Inbox", "Reports")">
+                                            <i class="fas fa-user-cog"></i>
+                                            <span class="nav-link-text">Inbox</span>
+                                        </a>
+                                    </li>
+                                }
                                 @if (Permission.HasPermission("Reports", "Outbox"))
                                 {
                                     <li class="nav-item Users">
@@ -321,13 +330,30 @@
                                         </a>
                                     </li>
                                 }
-
                                 @if (Permission.HasPermission("Reports", "OutboxCamp"))
                                 {
                                     <li class="nav-item Users">
                                         <a class="nav-link @Html.IsActive("OutboxCamp", "Reports")" href="@Url.Action("OutboxCamp", "Reports")">
                                             <i class="fas fa-user-cog"></i>
                                             <span class="nav-link-text">Outbox Campaign</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Permission.HasPermission("Reports", "SMSSummary"))
+                                {
+                                    <li class="nav-item Users">
+                                        <a class="nav-link @Html.IsActive("SMSSummary", "Reports")" href="@Url.Action("SMSSummary", "Reports")">
+                                            <i class="fas fa-user-cog"></i>
+                                            <span class="nav-link-text">SMS Summary</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Permission.HasPermission("Reports", "ActivityLog"))
+                                {
+                                    <li class="nav-item Users">
+                                        <a class="nav-link @Html.IsActive("ActivityLog", "Reports")" href="@Url.Action("ActivityLog", "Reports")">
+                                            <i class="fas fa-user-cog"></i>
+                                            <span class="nav-link-text">Activity Log</span>
                                         </a>
                                     </li>
                                 }

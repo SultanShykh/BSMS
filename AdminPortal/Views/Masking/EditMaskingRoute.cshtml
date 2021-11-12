@@ -38,9 +38,9 @@
                     <form method="post" action="/Masking/EditMaskingRoute">
                         <div class="row border border-top-1">
                             <div class="col-md-6">
-                                <input type="hidden" name="masking_hidden" id="masking_hidden" value=""/>
+                                <input type="hidden" name="masking_hidden" id="masking_hidden" value="" />
                                 <div class="form-group">
-                                    <label>Mobilink/Warid:</label>
+                                    <label>Mobilink:</label>
                                     @Html.DropDownList("route_name_mobilink", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByMobilink(), "id", "route_name", ViewBag.Mobilink), new
                                         {
                                             @class = "form-control form-control-sm",
@@ -51,15 +51,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Ufone:</label>
-                                    <div class="form-group">
-                                        @Html.DropDownList("route_name_ufone", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByUfone(), "id", "route_name", ViewBag.Ufone), new
-                                            {
-                                                @class = "form-control form-control-sm",
-                                                required = "true",
-                                                id = "route_name_ufone",
-                                            })
-                                    </div>
+                                    <label>Warid:</label>
+                                    @Html.DropDownList("route_name_warid", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByMobilink(), "id", "route_name", ViewBag.Warid), new
+                                        {
+                                            @class = "form-control form-control-sm",
+                                            required = "true",
+                                            id = "route_name_warid",
+                                        })
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -96,6 +94,19 @@
                                             {
                                                 @class = "form-control form-control-sm",
                                                 id = "route_name_SCOM",
+                                            })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Ufone:</label>
+                                    <div class="form-group">
+                                        @Html.DropDownList("route_name_ufone", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByUfone(), "id", "route_name", ViewBag.Ufone), new
+                                            {
+                                                @class = "form-control form-control-sm",
+                                                required = "true",
+                                                id = "route_name_ufone",
                                             })
                                     </div>
                                 </div>

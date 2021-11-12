@@ -178,7 +178,6 @@
     Html.RenderAction("_updateUser", "User");
 }
 <!-- Modal -->
-
 <!-- Update Mask Modal -->
 <div id="maskModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -218,12 +217,12 @@
                     </div>
                 </div>
                 <button type="button" class="btn bg-gradient-danger btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn bg-gradient-dark btn-sm" id="">Save</button>
+                <button type="button" class="btn bg-gradient-dark btn-sm" id="btnSave">Save</button>
             </div>
             @*<div class="modal-footer">
-                <button type="button" class="btn bg-gradient-danger btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn bg-gradient-dark btn-sm" id="">Save</button>
-            </div>*@
+                    <button type="button" class="btn bg-gradient-danger btn-sm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn bg-gradient-dark btn-sm" id="">Save</button>
+                </div>*@
         </div>
 
     </div>
@@ -316,11 +315,11 @@
         $('.masks').select2();
         var maskTable = $('#maskTable').DataTable();
         maskTable.destroy();
-
+        debugger
         var data = table.row($(this).closest('tr')).data();
-        $('#userMaskId').val(table[0]);
+        $('#userMaskId').val(data[0]);
 
-        CrudScript.makeAjaxRequest('GET', '/Masking/GetMasks', {Id: data[0]}).then(function (data) {
+        CrudScript.makeAjaxRequest('GET', '/Masking/GetMasks', { Id: data[0] }).then(function (data) {
             $('#maskTable').DataTable({
                 data: data.message,
                 columns: [
@@ -329,7 +328,7 @@
                     {
                         'mData': null,
                         "mRender": function (data, type, full) {
-                            return '<button class="border-0 text-dark remove" title="Remove"><i class="fa fa-times" aria-hidden="true"></i></button>';
+                            return '<button class="border-0 text-dark btnRemove" title="Remove"><i class="fa fa-times " aria-hidden="true"></i></button>';
                         }
                     },
                 ],
@@ -339,28 +338,63 @@
             });
         });
     });
-
+    $('#maskTable tbody').on('click', '.btnRemove', function () {
+        var maskTable = $('#maskTable').DataTable();
+        maskTable.row($(this).parents('tr'))
+            .remove()
+            .draw();
+    });
     $('#btnAdd').click(function () {
-        debugger
         var masksVal = $('#masks option:selected').val();
         var masksText = $('#masks option:selected').text();
         var maskTable = $('#maskTable').DataTable();
-        //var tr = '<tr role="row">'+
-        //    +'<td>'+masksVal+'</td>'+
-        //    +'<td>'+masksText+'</td>'+
-        //    +'<td></td>'+
-        //    +'</tr>';
+        var data = maskTable.data();
+        var count = 0;
+        $.each(data, function (key, val) {
+            if (masksVal == val.id) {
+                ++count;
+            }
+        });
 
-        maskTable.row.add({
-            "id": masksVal,
-            "masking": masksText,
-            "":'<button class="border-0 text-dark remove" title="Remove"><i class="fa fa-times" aria-hidden="true"></i></button>'
-        }).draw();
+        if (count == 0) {
+            maskTable.row.add({
+                "id": masksVal,
+                "masking": masksText,
+                "": '<button class="border-0 text-dark btnRemove" title="Remove"><i class="fa fa-times" aria-hidden="true"></i></button>'
+            }).draw();
+        }
+        else {
+            alert("Mask Already Exists");
+        }
+    });
 
+    $('#btnSave').click(function () {
+        debugger
+        var maskTable = $('#maskTable').DataTable().data();
+        var arr = new Array();
 
-        
-        //$('#maskBody').append(tr);
-
+        $.each(maskTable, function (key, val) {
+            var obj = {};
+            obj.id = val.id;
+            obj.masking = val.masking;
+            obj.userId = $('#userMaskId').val();
+            arr.push(obj);
+        });
+        $.ajax({
+            type: "POST",
+            url: "/User/UpdateMask",
+            data: JSON.stringify(arr),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.status == true) {
+                    ShowDivSuccess(data.message);
+                }
+                else {
+                    ShowDivError(data.message);
+                }
+            }
+        });
     });
 
     $('#btnUpdate').click(function () {
@@ -389,18 +423,4 @@
             ShowDivError("Input Data is not valid");
         }
     });
-    function ClearFields() {
-        $('#Id').val();
-        $('#msg').css('display', 'none');
-        $('#fullname').val("");
-        $('#username').val('');
-        $('#email').val('');
-        $('#password').val('');
-    }
-    function DateFormatString(expireDate) {
-        var str = (expireDate).substring(6, 19);
-        var date = new Date(parseInt(str));
-        var localdate = String(date.getFullYear()).padStart(4, '0') + '-' + String((date.getMonth() + 1)).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
-        return localdate;
-    }
 </script>

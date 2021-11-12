@@ -62,19 +62,7 @@ namespace AdminPortal.Codebase
         public static void UpdateUser(UserModel model, out bool result)
         {
             result = false;
-            var masking = "";
-            if (model.masking !=null) 
-            {
-                foreach (var maskings in model.masking)
-                {
-                    masking += maskings + ",";
-                }
-            }
-            if (string.IsNullOrEmpty(masking)) 
-            {
-                masking = null;
-            }
-            dynamic Records = AppDB.COR_USP_UpdateUser(userId:model.Id, fullname: model.fullname, Email: model.email, mobile_number: model.user_mobile,masking: masking,groupId: model.GroupId, password: model.password, otp_access: model.otp_access, expiry: model.user_expiry, status: model.status );
+            dynamic Records = AppDB.COR_USP_UpdateUser(userId:model.Id, fullname: model.fullname, Email: model.email, mobile_number: model.user_mobile,groupId: model.GroupId, password: model.password, otp_access: model.otp_access, expiry: model.user_expiry, status: model.status );
 
             if (Records.FirstOrDefault() != null && Records.FirstOrDefault().Message == "User Updated")
             {
@@ -108,6 +96,19 @@ namespace AdminPortal.Codebase
 
             List<Masking> masking = AppDB.COR_USP_SelectedUserMaskings(id).ToList<Masking>();
             return masking;
+        }
+
+        public static void UpdateMask(List<Masking> mask)
+        {
+            string masking="";
+            if (mask != null)
+            {
+                foreach (var maskings in mask)
+                {
+                    masking += maskings.id + ",";
+                }
+            }
+            AppDB.COR_USP_AddMask(masking, mask[0].userId);
         }
     }
 }

@@ -46,18 +46,6 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group form-group-default">
-                                @Html.LabelFor(model => model.masking)
-                                @Html.DropDownListFor(model => model.masking, new SelectList(AdminPortal.Codebase.CommonProcessing.GetMaskings(), "id", "masking"), new
-                               {
-                                   @class = "form-control masking form-control-sm",
-                                   id = "masking",
-                                   multiple = "true"
-                               })
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group form-group-default">
                                 <label>User Group</label>
                                 @Html.DropDownListFor(model => model.GroupId, new SelectList(AdminPortal.Codebase.CommonProcessing.GetAllGroups(), "Id", "Name"), new
                            {
@@ -67,6 +55,7 @@
                            })
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form-group form-group-default">
                                 @Html.LabelFor(model => model.password)
@@ -80,14 +69,13 @@
                                 <input class="form-check-input mt-1" type="checkbox" id="otp_access" name="otp_access" checked>
                             </div>
                         </div>
-                        <div class="col-md-6" .>
+                        <div class="col-md-6">
                             <div class="form-group form-group-default">
                                 @Html.LabelFor(model => model.user_expiry)
                                 @Html.EditorFor(model => model.user_expiry, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
                                 @Html.ValidationMessageFor(model => model.user_expiry, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-check form-switch">
                                 <label class="form-check-label" for="status">Status</label>

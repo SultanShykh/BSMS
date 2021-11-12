@@ -211,7 +211,7 @@
 
         $.each(ss, function (key, val) {
             var obj = {};
-            obj.id = val.id;
+            obj.id = parseInt(val.id);
             obj.groupid = val.groupid;
             obj.user_id = val.user_id;
             arr.push(obj);

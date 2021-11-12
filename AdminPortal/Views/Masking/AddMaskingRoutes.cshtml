@@ -28,7 +28,7 @@
                         <div class="row border border-top-0">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Mobilink/Warid:</label>
+                                    <label>Mobilink:</label>
                                     <div class="form-group">
                                         @Html.DropDownList("route_name_mobilink", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByMobilink(), "id", "route_name"), new
                                    {
@@ -41,13 +41,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Ufone:</label>
+                                    <label>Warid:</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("route_name_ufone", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByUfone(), "id", "route_name"), new
+                                        @Html.DropDownList("route_name_warid", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByMobilink(), "id", "route_name"), new
                                    {
                                        @class = "form-control form-control-sm",
                                        required = "true",
-                                       id = "route_name_ufone",
+                                       id = "route_name_warid",
                                    })
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@
                                    {
                                        @class = "form-control form-control-sm",
                                        required = "true",
-                                       id = "route_name_zong",
+                                       id = "route_name_telenor",
                                    })
                                     </div>
                                 </div>
@@ -82,12 +82,23 @@
                                 <div class="form-group">
                                     <label>SCOM</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("route_name_SCOM", new SelectList(AdminPortal.Codebase.MaskProcessing.FindBySCOM(), "id", "route_name"),new
+                                        @Html.DropDownList("route_name_SCOM", new SelectList(AdminPortal.Codebase.MaskProcessing.FindBySCOM(), "id", "route_name"), new
                                    {
                                        @class = "form-control form-control-sm",
                                        id = "route_name_SCOM",
                                    })
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Ufone:</label>
+                                <div class="form-group">
+                                    @Html.DropDownList("route_name_ufone", new SelectList(AdminPortal.Codebase.MaskProcessing.FindByUfone(), "id", "route_name"), new
+                               {
+                                   @class = "form-control form-control-sm",
+                                   required = "true",
+                                   id = "route_name_ufone",
+                               })
                                 </div>
                             </div>
                         </div>
