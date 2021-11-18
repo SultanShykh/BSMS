@@ -15,36 +15,29 @@ namespace AdminPortal.Helpers
             List<AuthorizeModel> listdata = new List<AuthorizeModel>();
             try
             {
+                if (HttpContext.Current.Session == null) HttpContext.Current.Response.Redirect("/Account/Login");
+
                 CommonProcessing.SetPermissions("", HttpContext.Current.Session["UserId"].ToString(), out listdata);
-                if (listdata.Count() < 0)
-                {
-                    flag = false;
-                }
+                if (listdata.Count() < 0) flag = false;
 
                 if (action == "")
                 {
                     foreach (var i in listdata)
                     {
-                        if (i.Controller == controller && i.AllowView == true)
-                        {
-                            flag = true;
-                        }
+                        if (i.Controller == controller && i.AllowView == true) flag = true;
                     }
                 }
                 else
                 {
                     foreach (var i in listdata)
                     {
-                        if (i.Controller == controller && i.Action == action && i.AllowView == true)
-                        {
-                            flag = true;
-                        }
+                        if (i.Controller == controller && i.Action == action && i.AllowView == true) flag = true;
                     }
                 }
             }
             catch (Exception ex) 
             {
-                HttpContext.Current.Response.Redirect("/Account/Login");
+                HttpContext.Current.Response.Redirect("/Account/Logout");
             }
             
             return flag;

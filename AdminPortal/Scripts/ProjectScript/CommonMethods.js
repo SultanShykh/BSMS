@@ -141,7 +141,7 @@ function DeleteConfirmGET(url, Id) {
         }
     }).then((Delete) => {
         if (Delete) {
-            CrudScript.makeAjaxRequest('GET', url + "/" + Id).then(function (data) {
+            CrudScript.makeAjaxRequest('GET', url).then(function (data) {
                 if (data.status == true) {
                     ShowDivSuccess(data.message);
                     location.reload();

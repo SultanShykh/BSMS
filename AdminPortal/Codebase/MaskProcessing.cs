@@ -29,6 +29,20 @@ namespace AdminPortal.Codebase
             }
             return list;
         }
+        public static List<dynamic> FindByWarid()
+        {
+            List<dynamic> list = new List<dynamic>();
+            var maskings = AppDB.routes_info.FindAll(AppDB.routes_info.network_name == 1 || AppDB.routes_info.network_name == 7);
+            foreach (var v in maskings)
+            {
+                list.Add(new
+                {
+                    route_name = v.route_name,
+                    id = v.id
+                });
+            }
+            return list;
+        }
         public static List<dynamic> FindByZong()
         {
             List<dynamic> list = new List<dynamic>();

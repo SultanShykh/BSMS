@@ -20,7 +20,7 @@
                                 <div class="form-group">
                                     <label>Maskings:</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("mask", new SelectList(AdminPortal.Codebase.MaskProcessing.GetMaskings(), "masking", "masking"), new
+                                        @Html.DropDownList("mask", new SelectList(AdminPortal.Codebase.MaskProcessing.GetMaskings(), "masking", "masking"), "-- Select Masking --",new
                                    {
                                        @class = "form-control form-control-sm",
                                        required = "true",
@@ -90,11 +90,11 @@
                                 <div class="form-group">
                                     <label>SCOM</label>
                                     <div class="form-group">
-                                        @Html.DropDownList("route_name_SCOM", new SelectList(AdminPortal.Codebase.MaskProcessing.FindBySCOM(), "id", "route_name", ViewBag.Scom), new
-                                            {
-                                                @class = "form-control form-control-sm",
-                                                id = "route_name_SCOM",
-                                            })
+                                        @Html.DropDownList("route_name_SCOM", new SelectList(AdminPortal.Codebase.MaskProcessing.FindBySCOM(), "id", "route_name", ViewBag.Scom), "-- select SCOM route--",  new
+                                   {
+                                       @class = "form-control form-control-sm",
+                                       id = "route_name_SCOM",
+                                   })
                                     </div>
                                 </div>
                             </div>

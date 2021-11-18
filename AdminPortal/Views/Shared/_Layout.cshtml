@@ -83,8 +83,6 @@
                                 <span class="nav-link-text">User <br />Management</span>
                                 <i aria-hidden="true" class="fas fa-angle-down ms-3"></i>
                             </a>
-
-
                             <div class="collapse" id="access-app-nav">
                                 <ul class="nav nav-collapse">
                                     @if (Permission.HasPermission("User", "Index"))
@@ -485,20 +483,16 @@
                 </div>
             </div>
         </nav>
-
         @RenderBody()
-
         <footer class="footer pt-3  mb-3">
             <div class="container-fluid">
                 <div class="row align-items-center justify-content-lg-between">
                     <div class="col-lg-12 mb-lg-0 mb-4 text-center">
-
                         ©
                         <script>
                             document.write(new Date().getFullYear())
                         </script>
                         Intellexal Solution PVT LTD.
-
                     </div>
                 </div>
             </div>
@@ -506,8 +500,27 @@
     </main>
 
     <script async defer src="~/Scripts/js/github-buttons.js"></script>
-    @*@Scripts.Render("~/bundles/Dashboard/Scripts")*@
     <script>
+        $(document).ready(function () {
+            if (location.href.includes("/User") || location.href.includes("/Menu") || location.href.includes("/Group")) {
+                addClassShow('#access-app-nav');
+            } else if (location.href.includes("/Message")) {
+                addClassShow('#Messages-app-nav');
+            } else if (location.href.includes("/Contacts")) {
+                addClassShow('#Contacts-app-nav');
+            } else if (location.href.includes("/Templates")) {
+                addClassShow('#Templates-app-nav');
+            } else if (location.href.includes("/Report")) {
+                addClassShow('#Report-app-nav');
+            }else if (location.href.includes("/Masking")) {
+                addClassShow('#masking-app-nav');
+            }
+        });
+
+        function addClassShow(element) {
+            $(element).addClass('collapse show');
+        }
+
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
             var options = {

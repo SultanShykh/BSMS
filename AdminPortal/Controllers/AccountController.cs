@@ -4,19 +4,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AdminPortal.Models;
+using AdminPortal.Codebase;
 
 namespace AdminPortal.Controllers
 {
     public class AccountController : Controller
     {
-        Codebase.AccountProcessing ac = new Codebase.AccountProcessing();
+        AccountProcessing ac = new AccountProcessing();
 
-        [HttpGet]
         public ActionResult Login()
         {
             return View();
         }
-
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Login(UserModel userModel)
         {
@@ -54,7 +53,6 @@ namespace AdminPortal.Controllers
                 return Json(new { reponse = true});
             }
         }
-
         public ActionResult Logout() 
         {
             Session["UserId"] = Session["name"] = null;

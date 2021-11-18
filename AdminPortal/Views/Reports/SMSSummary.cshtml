@@ -1,0 +1,122 @@
+﻿@model List<AdminPortal.Models.SMSSummaryModel>
+
+@section style
+    {
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <style>
+        .details-control:hover {
+            cursor: pointer;
+        }
+    </style>
+}
+<div class="container-fluid border-radius-lg">
+    <div class="row">
+        <div class="card shadow">
+            <div class="card-header mb-0 pb-0">
+                <div class="row">
+                    <div class="col-md-2">
+                        @*<a class="btn btn-sm bg-gradient-dark downloadlink" target="_blank" href="/Reports/@downloadAction?sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime&smstype=@ViewBag.smstype">Download</a>*@
+                    </div>
+                    <div class="col-md-10">
+                        <form id="form" method="GET" action="/Reports/@ViewBag.action">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <input type="text" name="sender" class="form-control form-control-sm" placeholder="Sender" value="@ViewBag.sender" />
+                                </div>
+                                @*<div class="col-md-2">
+                                    <input type="text" name="operator" class="form-control form-control-sm" placeholder="Operator" value="@ViewBag.sender" />
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" name="sender" class="form-control form-control-sm" placeholder="Sender" value="@ViewBag.sender" />
+                                </div>*@
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn bg-gradient-dark sender-button btn-sm" id="fetch">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body mt-0 pt-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-striped" id="MainTable">
+                        <thead class="bg-gradient-dark text-white">
+                            <tr>
+                                <td>Id</td>
+                                <td>User Name</td>
+                                <td>Sender</td>
+                                <td>SMS Type</td>
+                                <td>Operator</td>
+                                <td>SMS Count</td>
+                                <td>SMS Cost</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (Model.Count() > 0)
+                                {
+                                    foreach (var v in Model)
+                                    {
+                                        <tr>
+                                            <td>@v.id</td>
+                                            <td>@v.username</td>
+                                            <td>@v.sender</td>
+                                            <td>@v.smstype</td>
+                                            <td>@v.operater_id</td>
+                                            <td>@v.smscount</td>
+                                            <td>@v.smscost</td>
+                                        </tr>
+
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Page navigation example align-middle">
+                    <ul class="pagination">
+
+                        @if (ViewBag.PageNumber > 1)
+                        {
+                            <li class="page-item text-white"><a class="page-link bg-gradient-dark text-white" href="/Reports/@ViewBag.action?Id=1&sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime">1</a></li>
+                            <li class="page-item text-white">
+                                <a class="page-link bg-gradient-dark text-white" href="/Reports/@ViewBag.action?Id=@((int)ViewBag.PageNumber-1)&sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime" aria-label="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        }
+
+                        <li class="m-2 border-radius-md bg-light"><strong>&nbsp;&nbsp;&nbsp;@ViewBag.PageNumber&nbsp;&nbsp;&nbsp;</strong></li>
+
+                        @if (ViewBag.PageNumber < ViewBag.totalPages)
+                        {
+                            <!--Next Page-->
+                            <li class="page-item text-white">
+                                <a class="page-link bg-gradient-dark text-white" href="/Reports/@ViewBag.action?Id=@((int)ViewBag.PageNumber + 1)&sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime" aria-label="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                            <li class="page-item text-white"><a class="page-link bg-gradient-dark text-white" href="/Reports/@ViewBag.action?Id=@ViewBag.totalPages&sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime">@ViewBag.totalPages</a></li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+    {
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
+    <script>
+        var table = $('#MainTable').DataTable({
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false,
+        });
+    </script>
+}

@@ -27,7 +27,6 @@
 
     <style>
         #body{
-           
             height: 100%;
             /* Center and scale the image nicely */
             background-position: center;
@@ -125,35 +124,6 @@
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
     <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
-        var form = $('#form');
-        form.submit(function (e) {
-            debugger
-            var formData = new FormData(this);
-            if (form.valid()) {
-                debugger
-                $.ajax({
-                    url: '/Account/Login',
-                    type: "POST",
-                    async: true,
-                    data: formData,
-                    success: function (data) {
-                        debugger
-                        if (data.response == true && data.message == "success") {
-                            
-                        }
-                        else {
-                            ShowDivError(data.message);
-                        }
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                })
-            }
-            else {
-                e.preventDefault();
-            }
-        });
         $(document).ready(function () {
             var images = ["its_cva", "its_onlinebussiness-1366x768", "its_ecommerce", "its_whatsapp"];
             var i = 0;
@@ -171,7 +141,8 @@
                 damping: '0.5'
             }
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-        }</script>
+        }
+    </script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->

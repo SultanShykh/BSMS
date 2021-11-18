@@ -1,0 +1,27 @@
+﻿<div class="modal" id="groupModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add Group</h4>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                    <div class="form-group"></div>
+                    <H4>Select Group:</H4>
+                    @Html.DropDownList("id", new SelectList(AdminPortal.Codebase.ContactsProcessing.GetAssociatedGroups(), "id", "groupname"), new
+                   {
+                       @class = "form-control groupname",
+                       id = "groupname",
+                       required = true
+                   })
+                    <button class="btn btn-sm bg-gradient-dark mt-3" id="btnAddGroup">Add</button>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

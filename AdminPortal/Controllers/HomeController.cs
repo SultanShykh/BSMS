@@ -19,12 +19,11 @@ namespace AdminPortal.Controllers
         {
             return View();
         }
-
         //public FileResult DownloadFile()
         //{
         //    string filename = Path.GetFileName("bg.jpg");
         //    string path = Path.Combine(Server.MapPath("~/Media"), filename);
-        //    return File(path, "image/jpg","bg.jpg");
+        //    return File(path, "image/jpg", "bg.jpg");
         //}
     } 
 }

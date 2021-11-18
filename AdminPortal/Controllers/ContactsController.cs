@@ -9,6 +9,7 @@ using ClosedXML.Excel;
 using System.IO;
 using System.Web;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace AdminPortal.Controllers
 {
@@ -146,11 +147,11 @@ namespace AdminPortal.Controllers
             return Json(new { status = true, message = "Successfully Deleted" }, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public JsonResult DeleteContact(int Id)
+        public JsonResult DeleteContact(int Id, int groupId)
         {
             try
             {
-                ContactsProcessing.DeleteContact(Id, Convert.ToInt32(Session["UserId"]));
+                ContactsProcessing.DeleteContact(Id, Convert.ToInt32(Session["UserId"]), groupId);
             }
             catch (Exception ex)
             {
@@ -261,17 +262,27 @@ namespace AdminPortal.Controllers
                     dr["option1"] = v.option1;
                     dr["option2"] = v.option2;
                     dr["option3"] = v.option3;
+                    dr["crtime"] = v.crtime;
                     dt.Rows.Add(dr);
                 }
-                using (XLWorkbook wb = new XLWorkbook())
+
+                StringBuilder sb = new StringBuilder();
+                sb.Append("id,user id,fullname,numbers,emails,groupname,option1,option2,option3,crtime,\r\n");
+                foreach (var v in list)
                 {
-                    wb.Worksheets.Add(dt);
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        wb.SaveAs(stream);
-                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-                    }
+                    sb.Append(v.id + "," + v.user_id + "," + v.fullname + "," + v.numbers + "," + v.emails + "," + v.groupname + "," + v.option1 + "," + v.option2 + "," + v.option2 + "," + v.crtime + ",\r\n");
                 }
+                return File(Encoding.ASCII.GetBytes(sb.ToString()), "text/csv", "contacts.csv");
+
+                //using (XLWorkbook wb = new XLWorkbook())
+                //{
+                //    wb.Worksheets.Add(dt);
+                //    using (MemoryStream stream = new MemoryStream())
+                //    {
+                //        wb.SaveAs(stream);
+                //        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                //    }
+                //}
             }
             catch (Exception ex) 
             {

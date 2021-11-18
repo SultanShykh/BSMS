@@ -68,9 +68,9 @@ namespace AdminPortal.Codebase
             AppDB.groups.Delete(id:Id, user_id:user_id);
             AppDB.user_groups_contacts.Delete(group_id: Id, user_id: user_id);
         }
-        public static void DeleteContact(int Id, int user_id)
+        public static void DeleteContact(int Id, int user_id, int groupId)
         {
-            AppDB.user_groups_contacts.Delete(contact_id:Id, user_id: user_id);
+            AppDB.user_groups_contacts.Delete(contact_id:Id, user_id: user_id, group_id: groupId);
         }
         public static void AssignMultipleGroup(ContactsModel model, out string result, out string status) 
         {
@@ -101,6 +101,11 @@ namespace AdminPortal.Codebase
         public static List<ContactsModel> GetUserContacts(int user_id) 
         {
             return AppDB.contacts.FindAllBy(user_id: user_id) ?? new List<ContactsModel>();
-        } 
+        }
+        public static List<ContactGroupModel> GetAssociatedGroups() 
+        {
+            List<ContactGroupModel> list = AppDB.groups.FindAll(AppDB.groups.user_id == Convert.ToInt32(HttpContext.Current.Session["UserId"])) ?? new List<ContactGroupModel>();
+            return list;
+        }
     }
 }

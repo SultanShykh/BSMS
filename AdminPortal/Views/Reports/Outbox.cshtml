@@ -23,21 +23,33 @@
                             {
                                 downloadAction = "Download";
                             }
-                            else
+                            else if(ViewBag.action == "OutboxCamp")
                             {
                                 downloadAction = "DownloadCamp";
                             }
+                            else if (ViewBag.action == "Inbox")
+                            {
+                                downloadAction = "Inbox";
+                            }
+                            else if (ViewBag.action == "ActivityLog")
+                            {
+                                downloadAction = "ActivityLog";
+                            }
+                            else if (ViewBag.action == "SMSSummary")
+                            {
+                                downloadAction = "SMSSummary";
+                            }
                         }
-                        <a class="btn bg-gradient-dark downloadlink" target = "_blank" href="/Reports/@downloadAction?sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime&smstype=@ViewBag.smstype">Download</a>
+                        <a class="btn btn-sm bg-gradient-dark downloadlink" target = "_blank" href="/Reports/@downloadAction?sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime&smstype=@ViewBag.smstype">Download</a>
                     </div>
                     <div class="col-md-10">
                         <form id="form" method="GET" action="/Reports/@ViewBag.action">
                             <div class="row">
                                 <div class="col-md-2">
-                                    <input type="text" name="sender" class="form-control" placeholder="Sender" value="@ViewBag.sender" />
+                                    <input type="text" name="sender" class="form-control form-control-sm" placeholder="Sender" value="@ViewBag.sender" />
                                 </div>
                                 <div class="col-md-2">
-                                    <select class="form-control smstype" name="smstype" id="smstype">
+                                    <select class="form-control form-control-sm smstype" name="smstype" id="smstype" value="@ViewBag.smstype">
                                         <option value="">--Select SMS Type--</option>
                                         <option value="1">Quick SMS</option>
                                         <option value="2">API</option>
@@ -46,13 +58,13 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="receiver" class="form-control" placeholder="Receiver" value="@ViewBag.receiver" />
+                                    <input type="text" name="receiver" class="form-control form-control-sm" placeholder="Receiver" value="@ViewBag.receiver" />
                                 </div>
                                 <div class="col-md-3">
-                                    <input class="form-control bg-light shadow border-0" type="text" name="datetime" id="datetime" value="@ViewBag.datetime" />
+                                    <input class="form-control form-control-sm bg-light shadow border-0" type="text" name="datetime" id="datetime" value="@ViewBag.datetime" />
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn bg-gradient-dark sender-button" id="fetch">Search</button>
+                                    <button type="submit" class="btn bg-gradient-dark sender-button btn-sm" id="fetch">Search</button>
                                 </div>
                             </div>
                         </form>
@@ -110,7 +122,7 @@
                                             <td>@smstype</td>
                                             <td>@v.masking</td>
                                             <td>@v.receiver</td>
-                                            <td><textarea class="form-control" rows="2" cols="20" readonly>@v.msgdata</textarea></td>
+                                            <td><textarea class="form-control" rows="3" cols="20" readonly>@v.msgdata</textarea></td>
                                             <td>@v.senttime.ToString("yyyy-MM-dd HH:mm:ss")</td>
                                             <td>@v.deliveredtonetwork</td>
                                             <td>@v.status</td>
@@ -151,9 +163,6 @@
                             </li>
                             <li class="page-item text-white"><a class="page-link bg-gradient-dark text-white" href="/Reports/@ViewBag.action?Id=@ViewBag.totalPages&sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime">@ViewBag.totalPages</a></li>
                         }
-                        else
-                        {
-                        }
                     </ul>
                 </nav>
             </div>
@@ -168,6 +177,7 @@
     <script>
         $(document).ready(function () {
             $('.smstype').select2();
+            @*$('.smstype').val(@ViewBag.smstype);*@
         });
         $(function () {
             $('input[name="datetime"]').daterangepicker({

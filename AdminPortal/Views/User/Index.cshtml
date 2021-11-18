@@ -22,7 +22,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form id="form1" method="post" action="/User/Index/@ViewBag.pageNumber">
+                    <form id="form1" method="get" action="/User/Index/@ViewBag.pageNumber?username=@ViewBag.username&email=@ViewBag.email&user_mobile=@ViewBag.user_mobile">
                         <div class="row">
                             <div class="col-md-3">
                                 @Html.LabelFor(model => model.Item1[0].username)

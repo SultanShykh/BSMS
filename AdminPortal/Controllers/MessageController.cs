@@ -23,7 +23,6 @@ namespace AdminPortal.Controllers
         List<string> list = new List<string>();
         IDictionary<string,string> dict = new Dictionary<string, string>();
         DataTable dt = new DataTable();
-
         public ActionResult QuickSMS()
         {
             return View();
@@ -381,6 +380,25 @@ namespace AdminPortal.Controllers
         {
             m.COR_WEB_CampaignManagement(Convert.ToInt32(Session["UserId"]), out List<dynamic> stats, out List<dynamic> details);
             return View(Tuple.Create(stats, details));
+        }
+        [ChildActionOnly]
+        public ActionResult _AddGroup() 
+        {
+
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult _ViewContacts(FormCollection collection)
+        {
+            try
+            {
+                var list = ContactsProcessing.ViewContacts(Convert.ToInt32(Session["UserId"]), Convert.ToInt32(collection["Id"]));
+                return Json(new { status = true, message = list });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = true, message = ex.Message.ToString() });
+            }
         }
     }
 }

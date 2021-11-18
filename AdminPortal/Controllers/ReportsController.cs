@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Web.Mvc;
 using AdminPortal.Codebase;
+using AdminPortal.Models;
 
 namespace AdminPortal.Controllers
 {
@@ -45,7 +46,46 @@ namespace AdminPortal.Controllers
 
             return View("Outbox", outbox);
         }
-        public ActionResult Download(string sender = null, string receiver = null, string datetime = null, string smstype = null)
+        public ActionResult Inbox(int Id = 1, string sender = null, string receiver = null)
+        {
+            sender = string.IsNullOrEmpty(sender) ? null : sender;
+            receiver = string.IsNullOrEmpty(receiver) ? null : receiver;
+
+            OutboxProcessing.COR_USP_Inbox(Id, sender, receiver, out List<Inbox> inbox, out int totalPages);
+
+            ViewBag.PageNumber = Id;
+            ViewBag.totalPages = totalPages;
+            ViewBag.action = "Inbox";
+            ViewBag.sender = sender;
+            ViewBag.receiver = receiver;
+
+            return View(inbox);
+        }
+        public ActionResult ActivityLog(int Id = 1)
+        {
+            OutboxProcessing.COR_USP_ActivityLogs(Id, out List<ActivityLog> ActivityLog, out int totalPages);
+            ViewBag.PageNumber = Id;
+            ViewBag.totalPages = totalPages;
+            ViewBag.action = "ActivityLog";
+
+            return View(ActivityLog);
+        }
+        public ActionResult SMSSummary(int Id = 1, string sender = null)
+        {
+            sender = string.IsNullOrEmpty(sender) ? null : sender;
+            //receiver = string.IsNullOrEmpty(receiver) ? null : receiver;
+            //smstype = string.IsNullOrEmpty(smstype) ? null : smstype;
+
+            OutboxProcessing.COR_USP_SMSSummary(Convert.ToInt32(Session["UserId"]), Id, sender, out List<SMSSummaryModel> SMSSummary, out int totalPages);
+
+            ViewBag.PageNumber = Id;
+            ViewBag.totalPages = totalPages;
+            ViewBag.action = "SMSSummary";
+            ViewBag.sender = sender;
+
+            return View(SMSSummary);
+        }
+        public FileResult Download(string sender = null, string receiver = null, string datetime = null, string smstype = null)
         {
             datetime = string.IsNullOrEmpty(datetime) ? null : datetime.Replace(" ", "");
             sender = string.IsNullOrEmpty(sender) ? null : sender;
@@ -61,7 +101,7 @@ namespace AdminPortal.Controllers
             }
             return File(Encoding.ASCII.GetBytes(sb.ToString()), "text/csv", "outbox.csv");
         }
-        public ActionResult DownloadCamp(string sender = null, string receiver = null, string datetime = null, string smstype = null)
+        public FileResult DownloadCamp(string sender = null, string receiver = null, string datetime = null, string smstype = null)
         {
             datetime = string.IsNullOrEmpty(datetime) ? null : datetime.Replace(" ", "");
             sender = string.IsNullOrEmpty(sender) ? null : sender;

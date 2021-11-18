@@ -13,7 +13,6 @@ namespace AdminPortal.Codebase
     public class CommonProcessing
     {
         static dynamic AppDB = Database.OpenNamedConnection("MainDB");
-        
         public static List<GroupMasterModel> GetAllGroups()
         {
             List<GroupMasterModel> groups = AppDB.COR_USP_GetAllGroups() ?? new List<GroupMasterModel>();

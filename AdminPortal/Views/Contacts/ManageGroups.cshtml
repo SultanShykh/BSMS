@@ -181,7 +181,7 @@
     $('.delete').click(function () {
         var table = $('#MainTable').DataTable();
         var table_data = table.row($(this).closest('tr')).data();
-        DeleteConfirmGET('/Contacts/DeleteGroup', table_data[0]);
+        DeleteConfirmGET('/Contacts/DeleteGroup?Id='+table_data[0]);
     });
     $('.view').click(function () {
         var tableView = $('#viewTable').DataTable();

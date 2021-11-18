@@ -239,6 +239,7 @@ D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ClosedXML.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\CSVLibraryAK.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\DocumentFormat.OpenXml.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ExcelNumberFormat.dll
+D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Microsoft.Web.Infrastructure.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Newtonsoft.Json.dll
@@ -259,6 +260,8 @@ D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ClosedXML.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\CSVLibraryAK.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\DocumentFormat.OpenXml.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ExcelNumberFormat.xml
+D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.pdb
+D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\System.Web.Helpers.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\System.Web.Mvc.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\System.Web.Optimization.xml
@@ -269,11 +272,8 @@ D:\Deviniti_Git\AdminPortal\AdminPortal\bin\System.Web.WebPages.Razor.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Newtonsoft.Json.xml
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Antlr3.Runtime.pdb
 D:\Deviniti_Git\AdminPortal\AdminPortal\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CoreCompileInputs.cache
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.CopyComplete
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.dll
 D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.pdb
-D:\Deviniti_Git\AdminPortal\AdminPortal\obj\Debug\AdminPortal.csproj.AssemblyReference.cache
-D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.dll
-D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.pdb
-D:\Deviniti_Git\AdminPortal\AdminPortal\bin\ICSharpCode.SharpZipLib.xml

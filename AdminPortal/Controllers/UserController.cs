@@ -11,19 +11,23 @@ namespace AdminPortal.Controllers
 {
     public class UserController : Controller
     {
-        public ActionResult Index(int Id = 1, FormCollection collection = null)
+        [HttpGet]
+        public ActionResult Index(int Id = 1, string username = null, string email = null, string user_mobile = null)
         {
             List<UserModel> userModel = new List<UserModel>();
             List<Pagination> pagination = new List<Pagination>();
+            username = string.IsNullOrEmpty(username) ? null : username;
+            email = string.IsNullOrEmpty(email) ? null : email;
+            user_mobile = string.IsNullOrEmpty(user_mobile) ? null : user_mobile;
 
             ViewBag.pageNumber = Id;
-            ViewBag.username = collection["username"];
-            ViewBag.email = collection["email"];
-            ViewBag.user_mobile = collection["user_mobile"];
+            ViewBag.username = username;
+            ViewBag.email = email;
+            ViewBag.user_mobile = user_mobile;
 
             try
             {
-                UserProcessing.GetUsers(Id, collection["username"], collection["email"], collection["user_mobile"], out userModel, out pagination, Convert.ToInt32(Session["UserId"]));
+                UserProcessing.GetUsers(Id, username, email, user_mobile, out userModel, out pagination, Convert.ToInt32(Session["UserId"]));
                 
                 return View(Tuple.Create(userModel, pagination));
             }
@@ -89,7 +93,7 @@ namespace AdminPortal.Controllers
         {
             try
             {
-                UserProcessing.UpdateMask(masking);
+                UserProcessing.UpdateMask(masking, Convert.ToInt32(Session["UserId"]));
                 return Json(new { status = true, message = "Successfully Updated!!!" });
             }
             catch (Exception e)

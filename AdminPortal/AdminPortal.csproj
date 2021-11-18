@@ -181,19 +181,21 @@
     <Compile Include="Helpers\ContactsExtension.cs" />
     <Compile Include="Helpers\CSVExtension.cs" />
     <Compile Include="Helpers\Permission.cs" />
-    <Compile Include="Helpers\SessionCheck.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="Helpers\Validation.cs" />
     <Compile Include="HtmlUtility.cs" />
+    <Compile Include="Models\ActivityLog.cs" />
     <Compile Include="Models\AuthorizeModel.cs" />
     <Compile Include="Models\Campaign.cs" />
     <Compile Include="Models\ContactGroupModel.cs" />
     <Compile Include="Models\ContactsModel.cs" />
     <Compile Include="Models\GroupMasterModel.cs" />
+    <Compile Include="Models\Inbox.cs" />
     <Compile Include="Models\Masking.cs" />
     <Compile Include="Models\MenuModel.cs" />
     <Compile Include="Models\Outbox.cs" />
     <Compile Include="Models\Pagination.cs" />
+    <Compile Include="Models\SMSSummaryModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -272,6 +274,10 @@
     <Content Include="Views\Contacts\_AssignMultipleGroup.cshtml" />
     <Content Include="Views\Contacts\_ViewContacts.cshtml" />
     <Content Include="Views\Contacts\_AssignContacts.cshtml" />
+    <Content Include="Views\Message\_AddGroup.cshtml" />
+    <Content Include="Views\Reports\Inbox.cshtml" />
+    <Content Include="Views\Reports\SMSSummary.cshtml" />
+    <Content Include="Views\Reports\ActivityLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

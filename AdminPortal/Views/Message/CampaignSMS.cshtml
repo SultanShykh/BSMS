@@ -12,7 +12,6 @@
         <div class="row">
             <div class="col-lg-12 login-sec">
                 <div class="login-sec-bg">
-
                     @{
                         if (ViewBag.result != null)
                         {
@@ -22,7 +21,6 @@
                             <br />
                         }
                     }
-
                     <form id="form" method="post" action="/Message/CampaignSMS" enctype="multipart/form-data">
                         <h3>Campaign Details</h3>
                         <fieldset class="form-input">
@@ -33,13 +31,13 @@
                             @Html.ValidationMessageFor(model => model.camp_name, "", new { @class = "text-danger" })
 
                             @Html.LabelFor(model => model.sender):
-                            @Html.DropDownListFor(model => model.sender, new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(), "id", "masking"), new
-                            {
-                                @class = "form-control mb-1 masking",
-                                id = "Masking"
-                            })
+                            @Html.DropDownListFor(model => model.sender, new SelectList(AdminPortal.Codebase.UserProcessing.SelectedMaskings(null), "id", "masking"), new
+                       {
+                           @class = "form-control mb-1 masking",
+                           id = "Masking"
+                       })
                             @Html.LabelFor(model => model.receiver):
-                            @Html.TextAreaFor(model => model.receiver, new { @class = "form-control", cols = "10", rows = "5", id="receiver" })
+                            @Html.TextAreaFor(model => model.receiver, new { @class = "form-control", cols = "10", rows = "5", id = "receiver" })
                             <br />
                             <input type="file" class="form-control mt-2" name="contactsFile" id="contactsFile" />
                             <span id="" style="color: red !important;font-size: 10px;">*Attach .csv/.xlsx file only</span><br />
@@ -94,36 +92,6 @@
         </div>
     </div>
 </div>
-
-<!-- Group Modal -->
-<div class="modal" id="groupModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Add Group</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-                <h4>Select Multiple Group:</h4>
-                <select class="form-control" id="groupSelect" name="groupSelect">
-                    <option>Group 1</option>
-                    <option>Group 2</option>
-                    <option>Group 3</option>
-                </select>
-            </div>
-
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-
 <!-- Contact Modal -->
 <div class="modal" id="contactModal">
     <div class="modal-dialog modal-lg">
@@ -158,6 +126,10 @@
         </div>
     </div>
 </div>
+<!-- Group Modal -->
+@{
+    Html.RenderAction("_AddGroup", "Message");
+}
 
 @section scripts
     {
@@ -166,7 +138,9 @@
     <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
         $(document).ready(function () {
-            $('.masking').select2(); 
+            $('.masking').select2();
+            $('.groupname').select2();
+
             $(".alert").fadeIn();
             $('.alert').fadeOut(4000);
             $('#innerTable').DataTable();
@@ -186,6 +160,7 @@
             });
         });
         var form = $('#form');
+
         form.steps({
             headerTag: "h3",
             bodyTag: "fieldset",
@@ -215,16 +190,16 @@
             }
         })
             .validate({
-            errorPlacement: function errorPlacement(error, element) { element.before(error); },
-            rules: {
-                camp_name: {
-                    required: true
-                },
-                msgdata: {
-                    required: true
+                errorPlacement: function errorPlacement(error, element) { element.before(error); },
+                rules: {
+                    camp_name: {
+                        required: true
+                    },
+                    msgdata: {
+                        required: true
+                    }
                 }
-            }
-        });
+            });
         var form = $("#form");
         form.submit(function (e) {
             var filename = $('#contactsFile').val();
@@ -283,8 +258,22 @@
             $.each(ss, function (key, val) {
                 receiver += val.numbers + ",";
             });
-            $('#receiver').val(receiver);
+            var val = $('#receiver').val();
+            $('#receiver').val(val + "" + receiver);
             $('#contactModal').modal('hide');
+        });
+        $('#btnAddGroup').click(function () {
+            CrudScript.makeAjaxRequest('POST', '/Message/_ViewContacts', { id: $('#groupname').val() }).then(function (data) {
+                if (data.status == true) {
+                    var contacts = "";
+                    var preVal = $('#receiver').val();
+                    $.each(data.message, function (key, val) {
+                        contacts += val.numbers + ",";
+                    });
+                    $('#receiver').val(preVal + "," + contacts);
+                    $('#groupModal').modal('hide');
+                }
+            });
         });
     </script>
 

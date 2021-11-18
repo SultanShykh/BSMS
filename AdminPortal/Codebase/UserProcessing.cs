@@ -2,8 +2,6 @@
 using Simple.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Web;
 
 namespace AdminPortal.Codebase
@@ -98,7 +96,7 @@ namespace AdminPortal.Codebase
             return masking;
         }
 
-        public static void UpdateMask(List<Masking> mask)
+        public static void UpdateMask(List<Masking> mask, int user_id)
         {
             string masking="";
             if (mask != null)
@@ -108,7 +106,7 @@ namespace AdminPortal.Codebase
                     masking += maskings.id + ",";
                 }
             }
-            AppDB.COR_USP_AddMask(masking, mask[0].userId);
+            AppDB.COR_USP_AddMask(masking, mask[0].userId, user_id);
         }
     }
 }
