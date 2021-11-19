@@ -87,7 +87,6 @@ namespace AdminPortal.Controllers
                 return Json(new { status = false, message = "Error" });
             }
         }
-
         [HttpPost]
         public ActionResult UpdateMask(List<Masking> masking)
         {
@@ -101,7 +100,6 @@ namespace AdminPortal.Controllers
                 return Json(new { status = false, message = "Error" });
             }
         }
-
         [HttpPost]
         public ActionResult SelectedMaskings(int id)
         {

@@ -74,5 +74,10 @@ namespace AdminPortal.Codebase
             List<Masking> m = AppDB.COR_USP_GetMaskings() ?? new List<Masking>();
             return m;
         }
+        public static List<UserModel> GetAllUsers() 
+        {
+            List<UserModel> users = AppDB.COR_USP_GetAllUsers() ?? new List<UserModel>();
+            return users;
+        }
     }
 }

@@ -167,11 +167,12 @@ namespace AdminPortal.Helpers
             }
             return true;
         }
-        public static bool getDataFromExcel(string path, out IDictionary<string, string> list, out DataTable dt,Campaign campaign, out int count)
+        public static bool getDataFromExcel(string path, out IDictionary<string, string> list, out DataTable dt,Campaign campaign, out int count, out int flag)
         {
             list = new Dictionary<string, string>();
             dt = new DataTable();
             string cellValue;
+            flag = 0;
             count = 0;
 
             list.Clear();
@@ -251,22 +252,23 @@ namespace AdminPortal.Helpers
                     }
                     else
                     {
-                        return false;
+                        flag = 2;
                     }
                 }
             }
             catch (Exception ex)
             {
-                return false;
+                flag = 1;
             }
 
             return true;
         }
-        public static bool getDataFromCSV(string path, out IDictionary<string, string> list, out DataTable dt, Campaign campaign, out int count)
+        public static bool getDataFromCSV(string path, out IDictionary<string, string> list, out DataTable dt, Campaign campaign, out int count, out int flag)
         {
             list = new Dictionary<string, string>();
             string cellValue = "";
             int colNum;
+            flag = 0;
             count = 0;
 
             list.Clear();
@@ -346,11 +348,11 @@ namespace AdminPortal.Helpers
                     }
                 }
                 else
-                    return false;
+                    flag = 2;
             }
             catch (Exception ex)
             {
-                return false;
+                flag = 1;
             }
 
             return true;

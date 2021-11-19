@@ -95,7 +95,6 @@ namespace AdminPortal.Codebase
             List<Masking> masking = AppDB.COR_USP_SelectedUserMaskings(id).ToList<Masking>();
             return masking;
         }
-
         public static void UpdateMask(List<Masking> mask, int user_id)
         {
             string masking="";

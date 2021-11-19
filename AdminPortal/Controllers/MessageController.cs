@@ -257,8 +257,22 @@ namespace AdminPortal.Controllers
                         campaign.id = result.camp_id;
                         campaign.msgdata = msgdata;
 
-                        if (CSVExtension.getDataFromExcel(path, out dict, out DataTable dt, campaign, out int count))
+                        if (CSVExtension.getDataFromExcel(path, out dict, out DataTable dt, campaign, out int count, out int flag))
                         {
+                            if (flag == 1)
+                            {
+                                ViewBag.result = "Invalid/Corrupt file";
+                                ViewBag.status = "danger";
+                                System.IO.File.Delete(path);
+                                return View();
+                            }
+                            else if (flag == 2) 
+                            {
+                                ViewBag.result = "Please select a column or Add a selected column in the file";
+                                ViewBag.status = "danger";
+                                System.IO.File.Delete(path);
+                                return View();
+                            }
                             using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
                                 using (SqlBulkCopy sqlbulk = new SqlBulkCopy(con))
@@ -309,8 +323,22 @@ namespace AdminPortal.Controllers
                         campaign.id = result.camp_id;
                         campaign.msgdata = msgdata;
                         
-                        if (CSVExtension.getDataFromCSV(path, out dict, out DataTable dt,campaign ,out int count))
+                        if (CSVExtension.getDataFromCSV(path, out dict, out DataTable dt,campaign ,out int count, out int flag))
                         {
+                            if (flag == 1)
+                            {
+                                ViewBag.result = "Invalid/Corrupt file";
+                                ViewBag.status = "danger";
+                                System.IO.File.Delete(path);
+                                return View();
+                            }
+                            else if (flag == 2)
+                            {
+                                ViewBag.result = "Please select a column or Add a selected column in the file";
+                                ViewBag.status = "danger";
+                                System.IO.File.Delete(path);
+                                return View();
+                            }
                             using (SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["MainDB"].ConnectionString))
                             {
                                 using (SqlBulkCopy sqlbulk = new SqlBulkCopy(con))
@@ -384,7 +412,6 @@ namespace AdminPortal.Controllers
         [ChildActionOnly]
         public ActionResult _AddGroup() 
         {
-
             return PartialView();
         }
         [HttpPost]

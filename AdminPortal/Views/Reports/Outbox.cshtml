@@ -96,30 +96,13 @@
                                 {
                                     foreach (var v in Model)
                                     {
-                                        var smstype = "";
-                                        if (v.smstype == 1)
-                                        {
-                                            smstype = "Quick SMS";
-                                        }
-                                        else if (v.smstype == 2)
-                                        {
-                                            smstype = "API";
-                                        }
-                                        else if (v.smstype == 3)
-                                        {
-                                            smstype = "Personalized SMS";
-                                        }
-                                        else if (v.smstype == 4)
-                                        {
-                                            smstype = "Campaign SMS";
-                                        }
                                         <tr>
                                             <td class="details-control">
                                                 <i class="fa fa-plus-circle"></i>
                                             </td>
                                             <td>@v.outbox_id</td>
                                             <td>@v.username</td>
-                                            <td>@smstype</td>
+                                            <td>@v.smstype</td>
                                             <td>@v.masking</td>
                                             <td>@v.receiver</td>
                                             <td><textarea class="form-control" rows="3" cols="20" readonly>@v.msgdata</textarea></td>
@@ -129,7 +112,6 @@
                                             <td>@v.cost</td>
                                             <td hidden>@v.route</td>
                                         </tr>
-
                                     }
                                 }
                             }

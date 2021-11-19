@@ -18,22 +18,30 @@
                         @*<a class="btn btn-sm bg-gradient-dark downloadlink" target="_blank" href="/Reports/@downloadAction?sender=@ViewBag.sender&receiver=@ViewBag.receiver&datetime=@ViewBag.datetime&smstype=@ViewBag.smstype">Download</a>*@
                     </div>
                     <div class="col-md-10">
-                        @*<form id="form" method="GET" action="/Reports/@ViewBag.action">
+                        <form id="form" method="GET" action="/Reports/ActivityLog">
                             <div class="row">
                                 <div class="col-md-2">
-                                    <input type="text" name="sender" class="form-control form-control-sm" placeholder="Sender" value="@ViewBag.sender" />
+                                    <label>Date Calendar:</label>
+                                    <input class="form-control form-control-sm bg-light shadow border-0" type="text" name="datetime" id="datetime" value="" />
                                 </div>
                                 <div class="col-md-2">
-                                        <input type="text" name="operator" class="form-control form-control-sm" placeholder="Operator" value="@ViewBag.sender" />
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" name="sender" class="form-control form-control-sm" placeholder="Sender" value="@ViewBag.sender" />
-                                    </div>
+                                    <label>User: </label>
+                                    @Html.DropDownList("userId", new SelectList(AdminPortal.Codebase.CommonProcessing.GetAllUsers(), "id", "username"), "Select User Account", new
+                                 {
+                                     @class = "form-control form-control-sm userId",
+                                     required = "true",
+                                     id = "userId"
+                                 })
+                                </div>
+                                <div class="col-md-2">
+                                    <label>IP Address: </label>
+                                    <input type="text" name="ip" class="form-control form-control-sm" placeholder="" value="" />
+                                </div>
                                 <div class="col-md-3">
-                                    <button type="submit" class="btn bg-gradient-dark sender-button btn-sm" id="fetch">Search</button>
+                                    <button type="submit" class="btn bg-gradient-dark sender-button btn-sm mt-4" id="fetch">View</button>
                                 </div>
                             </div>
-                        </form>*@
+                        </form>
                     </div>
                 </div>
             </div>
@@ -106,6 +114,17 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="~/Scripts/ProjectScript/CommonMethods.js"></script>
     <script>
+        $(document).ready(function () {
+            $('.userId').select2();
+        });
+        $(function () {
+            $('input[name="datetime"]').daterangepicker({
+                opens: 'left',
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            });
+        });
         var table = $('#MainTable').DataTable({
             paging: false,
             searching: false,
